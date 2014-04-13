@@ -17,14 +17,13 @@
 		1A32CCEB18FB07DD00C51717 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */; };
 		1A32CCEE18FB07DD00C51717 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */; };
 		1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCF018FB07DD00C51717 /* TanksViewController.m */; };
-		1A32CCF418FB07DD00C51717 /* TanksMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCF318FB07DD00C51717 /* TanksMyScene.m */; };
-		1A32CCF618FB07DD00C51717 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCF518FB07DD00C51717 /* Spaceship.png */; };
 		1A32CCF818FB07DD00C51717 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCF718FB07DD00C51717 /* Images.xcassets */; };
 		1A32CCFF18FB07DD00C51717 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCFE18FB07DD00C51717 /* XCTest.framework */; };
 		1A32CD0018FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
 		1A32CD0118FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
 		1A32CD0918FB07DD00C51717 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CD0718FB07DD00C51717 /* InfoPlist.strings */; };
 		1A32CD0B18FB07DD00C51717 /* TanksTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CD0A18FB07DD00C51717 /* TanksTests.m */; };
+		1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CD1518FB092E00C51717 /* TanksGamePage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,15 +52,14 @@
 		1A32CCED18FB07DD00C51717 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		1A32CCEF18FB07DD00C51717 /* TanksViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksViewController.h; sourceTree = "<group>"; };
 		1A32CCF018FB07DD00C51717 /* TanksViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksViewController.m; sourceTree = "<group>"; };
-		1A32CCF218FB07DD00C51717 /* TanksMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksMyScene.h; sourceTree = "<group>"; };
-		1A32CCF318FB07DD00C51717 /* TanksMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksMyScene.m; sourceTree = "<group>"; };
-		1A32CCF518FB07DD00C51717 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		1A32CCF718FB07DD00C51717 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1A32CCFD18FB07DD00C51717 /* TanksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TanksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A32CCFE18FB07DD00C51717 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1A32CD0618FB07DD00C51717 /* TanksTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TanksTests-Info.plist"; sourceTree = "<group>"; };
 		1A32CD0818FB07DD00C51717 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1A32CD0A18FB07DD00C51717 /* TanksTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksTests.m; sourceTree = "<group>"; };
+		1A32CD1418FB092E00C51717 /* TanksGamePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksGamePage.h; sourceTree = "<group>"; };
+		1A32CD1518FB092E00C51717 /* TanksGamePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksGamePage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,11 +127,10 @@
 				1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */,
 				1A32CCEF18FB07DD00C51717 /* TanksViewController.h */,
 				1A32CCF018FB07DD00C51717 /* TanksViewController.m */,
-				1A32CCF218FB07DD00C51717 /* TanksMyScene.h */,
-				1A32CCF318FB07DD00C51717 /* TanksMyScene.m */,
-				1A32CCF518FB07DD00C51717 /* Spaceship.png */,
 				1A32CCF718FB07DD00C51717 /* Images.xcassets */,
 				1A32CCDE18FB07DD00C51717 /* Supporting Files */,
+				1A32CD1418FB092E00C51717 /* TanksGamePage.h */,
+				1A32CD1518FB092E00C51717 /* TanksGamePage.m */,
 			);
 			path = Tanks;
 			sourceTree = "<group>";
@@ -244,7 +241,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A32CCF618FB07DD00C51717 /* Spaceship.png in Resources */,
 				1A32CCF818FB07DD00C51717 /* Images.xcassets in Resources */,
 				1A32CCEE18FB07DD00C51717 /* Main_iPad.storyboard in Resources */,
 				1A32CCEB18FB07DD00C51717 /* Main_iPhone.storyboard in Resources */,
@@ -269,7 +265,7 @@
 			files = (
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
-				1A32CCF418FB07DD00C51717 /* TanksMyScene.m in Sources */,
+				1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */,
 				1A32CCE418FB07DD00C51717 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,7 +7,7 @@
 //
 
 #import "TanksViewController.h"
-#import "TanksMyScene.h"
+#import "TanksGamePage.h"
 
 @implementation TanksViewController
 
@@ -21,7 +21,7 @@
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SKScene * scene = [TanksMyScene sceneWithSize:skView.bounds.size];
+    SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
