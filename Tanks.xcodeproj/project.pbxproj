@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
+		1A32CCD818FB07DD00C51717 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */; };
+		1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
+		1A32CCDC18FB07DD00C51717 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCDB18FB07DD00C51717 /* SpriteKit.framework */; };
+		1A32CCE218FB07DD00C51717 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCE018FB07DD00C51717 /* InfoPlist.strings */; };
+		1A32CCE418FB07DD00C51717 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCE318FB07DD00C51717 /* main.m */; };
+		1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCE718FB07DD00C51717 /* TanksAppDelegate.m */; };
+		1A32CCEB18FB07DD00C51717 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */; };
+		1A32CCEE18FB07DD00C51717 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */; };
+		1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCF018FB07DD00C51717 /* TanksViewController.m */; };
+		1A32CCF418FB07DD00C51717 /* TanksMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CCF318FB07DD00C51717 /* TanksMyScene.m */; };
+		1A32CCF618FB07DD00C51717 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCF518FB07DD00C51717 /* Spaceship.png */; };
+		1A32CCF818FB07DD00C51717 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CCF718FB07DD00C51717 /* Images.xcassets */; };
+		1A32CCFF18FB07DD00C51717 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCFE18FB07DD00C51717 /* XCTest.framework */; };
+		1A32CD0018FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
+		1A32CD0118FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
+		1A32CD0918FB07DD00C51717 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A32CD0718FB07DD00C51717 /* InfoPlist.strings */; };
+		1A32CD0B18FB07DD00C51717 /* TanksTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32CD0A18FB07DD00C51717 /* TanksTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1A32CD0218FB07DD00C51717 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A32CCCA18FB07DD00C51717 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A32CCD118FB07DD00C51717;
+			remoteInfo = Tanks;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1A32CCD218FB07DD00C51717 /* Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tanks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A32CCD518FB07DD00C51717 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		1A32CCD918FB07DD00C51717 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1A32CCDB18FB07DD00C51717 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		1A32CCDF18FB07DD00C51717 /* Tanks-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tanks-Info.plist"; sourceTree = "<group>"; };
+		1A32CCE118FB07DD00C51717 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1A32CCE318FB07DD00C51717 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1A32CCE518FB07DD00C51717 /* Tanks-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tanks-Prefix.pch"; sourceTree = "<group>"; };
+		1A32CCE618FB07DD00C51717 /* TanksAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksAppDelegate.h; sourceTree = "<group>"; };
+		1A32CCE718FB07DD00C51717 /* TanksAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksAppDelegate.m; sourceTree = "<group>"; };
+		1A32CCEA18FB07DD00C51717 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		1A32CCED18FB07DD00C51717 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		1A32CCEF18FB07DD00C51717 /* TanksViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksViewController.h; sourceTree = "<group>"; };
+		1A32CCF018FB07DD00C51717 /* TanksViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksViewController.m; sourceTree = "<group>"; };
+		1A32CCF218FB07DD00C51717 /* TanksMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksMyScene.h; sourceTree = "<group>"; };
+		1A32CCF318FB07DD00C51717 /* TanksMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksMyScene.m; sourceTree = "<group>"; };
+		1A32CCF518FB07DD00C51717 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
+		1A32CCF718FB07DD00C51717 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		1A32CCFD18FB07DD00C51717 /* TanksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TanksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A32CCFE18FB07DD00C51717 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		1A32CD0618FB07DD00C51717 /* TanksTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TanksTests-Info.plist"; sourceTree = "<group>"; };
+		1A32CD0818FB07DD00C51717 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1A32CD0A18FB07DD00C51717 /* TanksTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanksTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A32CCCF18FB07DD00C51717 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CCD818FB07DD00C51717 /* CoreGraphics.framework in Frameworks */,
+				1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */,
+				1A32CCDC18FB07DD00C51717 /* SpriteKit.framework in Frameworks */,
+				1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A32CCFA18FB07DD00C51717 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CCFF18FB07DD00C51717 /* XCTest.framework in Frameworks */,
+				1A32CD0118FB07DD00C51717 /* UIKit.framework in Frameworks */,
+				1A32CD0018FB07DD00C51717 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A32CCC918FB07DD00C51717 = {
+			isa = PBXGroup;
+			children = (
+				1A32CCDD18FB07DD00C51717 /* Tanks */,
+				1A32CD0418FB07DD00C51717 /* TanksTests */,
+				1A32CCD418FB07DD00C51717 /* Frameworks */,
+				1A32CCD318FB07DD00C51717 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1A32CCD318FB07DD00C51717 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CCD218FB07DD00C51717 /* Tanks.app */,
+				1A32CCFD18FB07DD00C51717 /* TanksTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A32CCD418FB07DD00C51717 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CCD518FB07DD00C51717 /* Foundation.framework */,
+				1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */,
+				1A32CCD918FB07DD00C51717 /* UIKit.framework */,
+				1A32CCDB18FB07DD00C51717 /* SpriteKit.framework */,
+				1A32CCFE18FB07DD00C51717 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1A32CCDD18FB07DD00C51717 /* Tanks */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CCE618FB07DD00C51717 /* TanksAppDelegate.h */,
+				1A32CCE718FB07DD00C51717 /* TanksAppDelegate.m */,
+				1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */,
+				1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */,
+				1A32CCEF18FB07DD00C51717 /* TanksViewController.h */,
+				1A32CCF018FB07DD00C51717 /* TanksViewController.m */,
+				1A32CCF218FB07DD00C51717 /* TanksMyScene.h */,
+				1A32CCF318FB07DD00C51717 /* TanksMyScene.m */,
+				1A32CCF518FB07DD00C51717 /* Spaceship.png */,
+				1A32CCF718FB07DD00C51717 /* Images.xcassets */,
+				1A32CCDE18FB07DD00C51717 /* Supporting Files */,
+			);
+			path = Tanks;
+			sourceTree = "<group>";
+		};
+		1A32CCDE18FB07DD00C51717 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CCDF18FB07DD00C51717 /* Tanks-Info.plist */,
+				1A32CCE018FB07DD00C51717 /* InfoPlist.strings */,
+				1A32CCE318FB07DD00C51717 /* main.m */,
+				1A32CCE518FB07DD00C51717 /* Tanks-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1A32CD0418FB07DD00C51717 /* TanksTests */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CD0A18FB07DD00C51717 /* TanksTests.m */,
+				1A32CD0518FB07DD00C51717 /* Supporting Files */,
+			);
+			path = TanksTests;
+			sourceTree = "<group>";
+		};
+		1A32CD0518FB07DD00C51717 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1A32CD0618FB07DD00C51717 /* TanksTests-Info.plist */,
+				1A32CD0718FB07DD00C51717 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A32CCD118FB07DD00C51717 /* Tanks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Tanks" */;
+			buildPhases = (
+				1A32CCCE18FB07DD00C51717 /* Sources */,
+				1A32CCCF18FB07DD00C51717 /* Frameworks */,
+				1A32CCD018FB07DD00C51717 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tanks;
+			productName = Tanks;
+			productReference = 1A32CCD218FB07DD00C51717 /* Tanks.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1A32CCFC18FB07DD00C51717 /* TanksTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A32CD1118FB07DD00C51717 /* Build configuration list for PBXNativeTarget "TanksTests" */;
+			buildPhases = (
+				1A32CCF918FB07DD00C51717 /* Sources */,
+				1A32CCFA18FB07DD00C51717 /* Frameworks */,
+				1A32CCFB18FB07DD00C51717 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A32CD0318FB07DD00C51717 /* PBXTargetDependency */,
+			);
+			name = TanksTests;
+			productName = TanksTests;
+			productReference = 1A32CCFD18FB07DD00C51717 /* TanksTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A32CCCA18FB07DD00C51717 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = Tanks;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Montablo;
+				TargetAttributes = {
+					1A32CCFC18FB07DD00C51717 = {
+						TestTargetID = 1A32CCD118FB07DD00C51717;
+					};
+				};
+			};
+			buildConfigurationList = 1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Tanks" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1A32CCC918FB07DD00C51717;
+			productRefGroup = 1A32CCD318FB07DD00C51717 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A32CCD118FB07DD00C51717 /* Tanks */,
+				1A32CCFC18FB07DD00C51717 /* TanksTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A32CCD018FB07DD00C51717 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CCF618FB07DD00C51717 /* Spaceship.png in Resources */,
+				1A32CCF818FB07DD00C51717 /* Images.xcassets in Resources */,
+				1A32CCEE18FB07DD00C51717 /* Main_iPad.storyboard in Resources */,
+				1A32CCEB18FB07DD00C51717 /* Main_iPhone.storyboard in Resources */,
+				1A32CCE218FB07DD00C51717 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A32CCFB18FB07DD00C51717 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CD0918FB07DD00C51717 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A32CCCE18FB07DD00C51717 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
+				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
+				1A32CCF418FB07DD00C51717 /* TanksMyScene.m in Sources */,
+				1A32CCE418FB07DD00C51717 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A32CCF918FB07DD00C51717 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A32CD0B18FB07DD00C51717 /* TanksTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A32CD0318FB07DD00C51717 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A32CCD118FB07DD00C51717 /* Tanks */;
+			targetProxy = 1A32CD0218FB07DD00C51717 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1A32CCE018FB07DD00C51717 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A32CCE118FB07DD00C51717 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A32CCEA18FB07DD00C51717 /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A32CCED18FB07DD00C51717 /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		1A32CD0718FB07DD00C51717 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A32CD0818FB07DD00C51717 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1A32CD0C18FB07DD00C51717 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1A32CD0D18FB07DD00C51717 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1A32CD0F18FB07DD00C51717 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
+				INFOPLIST_FILE = "Tanks/Tanks-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1A32CD1018FB07DD00C51717 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
+				INFOPLIST_FILE = "Tanks/Tanks-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		1A32CD1218FB07DD00C51717 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Tanks.app/Tanks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "TanksTests/TanksTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		1A32CD1318FB07DD00C51717 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Tanks.app/Tanks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
+				INFOPLIST_FILE = "TanksTests/TanksTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Tanks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A32CD0C18FB07DD00C51717 /* Debug */,
+				1A32CD0D18FB07DD00C51717 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Tanks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A32CD0F18FB07DD00C51717 /* Debug */,
+				1A32CD1018FB07DD00C51717 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1A32CD1118FB07DD00C51717 /* Build configuration list for PBXNativeTarget "TanksTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A32CD1218FB07DD00C51717 /* Debug */,
+				1A32CD1318FB07DD00C51717 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1A32CCCA18FB07DD00C51717 /* Project object */;
+}
