@@ -18,6 +18,8 @@
     
     NSMutableArray *bullets;
     
+    NSMutableArray *tanks;
+    
 }
 
 -(id)initWithSize:(CGSize)size {
@@ -32,6 +34,7 @@
         self.physicsWorld.contactDelegate = self;
         
         bullets = [NSMutableArray array];
+        tanks = [NSMutableArray array];
         
         [self addJoystick];
         
