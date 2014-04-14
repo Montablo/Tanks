@@ -236,7 +236,7 @@
         }
     }
     
-    [self performSelector:@selector(advanceBullet:) withObject:b afterDelay:0.005];
+    [self performSelector:@selector(advanceBullet:) withObject:b afterDelay:.01];
     
 }
 
@@ -288,7 +288,6 @@
     
     //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
     
-    NSLog(@"%i", userTank.numCurrentBullets);
 }
 
 -(void) checkBullets {

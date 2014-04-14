@@ -12,7 +12,7 @@
 #define BULLET_WIDTH 16
 #define BULLET_HEIGHT 10
 
-#define TANK_SPEED 1.0
+#define TANK_SPEED 2.0
 
 static const uint32_t userCategory =  0x1 << 0;
 static const uint32_t enemyCategory =  0x1 << 1;

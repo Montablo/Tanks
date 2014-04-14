@@ -19,10 +19,13 @@
     if (!skView.scene) {
         skView.showsFPS = YES;
         skView.showsNodeCount = YES;
+        skView.frameInterval = 2;
+        
         
         // Create and configure the scene.
         SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
         scene.scaleMode = SKSceneScaleModeAspectFill;
+        
         
         // Present the scene.
         [skView presentScene:scene];
