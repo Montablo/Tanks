@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */; };
+		044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03E18FB2AB30007F2DE /* JCJoystick.m */; };
+		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
+		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
+		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
+		04F9CE8B18FB339E009B0D7D /* EnemyTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8A18FB339E009B0D7D /* EnemyTank.m */; };
 		1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
 		1A32CCD818FB07DD00C51717 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */; };
 		1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
@@ -37,6 +43,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		044DF03B18FB2AB30007F2DE /* JCImageJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCImageJoystick.h; sourceTree = "<group>"; };
+		044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCImageJoystick.m; sourceTree = "<group>"; };
+		044DF03D18FB2AB30007F2DE /* JCJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCJoystick.h; sourceTree = "<group>"; };
+		044DF03E18FB2AB30007F2DE /* JCJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCJoystick.m; sourceTree = "<group>"; };
+		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
+		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
+		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
+		04F9CE8418FB31D6009B0D7D /* Tank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tank.m; sourceTree = "<group>"; };
+		04F9CE8618FB3391009B0D7D /* UserTank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTank.h; sourceTree = "<group>"; };
+		04F9CE8718FB3391009B0D7D /* UserTank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTank.m; sourceTree = "<group>"; };
+		04F9CE8918FB339E009B0D7D /* EnemyTank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyTank.h; sourceTree = "<group>"; };
+		04F9CE8A18FB339E009B0D7D /* EnemyTank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnemyTank.m; sourceTree = "<group>"; };
+		04F9CE8C18FB3522009B0D7D /* TanksConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksConstants.h; sourceTree = "<group>"; };
 		1A32CCD218FB07DD00C51717 /* Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tanks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A32CCD518FB07DD00C51717 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -87,6 +106,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04F9CE8118FB31AF009B0D7D /* Joystick */ = {
+			isa = PBXGroup;
+			children = (
+				044DF03B18FB2AB30007F2DE /* JCImageJoystick.h */,
+				044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */,
+				044DF03D18FB2AB30007F2DE /* JCJoystick.h */,
+				044DF03E18FB2AB30007F2DE /* JCJoystick.m */,
+			);
+			name = Joystick;
+			sourceTree = "<group>";
+		};
+		04F9CE8218FB31B8009B0D7D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				04F9CE8318FB31D6009B0D7D /* Tank.h */,
+				04F9CE8418FB31D6009B0D7D /* Tank.m */,
+				04F9CE8618FB3391009B0D7D /* UserTank.h */,
+				04F9CE8718FB3391009B0D7D /* UserTank.m */,
+				04F9CE8918FB339E009B0D7D /* EnemyTank.h */,
+				04F9CE8A18FB339E009B0D7D /* EnemyTank.m */,
+				04F9CE8C18FB3522009B0D7D /* TanksConstants.h */,
+				04C0E9D118FB504E00B73711 /* Bullet.h */,
+				04C0E9D218FB504E00B73711 /* Bullet.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
 		1A32CCC918FB07DD00C51717 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +167,8 @@
 		1A32CCDD18FB07DD00C51717 /* Tanks */ = {
 			isa = PBXGroup;
 			children = (
+				04F9CE8218FB31B8009B0D7D /* Classes */,
+				04F9CE8118FB31AF009B0D7D /* Joystick */,
 				1A32CCE618FB07DD00C51717 /* TanksAppDelegate.h */,
 				1A32CCE718FB07DD00C51717 /* TanksAppDelegate.m */,
 				1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */,
@@ -265,6 +313,12 @@
 			files = (
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
+				04F9CE8B18FB339E009B0D7D /* EnemyTank.m in Sources */,
+				04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */,
+				044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */,
+				04C0E9D318FB504E00B73711 /* Bullet.m in Sources */,
+				04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */,
+				044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */,
 				1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */,
 				1A32CCE418FB07DD00C51717 /* main.m in Sources */,
 			);
@@ -483,6 +537,7 @@
 				1A32CD1018FB07DD00C51717 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A32CD1118FB07DD00C51717 /* Build configuration list for PBXNativeTarget "TanksTests" */ = {
 			isa = XCConfigurationList;
@@ -491,6 +546,7 @@
 				1A32CD1318FB07DD00C51717 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
