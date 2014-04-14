@@ -209,33 +209,6 @@
         
     }
     
-    for(Bullet *other in bullets) {
-        if(![b isEqual:other]) {
-            if([b intersectsNode:other]) {
-                
-                [b removeFromParent];
-                [other removeFromParent];
-                
-                [bullets removeObjectIdenticalTo:b];
-                [bullets removeObjectIdenticalTo:other];
-                
-                if(b.ownerType == 0) {
-                    userTank.numCurrentBullets --;
-                } else {
-                    enemyTank.numCurrentBullets --;
-                }
-                
-                if(other.ownerType == 0) {
-                    userTank.numCurrentBullets --;
-                } else {
-                    enemyTank.numCurrentBullets --;
-                }
-                
-                break;
-            }
-        }
-    }
-    
     [self performSelector:@selector(advanceBullet:) withObject:b afterDelay:0.005];
     
 }
@@ -244,9 +217,17 @@
     
     if(type == 0) {
         
-        if(userTank.numCurrentBullets >= userTank.maxCurrentBullets) return;
+        int userBullets = 0;
+        int enemyBullets = 0;
         
-        userTank.numCurrentBullets ++;
+        for(Bullet *b in bullets) {
+            if(b.ownerType == 0) userBullets ++;
+            else enemyBullets ++;
+        }
+        
+        if(userBullets >= userTank.maxCurrentBullets) return;
+        else if (enemyBullets >= enemyTank.maxCurrentBullets) return;
+        
     }
     
     CGPoint startingPoint = type == 0 ? userTank.position : enemyTank.position;
@@ -284,43 +265,8 @@
         [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
     }
     
-    //[self checkBullets];
-    
     //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
     
-    NSLog(@"%i", userTank.numCurrentBullets);
-}
-
--(void) checkBullets {
-    
-    for(Bullet *b in bullets.copy) {
-        
-        for(Bullet *other in bullets.copy) {
-            if(![b isEqual:other]) {
-                if([b intersectsNode:other]) {
-                    [b removeFromParent];
-                    [other removeFromParent];
-                    
-                    [bullets removeObjectIdenticalTo:b];
-                    [bullets removeObjectIdenticalTo:other];
-                    
-                    if(b.ownerType == 0) {
-                        userTank.numCurrentBullets --;
-                    } else {
-                        enemyTank.numCurrentBullets --;
-                    }
-                    
-                    if(other.ownerType == 0) {
-                        userTank.numCurrentBullets --;
-                    } else {
-                        enemyTank.numCurrentBullets --;
-                    }
-                    
-                    return;
-                }
-            }
-        }
-    }
 }
 
 @end
