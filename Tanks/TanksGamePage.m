@@ -22,28 +22,32 @@
     
 }
 
+#pragma mark Initialization methods
+
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
         
-        [self readWalls];
-        [self readContainers];
-        
         self.backgroundColor = [SKColor whiteColor];
-        //Making self delegate of physics World
-        self.physicsWorld.gravity = CGVectorMake(0,0);
-        self.physicsWorld.contactDelegate = self;
         
-        bullets = [NSMutableArray array];
-        tanks = [NSMutableArray array];
+        [self initGame];
         
-        [self addJoystick];
+        [self startGame];
         
-        [self addUserTank];
-        [self addEnemyTank];
-        
-        [self displayWalls];
     }
     return self;
+}
+
+-(void) initGame {
+    [self readWalls];
+    [self readContainers];
+    
+    self.physicsWorld.gravity = CGVectorMake(0,0);
+    self.physicsWorld.contactDelegate = self;
+    
+    bullets = [NSMutableArray array];
+    tanks = [NSMutableArray array];
+        
+    [self addJoystick];
 }
 
 -(void) displayWalls {
@@ -60,30 +64,13 @@
     
 }
 
+//will eventualy read from file
 -(void) readWalls {
     walls = [NSMutableArray arrayWithArray:@[[self makeRectWithCenterX:CGRectGetMidX(self.frame) withY:CGRectGetMidY(self.frame) withWidth:50 withHeight:150]]];
 }
 
 -(void) readContainers {
     containers = [NSMutableArray arrayWithArray:@[[self makeRectWithBottomLeftX:0 withY:0 withWidth:self.frame.size.width withHeight:self.frame.size.height]]];
-}
-
--(NSValue *) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {
-    return [NSValue valueWithCGRect: CGRectMake(x + width/2, y + height/2, width, height)];
-}
-
--(NSValue *) makeRectWithCenterX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {
-    return [NSValue valueWithCGRect: CGRectMake(x, y, width, height)];
-}
-
--(CGRect) getRectWithBottomLeftX : (NSValue *) val {
-    
-    CGRect rect = [val CGRectValue];
-    
-    rect.origin.x -= rect.size.width / 2;
-    rect.origin.y -= rect.size.height / 2;
-    
-    return rect;
 }
 
 -(void) addJoystick {
@@ -105,6 +92,37 @@
     
     [self addChild:enemyTank];
 }
+
+-(void) startGame {
+        
+    [self addUserTank];
+    [self addEnemyTank];
+    
+    [self displayWalls];
+    
+}
+
+#pragma mark CGRect helping methods
+
+-(NSValue *) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {
+    return [NSValue valueWithCGRect: CGRectMake(x + width/2, y + height/2, width, height)];
+}
+
+-(NSValue *) makeRectWithCenterX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {
+    return [NSValue valueWithCGRect: CGRectMake(x, y, width, height)];
+}
+
+-(CGRect) getRectWithBottomLeftX : (NSValue *) val {
+    
+    CGRect rect = [val CGRectValue];
+    
+    rect.origin.x -= rect.size.width / 2;
+    rect.origin.y -= rect.size.height / 2;
+    
+    return rect;
+}
+
+#pragma mark Game logic - boundaries
 
 -(BOOL) isXinBounds : (float) x withY : (float) y  withWidth : (float) width withHeight : (float) height {
     for (int i=0; i<containers.count; i++) {
@@ -128,11 +146,44 @@
     return true;
 }
 
+#pragma mark Bullet firing
+
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     CGPoint point = [[touches anyObject] locationInNode:self];
     
     [self fireBulletWithType : 0 withPoint:point];
+}
+
+-(void) fireBulletWithType : (int) type withPoint : (CGPoint) point {
+    
+    if(type == 0) {
+        
+        int userBullets = 0;
+        int enemyBullets = 0;
+        
+        for(Bullet *b in bullets) {
+            if(b.ownerType == 0) userBullets ++;
+            else enemyBullets ++;
+        }
+        
+        if(userBullets >= userTank.maxCurrentBullets) return;
+        else if (enemyBullets >= enemyTank.maxCurrentBullets) return;
+        
+    }
+    
+    CGPoint startingPoint = type == 0 ? userTank.position : enemyTank.position;
+    
+    float angle = [self getAngleP1 : startingPoint P2 : point];
+    
+    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type];
+    
+    [self addChild:newBullet];
+    
+    [self fireBullet : newBullet];
+    
+    [bullets addObject:newBullet];
+    
 }
 
 -(void) fireBullet : (Bullet *) b {
@@ -216,36 +267,7 @@
     
 }
 
--(void) fireBulletWithType : (int) type withPoint : (CGPoint) point {
-    
-    if(type == 0) {
-        
-        int userBullets = 0;
-        int enemyBullets = 0;
-        
-        for(Bullet *b in bullets) {
-            if(b.ownerType == 0) userBullets ++;
-            else enemyBullets ++;
-        }
-        
-        if(userBullets >= userTank.maxCurrentBullets) return;
-        else if (enemyBullets >= enemyTank.maxCurrentBullets) return;
-        
-    }
-    
-    CGPoint startingPoint = type == 0 ? userTank.position : enemyTank.position;
-    
-    float angle = [self getAngleP1 : startingPoint P2 : point];
-    
-    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type];
-    
-    [self addChild:newBullet];
-    
-    [self fireBullet : newBullet];
-    
-    [bullets addObject:newBullet];
-    
-}
+#pragma mark Math functions
 
 -(float) getAngleP1 : (CGPoint) P1 P2 : (CGPoint) P2 {
     float xDiff = P2.x - P1.x;
@@ -255,6 +277,8 @@
     
     return a;
 }
+
+#pragma mark Update - joystick
 
 -(void) update:(NSTimeInterval)currentTime {
     
