@@ -18,4 +18,6 @@
 @property int numCurrentBullets;
 @property int maxCurrentBullets;
 
+@property (strong, nonatomic) NSMutableArray bullets;
+
 @end

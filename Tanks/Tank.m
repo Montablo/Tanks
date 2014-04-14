@@ -8,10 +8,7 @@
 
 #import "Tank.h"
 
-@implementation Tank {
-    int numCurrentBullets;
-    int maxCurrentBullets;
-}
+@implementation Tank
 
 -(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position {
     
@@ -34,6 +31,8 @@
     self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:self.size];
     self.physicsBody.dynamic = YES;
     self.physicsBody.collisionBitMask = 0;
+    
+    self.bullets = [NSMutableArray array];
     
 }
 
