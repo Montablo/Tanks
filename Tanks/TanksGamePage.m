@@ -313,7 +313,7 @@
         //}
     }
     
-    [self performSelector:@selector(processTankAction) withObject:nil afterDelay: .005];
+    [self performSelector:@selector(processTankAction) withObject:nil afterDelay: .015];
 }
 
 -(void) processTankMovement : (EnemyTank *) t {
@@ -323,14 +323,14 @@
         
         UserTank *userTank = tanks[0];
         
-        if([self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank]) { //stuff later
-            
+        CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:userTank.position];
+        
+        if([self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
+            [self moveTankAimlessly : t];
         } else { //No wall
             if([self tankCanSeeUser:t withUser:userTank]) {
                 
                 //t.isMoving = true;
-                
-                CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:userTank.position];
                 
                 [self moveTank : t toPoint: newPoint];
                 
@@ -341,8 +341,6 @@
 }
 
 -(void) moveTank : (EnemyTank *) t toPoint : (CGPoint) goalPoint {
-    t.direction = [self getAngleP1:t.position P2:goalPoint];
-    
     [self processTankMoving : @[t, [NSValue valueWithCGPoint:goalPoint]]];
 }
 
@@ -355,17 +353,45 @@
     
     CGPoint newPos = CGPointMake(t.position.x + cosf(t.direction), t.position.y + sinf(t.direction));
     
-    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) return;
+    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
+        [self moveTankAimlessly:t];
+        return;
+    }
     
-    if([self distanceBetweenPoints:newPos P2:goalPoint] <= 50) {
+    if([self distanceBetweenPoints:newPos P2:goalPoint] <= t.maximumDistance) {
         t.isMoving = NO;
+        //t.direction = -1 * [self getAngleP1:newPos P2:goalPoint];
+        [self moveTankAimlessly : t];
         return;
     }
     
     t.position = newPos;
     
-    //[self performSelector:@selector(processTankMoving:) withObject:args afterDelay: .02];
+}
+
+-(void) moveTankAimlessly : (EnemyTank *) t {
+    if(t.isObliterated) return;
     
+    int n =[self randomInt:0 withUpperBound:100];
+    if(n <= 20) {
+        t.direction += ((arc4random() / (double) pow(2, 32))*2*M_PI - 1) / 100;
+        if(n == 1) {
+            t.direction = M_PI - t.direction;
+        }
+    }
+    
+    float newX = t.position.x + cosf(t.direction);
+    float newY = t.position.y + sinf(t.direction);
+    
+    CGPoint newPos = CGPointMake(newX, newY);
+    
+    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
+        [self moveTankAimlessly:t];
+        //t.direction = -t.direction;
+        return;
+    }
+    
+    t.position = newPos;
 }
 
 -(void) processTankFiring : (Tank *) t {
@@ -397,11 +423,11 @@
 
 
 -(CGPoint) getPointAtMaxDistance : (EnemyTank *) t withGoal : (CGPoint) goalPoint {
-    t.direction = [self getAngleP1:t.position P2:goalPoint];
+    float direction = [self getAngleP1:t.position P2:goalPoint];
     
     float dist = [self distanceBetweenPoints:t.position P2:goalPoint];
     
-    return CGPointMake(t.position.x + (dist - t.maximumDistance)*cosf(t.direction), t.position.y + (dist - t.maximumDistance)*sinf(t.direction));
+    return CGPointMake(t.position.x + (dist - t.maximumDistance)*cosf(direction), t.position.y + (dist - t.maximumDistance)*sinf(direction));
 }
 
            

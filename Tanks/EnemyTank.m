@@ -30,7 +30,7 @@
         self.isMoving = NO;
         self.canMove = YES;
         self.rangeOfSight = 250;
-        self.maximumDistance = 100.0;
+        self.maximumDistance = 100;
         
         self.direction = M_PI;
         
