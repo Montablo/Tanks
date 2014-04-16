@@ -22,5 +22,8 @@
 
 @property float direction; //in radians
 
+@property float trackingCooldown;
+@property float initialTrackingCooldown;
+
 
 @end

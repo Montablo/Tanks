@@ -29,10 +29,13 @@
         
         self.isMoving = NO;
         self.canMove = YES;
-        self.rangeOfSight = 250;
-        self.maximumDistance = 100;
+        self.rangeOfSight = 500;
+        self.maximumDistance = 50;
         
         self.direction = M_PI;
+        
+        self.initialTrackingCooldown = 5.0;
+        self.trackingCooldown = 0;
         
         self.physicsBody.categoryBitMask = enemyCategory;
         self.physicsBody.dynamic = YES;

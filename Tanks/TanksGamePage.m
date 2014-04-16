@@ -325,16 +325,13 @@
         
         CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:userTank.position];
         
-        if([self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
+        if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
         } else { //No wall
-            if([self tankCanSeeUser:t withUser:userTank]) {
                 
                 //t.isMoving = true;
                 
                 [self moveTank : t toPoint: newPoint];
-                
-            }
         }
         
     }
@@ -348,18 +345,20 @@
     
     EnemyTank *t = args[0];
     CGPoint goalPoint = [args[1] CGPointValue];
+    float direction = [self getAngleP1:t.position P2:goalPoint];
     
     if(t.isObliterated) return;
     
-    CGPoint newPos = CGPointMake(t.position.x + cosf(t.direction), t.position.y + sinf(t.direction));
+    CGPoint newPos = CGPointMake(t.position.x + cosf(direction), t.position.y + sinf(direction));
     
     if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
+        t.trackingCooldown = t.initialTrackingCooldown;
         [self moveTankAimlessly:t];
         return;
     }
     
     if([self distanceBetweenPoints:newPos P2:goalPoint] <= t.maximumDistance) {
-        t.isMoving = NO;
+        t.trackingCooldown = t.initialTrackingCooldown;
         //t.direction = -1 * [self getAngleP1:newPos P2:goalPoint];
         [self moveTankAimlessly : t];
         return;
@@ -380,14 +379,50 @@
         }
     }
     
+    if(t.trackingCooldown > 0) t.trackingCooldown -= .01;
+    else t.trackingCooldown = 0;
+    
     float newX = t.position.x + cosf(t.direction);
     float newY = t.position.y + sinf(t.direction);
     
     CGPoint newPos = CGPointMake(newX, newY);
     
     if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
-        [self moveTankAimlessly:t];
-        //t.direction = -t.direction;
+        
+        float width = t.frame.size.width;
+        float height = t.frame.size.height;
+        
+        for (int i=0; i<containers.count; i++) {
+            
+            CGRect container = [self getRectWithBottomLeftX:containers[i]];
+            if(newX - width / 2 < container.origin.x || newX + width / 2 > container.origin.x + container.size.width) { //adjust x
+                t.direction = M_PI - t.direction;
+            } else if(newY - height / 2 < container.origin.y || newY + height / 2 > container.origin.y + container.size.height) { //adjust y
+                t.direction *= -1;
+            } else {
+                continue;
+            }
+            
+        }
+        
+        for (int i=0; i<walls.count; i++) {
+            
+            CGRect wall = [self getRectWithBottomLeftX:walls[i]];
+            if(newX + width / 2 > wall.origin.x && newX - width / 2 < wall.origin.x + wall.size.width && newY + height / 2 > wall.origin.y && newY - height / 2 < wall.origin.y + wall.size.height) {
+                
+                float xDiff = MAX(wall.origin.x - newX, newX - (wall.origin.x + wall.size.width));
+                float yDiff = MAX(wall.origin.y - newY, newY - (wall.origin.y + wall.size.height));
+                
+                if(xDiff > yDiff)t.direction = M_PI - t.direction;
+                else t.direction *= -1;
+                
+            } else {
+                continue;
+            }
+            
+        }
+
+        
         return;
     }
     
