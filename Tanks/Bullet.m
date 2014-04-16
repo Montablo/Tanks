@@ -41,8 +41,21 @@
     self.physicsBody.usesPreciseCollisionDetection = YES;
     self.name = @"bullet";
     
-    speed = .06;
+    speed = .008;
     
 }
+
+-(void) advanceBullet {
+    
+    if(self.isObliterated) return;
+    
+    CGPoint newPos = CGPointMake(self.position.x + cosf(self.zRotation), self.position.y + sinf(self.zRotation));
+    
+    self.position = newPos;
+    
+    [self performSelector:@selector(advanceBullet) withObject:nil afterDelay: speed];
+    
+}
+
 
 @end

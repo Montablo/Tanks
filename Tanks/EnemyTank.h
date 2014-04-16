@@ -14,4 +14,13 @@
 
 -(instancetype) initWithImageNamed:(NSString *)name withType : (int) type withSize : (CGSize) size withPosition : (CGPoint) position;
 
+@property BOOL isMoving;
+@property BOOL canMove;
+
+@property float rangeOfSight;
+@property float maximumDistance;
+
+@property float direction; //in radians
+
+
 @end

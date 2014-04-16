@@ -24,7 +24,6 @@
 
 -(void) setUp {
     
-    self.numCurrentBullets = 0;
     self.maxCurrentBullets = 5;
     
     //Adding SpriteKit physicsBody for collision detection

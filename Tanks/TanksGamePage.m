@@ -6,17 +6,12 @@
 //  Copyright (c) 2014 Montablo. All rights reserved.
 //
 
-#import "TanksGamePage.h"
+#include "TanksGamePage.h"
 
 @implementation TanksGamePage {
     
-    UserTank *userTank;
-    EnemyTank *enemyTank;
-    
     NSMutableArray *walls;
     NSMutableArray *containers;
-    
-    NSMutableArray *bullets;
     
     NSMutableArray *tanks;
     
@@ -44,7 +39,6 @@
     self.physicsWorld.gravity = CGVectorMake(0,0);
     self.physicsWorld.contactDelegate = self;
     
-    bullets = [NSMutableArray array];
     tanks = [NSMutableArray array];
         
     [self addJoystick];
@@ -79,26 +73,21 @@
     [self addChild:self.joystick];
 }
 
--(void) addUserTank {
-    //initalizing spaceship node
-    userTank = [[UserTank alloc] initWithImageNamed:@"userTank" withSize:CGSizeMake(50, 50) withPosition:CGPointMake(50, CGRectGetMidY(self.frame))];
+-(void) addTanks {
+    tanks = [NSMutableArray arrayWithObjects:[[UserTank alloc] initWithImageNamed:@"userTank" withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(50, CGRectGetMidY(self.frame))], [[EnemyTank alloc] initWithImageNamed:@"enemyTank" withType: 0 withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(CGRectGetMaxX(self.frame) - 50, CGRectGetMidY(self.frame))], nil];
     
-    [self addChild:userTank];
-}
-
--(void) addEnemyTank {
-    //initalizing spaceship node
-    enemyTank = [[EnemyTank alloc] initWithImageNamed:@"enemyTank" withType: 0 withSize:CGSizeMake(50, 50) withPosition:CGPointMake(CGRectGetMaxX(self.frame) - 50, CGRectGetMidY(self.frame))];
-    
-    [self addChild:enemyTank];
+    for(Tank *t in tanks) {
+        [self addChild:t];
+    }
 }
 
 -(void) startGame {
         
-    [self addUserTank];
-    [self addEnemyTank];
+    [self addTanks];
     
     [self displayWalls];
+    
+    [self initAITankLogic];
     
 }
 
@@ -118,6 +107,13 @@
     
     rect.origin.x -= rect.size.width / 2;
     rect.origin.y -= rect.size.height / 2;
+    
+    return rect;
+}
+
+-(CGRect) getRectWithCenterX : (NSValue *) val {
+    
+    CGRect rect = [val CGRectValue];
     
     return rect;
 }
@@ -157,22 +153,11 @@
 
 -(void) fireBulletWithType : (int) type withPoint : (CGPoint) point {
     
-    if(type == 0) {
-        
-        int userBullets = 0;
-        int enemyBullets = 0;
-        
-        for(Bullet *b in bullets) {
-            if(b.ownerType == 0) userBullets ++;
-            else enemyBullets ++;
-        }
-        
-        if(userBullets >= userTank.maxCurrentBullets) return;
-        else if (enemyBullets >= enemyTank.maxCurrentBullets) return;
-        
-    }
+    Tank *t = tanks[type];
     
-    CGPoint startingPoint = type == 0 ? userTank.position : enemyTank.position;
+    if(t.bullets.count == t.maxCurrentBullets) return;
+    
+    CGPoint startingPoint = t.position;
     
     float angle = [self getAngleP1 : startingPoint P2 : point];
     
@@ -180,121 +165,96 @@
     
     [self addChild:newBullet];
     
-    [self fireBullet : newBullet];
+    [t.bullets addObject:newBullet];
     
-    [bullets addObject:newBullet];
-    
-}
-
--(void) fireBullet : (Bullet *) b {
-    
-    [self advanceBullet : b];
+    [newBullet advanceBullet];
     
 }
 
--(void) advanceBullet : (Bullet *) b  {
-    CGPoint newPos = CGPointMake(b.position.x + cosf(b.zRotation), b.position.y + sinf(b.zRotation));
-    
-    b.position = newPos;
-    
-    float x = newPos.x;
-    float y = newPos.y;
-    
-    float width = b.frame.size.width;
-    float height = b.frame.size.height;
-    
-    for (int i=0; i<containers.count; i++) {
-        
-        CGRect container = [self getRectWithBottomLeftX:containers[i]];
-        if(x - width / 2 < container.origin.x || x + width / 2 > container.origin.x + container.size.width) { //adjust x
-            b.zRotation = M_PI - b.zRotation;
-        } else if(y - height / 2 < container.origin.y || y + height / 2 > container.origin.y + container.size.height) { //adjust y
-            b.zRotation *= -1;
-        } else {
-            continue;
-        }
-        
-        if(b.numRicochets == b.maxRicochets) {
-            [b removeFromParent];
-            [bullets removeObjectIdenticalTo:b];
+-(void) checkBullets {
+    for(Tank *t in tanks) {
+        for(Bullet *b in t.bullets) {
             
-            if(b.ownerType == 0) {
-                userTank.numCurrentBullets --;
-            } else {
-                enemyTank.numCurrentBullets --;
-            }
             
-            return;
-        }
-        
-        b.numRicochets++;
-        
-    }
-    
-    for (int i=0; i<walls.count; i++) {
-        
-        CGRect wall = [self getRectWithBottomLeftX:walls[i]];
-        if(x + width / 2 > wall.origin.x && x - width / 2 < wall.origin.x + wall.size.width && y + height / 2 > wall.origin.y && y - height / 2 < wall.origin.y + wall.size.height) {
+            if(b.isObliterated) return;
             
-            float xDiff = MAX(wall.origin.x - x, x - (wall.origin.x + wall.size.width));
-            float yDiff = MAX(wall.origin.y - y, y - (wall.origin.y + wall.size.height));
+            float x = b.position.x;
+            float y = b.position.y;
             
-            if(xDiff > yDiff)b.zRotation = M_PI - b.zRotation;
-            else b.zRotation *= -1;
+            float width = b.frame.size.width;
+            float height = b.frame.size.height;
             
-        } else {
-            continue;
-        }
-        
-        if(b.numRicochets == b.maxRicochets) {
-            [b removeFromParent];
-            [bullets removeObjectIdenticalTo:b];
-            
-            if(b.ownerType == 0) {
-                userTank.numCurrentBullets --;
-            } else {
-                enemyTank.numCurrentBullets --;
-            }
-            
-            return;
-        }
-        
-        b.numRicochets++;
-        
-    }
-    
-<<<<<<< HEAD
-    for(Bullet *other in bullets) {
-        if(![b isEqual:other]) {
-            if([b intersectsNode:other]) {
+            for (int i=0; i<containers.count; i++) {
                 
-                [b removeFromParent];
-                [other removeFromParent];
-                
-                [bullets removeObjectIdenticalTo:b];
-                [bullets removeObjectIdenticalTo:other];
-                
-                if(b.ownerType == 0) {
-                    userTank.numCurrentBullets --;
+                CGRect container = [self getRectWithBottomLeftX:containers[i]];
+                if(x - width / 2 < container.origin.x || x + width / 2 > container.origin.x + container.size.width) { //adjust x
+                    b.zRotation = M_PI - b.zRotation;
+                } else if(y - height / 2 < container.origin.y || y + height / 2 > container.origin.y + container.size.height) { //adjust y
+                    b.zRotation *= -1;
                 } else {
-                    enemyTank.numCurrentBullets --;
+                    continue;
                 }
                 
-                if(other.ownerType == 0) {
-                    userTank.numCurrentBullets --;
-                } else {
-                    enemyTank.numCurrentBullets --;
+                if(b.numRicochets == b.maxRicochets) {
+                    [b removeFromParent];
+                    [t.bullets removeObjectIdenticalTo:b];
+                    
+                    return;
                 }
                 
-                break;
+                b.numRicochets++;
+                
             }
+            
+            for (int i=0; i<walls.count; i++) {
+                
+                CGRect wall = [self getRectWithBottomLeftX:walls[i]];
+                if(x + width / 2 > wall.origin.x && x - width / 2 < wall.origin.x + wall.size.width && y + height / 2 > wall.origin.y && y - height / 2 < wall.origin.y + wall.size.height) {
+                    
+                    float xDiff = MAX(wall.origin.x - x, x - (wall.origin.x + wall.size.width));
+                    float yDiff = MAX(wall.origin.y - y, y - (wall.origin.y + wall.size.height));
+                    
+                    if(xDiff > yDiff)b.zRotation = M_PI - b.zRotation;
+                    else b.zRotation *= -1;
+                    
+                } else {
+                    continue;
+                }
+                
+                if(b.numRicochets == b.maxRicochets) {
+                    [b removeFromParent];
+                    [t.bullets removeObjectIdenticalTo:b];
+                    
+                    return;
+                }
+                
+                b.numRicochets++;
+                
+            }
+            
+            for(Tank *t in tanks) {
+                
+                for(Bullet *other in t.bullets) {
+                    if(![b isEqual:other]) {
+                        if([b intersectsNode:other]) {
+                            
+                            [b removeFromParent];
+                            [other removeFromParent];
+                            
+                            [t.bullets removeObjectIdenticalTo:b];
+                            [t.bullets removeObjectIdenticalTo:other];
+                            
+                            other.isObliterated = YES;
+                            
+                            return;
+                        }
+                    }
+                }
+                
+            }
+
         }
     }
-    
-    [self performSelector:@selector(advanceBullet:) withObject:b afterDelay:.01];
-=======
-    [self performSelector:@selector(advanceBullet:) withObject:b afterDelay:0.005];
->>>>>>> FETCH_HEAD
     
 }
 
@@ -309,9 +269,17 @@
     return a;
 }
 
+-(int) randomInt : (int) lowerBound withUpperBound : (int) upperBound {
+    int rand = arc4random_uniform(upperBound);
+    return rand + lowerBound;
+}
+
 #pragma mark Update - joystick
 
 -(void) update:(NSTimeInterval)currentTime {
+    
+    Tank *userTank = tanks[0];
+    Tank *enemyTank = tanks[1];
     
     float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x;
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y;
@@ -323,43 +291,166 @@
         [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
     }
     
-    //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
+    [self checkBullets];
     
-<<<<<<< HEAD
+    //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
+    //NSLog(@"%i", [self isWallBetweenPoints:userTank.position P2:enemyTank.position]);
 }
 
--(void) checkBullets {
+#pragma mark Tank AI
+
+-(void) initAITankLogic {
+    [self processTankAction];
+}
+
+-(void) processTankAction {
+    for(int i=1; i<tanks.count; i++) {
+        EnemyTank *t = tanks[i];
+        //int randNum = [self randomInt:0 withUpperBound:3];
+        //if(randNum == 0) {
+            [self processTankMovement : t];
+            [self processTankFiring : t];
+        //}
+    }
     
-    for(Bullet *b in bullets.copy) {
+    [self performSelector:@selector(processTankAction) withObject:nil afterDelay: .005];
+}
+
+-(void) processTankMovement : (EnemyTank *) t {
+    
+    if(!t.isMoving && t.canMove) {
+        NSLog(@"moving!");
         
-        for(Bullet *other in bullets.copy) {
-            if(![b isEqual:other]) {
-                if([b intersectsNode:other]) {
-                    [b removeFromParent];
-                    [other removeFromParent];
-                    
-                    [bullets removeObjectIdenticalTo:b];
-                    [bullets removeObjectIdenticalTo:other];
-                    
-                    if(b.ownerType == 0) {
-                        userTank.numCurrentBullets --;
-                    } else {
-                        enemyTank.numCurrentBullets --;
-                    }
-                    
-                    if(other.ownerType == 0) {
-                        userTank.numCurrentBullets --;
-                    } else {
-                        enemyTank.numCurrentBullets --;
-                    }
-                    
-                    return;
-                }
+        UserTank *userTank = tanks[0];
+        
+        if([self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank]) { //stuff later
+            
+        } else { //No wall
+            if([self tankCanSeeUser:t withUser:userTank]) {
+                
+                //t.isMoving = true;
+                
+                CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:userTank.position];
+                
+                [self moveTank : t toPoint: newPoint];
+                
             }
         }
+        
     }
-=======
->>>>>>> FETCH_HEAD
+}
+
+-(void) moveTank : (EnemyTank *) t toPoint : (CGPoint) goalPoint {
+    t.direction = [self getAngleP1:t.position P2:goalPoint];
+    
+    [self processTankMoving : @[t, [NSValue valueWithCGPoint:goalPoint]]];
+}
+
+-(void) processTankMoving : (NSArray *) args {
+    
+    EnemyTank *t = args[0];
+    CGPoint goalPoint = [args[1] CGPointValue];
+    
+    if(t.isObliterated) return;
+    
+    CGPoint newPos = CGPointMake(t.position.x + cosf(t.direction), t.position.y + sinf(t.direction));
+    
+    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) return;
+    
+    if([self distanceBetweenPoints:newPos P2:goalPoint] <= 50) {
+        t.isMoving = NO;
+        return;
+    }
+    
+    t.position = newPos;
+    
+    //[self performSelector:@selector(processTankMoving:) withObject:args afterDelay: .02];
+    
+}
+
+-(void) processTankFiring : (Tank *) t {
+    
+}
+
+#pragma mark Tank AI helper methods
+
+-(BOOL) tankCanSeeUser : (EnemyTank *) t withUser : (UserTank *) userTank {
+    return [self distanceBetweenPoints:t.position P2:userTank.position] <= t.rangeOfSight;
+}
+       
+-(float) distanceBetweenPoints: (CGPoint) P1 P2 : (CGPoint) P2 {
+    return sqrtf(powf(P2.y - P1.y, 2) + powf(P2.x - P1.x, 2));
+}
+
+-(BOOL) isWallBetweenPoints : (CGPoint) P1 P2 : (CGPoint) P2 {
+   for(int i=0; i<walls.count; i++) {
+       
+       CGRect wall = [self getRectWithBottomLeftX:walls[i]];
+       
+       if([self RectContainsLine:wall withStart:P1 andEnd:P2]) {
+           return true;
+       }
+   }
+   return false;
+}
+
+
+
+-(CGPoint) getPointAtMaxDistance : (EnemyTank *) t withGoal : (CGPoint) goalPoint {
+    t.direction = [self getAngleP1:t.position P2:goalPoint];
+    
+    float dist = [self distanceBetweenPoints:t.position P2:goalPoint];
+    
+    return CGPointMake(t.position.x + (dist - t.maximumDistance)*cosf(t.direction), t.position.y + (dist - t.maximumDistance)*sinf(t.direction));
+}
+
+           
+- (BOOL) RectContainsLine : (CGRect) r withStart : (CGPoint) lineStart andEnd : (CGPoint) lineEnd
+{
+    BOOL (^LineIntersectsLine)(CGPoint, CGPoint, CGPoint, CGPoint) = ^BOOL(CGPoint line1Start, CGPoint line1End, CGPoint line2Start, CGPoint line2End)
+    {
+        CGFloat q =
+        //Distance between the lines' starting rows times line2's horizontal length
+        (line1Start.y - line2Start.y) * (line2End.x - line2Start.x)
+        //Distance between the lines' starting columns times line2's vertical length
+        - (line1Start.x - line2Start.x) * (line2End.y - line2Start.y);
+        CGFloat d =
+        //Line 1's horizontal length times line 2's vertical length
+        (line1End.x - line1Start.x) * (line2End.y - line2Start.y)
+        //Line 1's vertical length times line 2's horizontal length
+        - (line1End.y - line1Start.y) * (line2End.x - line2Start.x);
+        
+        if( d == 0 )
+            return NO;
+        
+        CGFloat r = q / d;
+        
+        q =
+        //Distance between the lines' starting rows times line 1's horizontal length
+        (line1Start.y - line2Start.y) * (line1End.x - line1Start.x)
+        //Distance between the lines' starting columns times line 1's vertical length
+        - (line1Start.x - line2Start.x) * (line1End.y - line1Start.y);
+        
+        CGFloat s = q / d;
+        if( r < 0 || r > 1 || s < 0 || s > 1 )
+            return NO;
+        
+        return YES;
+    };
+    
+    /*Test whether the line intersects any of:
+     *- the bottom edge of the rectangle
+     *- the right edge of the rectangle
+     *- the top edge of the rectangle
+     *- the left edge of the rectangle
+     *- the interior of the rectangle (both points inside)
+     */
+    
+    return (LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x, r.origin.y), CGPointMake(r.origin.x + r.size.width, r.origin.y)) ||
+            LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x + r.size.width, r.origin.y), CGPointMake(r.origin.x + r.size.width, r.origin.y + r.size.height)) ||
+            LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x + r.size.width, r.origin.y + r.size.height), CGPointMake(r.origin.x, r.origin.y + r.size.height)) ||
+            LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x, r.origin.y + r.size.height), CGPointMake(r.origin.x, r.origin.y)) ||
+            (CGRectContainsPoint(r, lineStart) && CGRectContainsPoint(r, lineEnd)));
 }
 
 @end

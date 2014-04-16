@@ -27,6 +27,13 @@
     
     if(self) {
         
+        self.isMoving = NO;
+        self.canMove = YES;
+        self.rangeOfSight = 250;
+        self.maximumDistance = 100.0;
+        
+        self.direction = M_PI;
+        
         self.physicsBody.categoryBitMask = enemyCategory;
         self.physicsBody.dynamic = YES;
         self.physicsBody.contactTestBitMask = userCategory;

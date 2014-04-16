@@ -15,9 +15,10 @@
 
 -(void) setUp;
 
-@property int numCurrentBullets;
 @property int maxCurrentBullets;
 
-@property (strong, nonatomic) NSMutableArray bullets;
+@property (strong, nonatomic) NSMutableArray* bullets;
+
+@property BOOL isObliterated;
 
 @end

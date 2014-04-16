@@ -15,11 +15,13 @@
 
 -(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) bdirection withOwnerType : (int) ownerType ;
 
--(void) fire;
-
 @property int numRicochets;
 @property int maxRicochets;
 
 @property int ownerType;
+
+@property BOOL isObliterated;
+
+-(void) advanceBullet;
 
 @end
