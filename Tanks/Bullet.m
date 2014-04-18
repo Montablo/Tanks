@@ -29,13 +29,6 @@
     
     self.size = CGSizeMake(BULLET_WIDTH, BULLET_HEIGHT);
     
-    //Adding SpriteKit physicsBody for collision detection
-    self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:self.size];
-    self.physicsBody.categoryBitMask = bulletCategory;
-    self.physicsBody.dynamic = YES;
-    self.physicsBody.contactTestBitMask = tankCategory;
-    self.physicsBody.collisionBitMask = 0;
-    self.physicsBody.usesPreciseCollisionDetection = YES;
     self.name = @"bullet";
     
     self.speed = .008;

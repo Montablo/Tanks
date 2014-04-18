@@ -93,10 +93,6 @@
         
         self.trackingCooldown = 0;
         
-        self.physicsBody.categoryBitMask = enemyCategory;
-        self.physicsBody.dynamic = YES;
-        self.physicsBody.contactTestBitMask = userCategory;
-        self.physicsBody.collisionBitMask = 0;
         self.name = @"enemyTank";
 
     }

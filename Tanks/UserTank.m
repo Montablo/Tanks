@@ -26,10 +26,6 @@
     if(self) {
         
         self.color = [SKColor blueColor];
-        self.physicsBody.categoryBitMask = userCategory;
-        self.physicsBody.dynamic = YES;
-        self.physicsBody.contactTestBitMask = enemyCategory;
-        self.physicsBody.collisionBitMask = 0;
         self.name = @"userTank";
         
     }

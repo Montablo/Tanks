@@ -32,11 +32,6 @@
     
     self.maxCurrentBullets = 5;
     
-    //Adding SpriteKit physicsBody for collision detection
-    self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:self.size];
-    self.physicsBody.dynamic = YES;
-    self.physicsBody.collisionBitMask = 0;
-    
     self.bullets = [NSMutableArray array];
     
 }

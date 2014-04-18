@@ -56,9 +56,6 @@
     
     currentLevel = [[self.userData objectForKey:@"level"] intValue];
     
-    self.physicsWorld.gravity = CGVectorMake(0,0);
-    self.physicsWorld.contactDelegate = self;
-    
     walls = levels[currentLevel][0];
     containers = levels[currentLevel][1];
     tanks = levels[currentLevel][2];

@@ -22,8 +22,3 @@
 #define HIGH_INTELLIGENCE 3
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-
-static const uint32_t userCategory =  0x1 << 0;
-static const uint32_t enemyCategory =  0x1 << 1;
-static const uint32_t tankCategory =  0x1 << 2;
-static const uint32_t bulletCategory =  0x1 << 3;
