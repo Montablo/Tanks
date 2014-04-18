@@ -10,9 +10,9 @@
 
 @implementation UserTank
 
--(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position {
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position {
     
-    self = [super initWithImageNamed:name withSize: size withPosition: position];
+    self = [super initWithSize: size withPosition: position];
     
     if (self)
         [self setUpSelf];
@@ -25,6 +25,7 @@
     
     if(self) {
         
+        self.color = [SKColor blueColor];
         self.physicsBody.categoryBitMask = userCategory;
         self.physicsBody.dynamic = YES;
         self.physicsBody.contactTestBitMask = enemyCategory;

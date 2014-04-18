@@ -10,6 +10,6 @@
 
 @interface UserTank : Tank
 
--(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position;
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position;
 
 @end

@@ -12,10 +12,10 @@
 #import "UserTank.h"
 #import "EnemyTank.h"
 #import "Bullet.h"
+#import "TanksNavigation.h"
 
 @interface TanksGamePage : SKScene
 
 @property (strong, nonatomic) JCImageJoystick *joystick;
-@property int currentLevel;
 
 @end

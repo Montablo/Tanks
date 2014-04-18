@@ -12,7 +12,7 @@
 
 @property int type;
 
--(instancetype) initWithImageNamed:(NSString *)name withType : (int) type withSize : (CGSize) size withPosition : (CGPoint) position;
+-(instancetype) initWithType : (int) type withSize : (CGSize) size withPosition : (CGPoint) position;
 
 @property BOOL isMoving;
 @property BOOL canMove;
@@ -29,7 +29,10 @@
 
 @property int bulletSensingDistance;
 
-@property int bulletSpeed;
+@property float bulletSpeed;
 @property int bulletFrequency;
+@property int numRicochets;
+
+@property int bulletShootingDownFrequency;
 
 @end

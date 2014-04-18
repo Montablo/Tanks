@@ -30,7 +30,7 @@
     if (self = [super initWithSize:size]) {
         
         self.backgroundColor = [SKColor whiteColor];
-        
+        NSLog(@"%f, %f", self.frame.size.width, self.frame.size.height);
     }
     return self;
 }
@@ -50,7 +50,7 @@
     
     tanks = [NSMutableArray array];
     
-    [self readLevels];
+    levels = [self.userData objectForKey:@"levels"];
     
     gameIsPaused = NO;
     
@@ -84,107 +84,6 @@
     
 }
 
-//will eventualy read from file
--(void) readLevels {
-    walls = [NSMutableArray arrayWithArray:@[[self makeRectWithCenterX:CGRectGetMidX(self.frame) withY:CGRectGetMidY(self.frame) withWidth:50 withHeight:150]]];
-    
-    levels = [NSMutableArray array];
-    
-    NSURL *url = [NSURL URLWithString:@"http://montablo.eu5.org/Tanks/levels.txt"];
-    NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
-    NSArray* allLinedStrings = [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
-    
-    int levelNumber = -1;
-    int type = -1;
-    
-    for (int i=0; i<allLinedStrings.count; i++) {
-        NSString *line = allLinedStrings[i];
-        
-        if(levels.count == [line intValue] - 1) {
-            levelNumber = [line intValue] - 1;
-            [levels addObject:@[[NSMutableArray array], [NSMutableArray array], [NSMutableArray array]]];
-            type = 0;
-            continue;
-        }
-        
-        if(levelNumber != -1) {
-            NSMutableArray *level = levels[levelNumber];
-            
-            if([line isEqual:@""]) {
-                type++;
-                if(type == 3) type = -1;
-                continue;
-            }
-            
-            if(type == 2) {
-                
-                NSArray *strings = [line componentsSeparatedByString:@" "];
-                
-                int ttype = 0;
-                float x = 0;
-                float y = 0;
-                
-                for (int i=0; i<strings.count; i++) {
-                    if(i == 0) {
-                        ttype = [strings[i] intValue];
-                    }
-                    else if(i == 1) {
-                        if([strings[i] isEqualToString:@"center"]) x = CGRectGetMidX(self.frame);
-                        else if([strings[i] isEqualToString:@"max"]) x = CGRectGetMaxX(self.frame);
-                        else x = [strings[i] floatValue];
-                    }
-                    else if(i == 2) {
-                        if([strings[i] isEqualToString:@"center"]) y = CGRectGetMidY(self.frame);
-                        else if([strings[i] isEqualToString:@"max"]) y = CGRectGetMaxY(self.frame);
-                        else y = [strings[i] floatValue];
-                    }
-                }
-                if(ttype == -1) [level[2] addObject : [[UserTank alloc] initWithImageNamed:@"userTank" withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(x, y)]];
-                else [level[2] addObject:[[EnemyTank alloc] initWithImageNamed:@"enemyTank" withType:type withSize: CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(x, y)]];
-            }
-            
-            NSArray *strings = [line componentsSeparatedByString:@" "];
-            
-            NSString *wtype;
-            float x = 0;
-            float y = 0;
-            float width = 0;
-            float height = 0;
-            
-            for (int i=0; i<strings.count; i++) {
-                if(i == 0) wtype = strings[i];
-                else if(i == 1) {
-                    if([strings[i] isEqualToString:@"center"]) x = CGRectGetMidX(self.frame);
-                    else if([strings[i] isEqualToString:@"max"]) x = CGRectGetMaxX(self.frame);
-                    else x = [strings[i] floatValue];
-                }
-                else if(i == 2) {
-                    if([strings[i] isEqualToString:@"center"]) y = CGRectGetMidY(self.frame);
-                    else if([strings[i] isEqualToString:@"max"]) y = CGRectGetMaxY(self.frame);
-                    else y = [strings[i] floatValue];
-                }
-                else if(i == 3) {
-                    if([strings[i] isEqualToString:@"mid"]) width = CGRectGetMidX(self.frame);
-                    else if([strings[i] isEqualToString:@"max"]) width = CGRectGetMaxX(self.frame);
-                    else width = [strings[i] floatValue];
-                }
-                else if(i == 4) {
-                    if([strings[i] isEqualToString:@"mid"]) height = CGRectGetMidY(self.frame);
-                    else if([strings[i] isEqualToString:@"max"]) height = CGRectGetMaxY(self.frame);
-                    else height = [strings[i] floatValue];
-                }
-            }
-            
-            NSValue *rect = [wtype isEqualToString:@"c"] ? [self makeRectWithCenterX:x withY:y withWidth:width withHeight:height] : [self makeRectWithBottomLeftX:x withY:y withWidth:width withHeight:height];
-            
-            if(type == 0) {
-                [level[0] addObject:rect];
-            } else if(type == 1) {
-                [level[1] addObject:rect];
-            }
-        }
-    }
-}
 
 -(void) readContainers {
     containers = [NSMutableArray arrayWithArray:@[[self makeRectWithBottomLeftX:0 withY:0 withWidth:self.frame.size.width withHeight:self.frame.size.height]]];
@@ -193,15 +92,9 @@
 -(void) addJoystick {
     self.joystick = [[JCImageJoystick alloc]initWithJoystickImage:(@"redStick.png") baseImage:@"stickbase.png"];
     [self.joystick setPosition:CGPointMake(self.joystick.size.width / 2 + 10, self.joystick.size.height / 2 + 10)];
+    self.joystick.zPosition = -1;
+    self.joystick.alpha = .5;
     [self addChild:self.joystick];
-}
-
--(void) addTanks {
-    tanks = [NSMutableArray arrayWithObjects:[[UserTank alloc] initWithImageNamed:@"userTank" withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(50, CGRectGetMidY(self.frame))], [[EnemyTank alloc] initWithImageNamed:@"enemyTank" withType: 0 withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(CGRectGetMaxX(self.frame) - 100, CGRectGetMidY(self.frame))], [[EnemyTank alloc] initWithImageNamed:@"enemyTank" withType: 0 withSize:CGSizeMake(TANK_WIDTH, TANK_HEIGHT) withPosition:CGPointMake(CGRectGetMaxX(self.frame) - 25, CGRectGetMidY(self.frame))], nil];
-    
-    for(Tank *t in tanks) {
-        [self addChild:t];
-    }
 }
 
 -(void) startGame {
@@ -269,12 +162,6 @@
     SKNode *n = [self nodeAtPoint:orgin];
     
     if([n.name isEqualToString:@"endText"]) {
-        // Configure the view.
-        SKView * skView = (SKView *)self.view;
-        skView.showsFPS = YES;
-        skView.showsNodeCount = YES;
-        // Create and configure the scene.
-        SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
         
         int levelNum = 0;
         
@@ -285,15 +172,11 @@
                 levelNum = currentLevel + 1;
             }
         } else {
-            levelNum = 0;
+            [TanksNavigation loadTanksHomePage:self];
+            return;
         }
         
-        scene.userData = [NSMutableDictionary dictionary];
-        [scene.userData setObject:[NSNumber numberWithInt:levelNum] forKey:@"level"];
-        scene.scaleMode = SKSceneScaleModeAspectFill;
-        
-        // Present the scene.
-        [skView presentScene:scene];
+        [TanksNavigation loadTanksGamePage:self :levelNum :levels];
     }
 }
 
@@ -342,13 +225,16 @@
     
     float angle = [self getAngleP1 : t.position P2 : point];
     
+    t.turret.zRotation = angle - M_PI / 2;
+    
     CGPoint startingPoint = CGPointMake(t.position.x + (t.frame.size.width)*cosf(angle), t.position.y + (t.frame.size.height)*sinf(angle));
     
     Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type];
     
     if(type != 0) {
         EnemyTank *et = tanks[type];
-        //newBullet.speed = et.bulletSpeed;
+        newBullet.speed = et.bulletSpeed;
+        newBullet.maxRicochets = et.numRicochets;
     }
     
     [self addChild:newBullet];
@@ -516,7 +402,7 @@
     if(gameIsPaused) return;
     
     Tank *userTank = tanks[0];
-    Tank *enemyTank = tanks[1];
+    //Tank *enemyTank = tanks[1];
     
     float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x;
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y;
@@ -566,7 +452,7 @@
         
     }
     
-    [self performSelector:@selector(processTankActionFiring) withObject:nil afterDelay: 1];
+    [self performSelector:@selector(processTankActionFiring) withObject:nil afterDelay: .1];
 }
 
 #pragma mark Tank AI - Moving
@@ -722,13 +608,22 @@
 
 -(void) processTankFiring : (EnemyTank *) t {
     UserTank *userTank = tanks[0];
-    if(![self isWallBetweenPoints:t.position P2:userTank.position] && [self tankCanSeeUser:t withUser:userTank]) { // straight fire
-        [self fireBulletWithType:[tanks indexOfObject:t] withPoint:userTank.position];
+    int rand = [self randomInt:0 withUpperBound:t.bulletShootingDownFrequency];
+    Bullet *b = [self isBulletNearTank:t];
+    if(rand == 0 && b) {
+        [self shootDownBullet : t atBullet: b];
+    }
+    else if(![self isWallBetweenPoints:t.position P2:userTank.position] && [self tankCanSeeUser:t withUser:userTank]) { // straight fire
+        [self fireBulletWithType:(int) [tanks indexOfObject:t] withPoint:userTank.position];
     } else { //bounce fire
         if(t.type == 0) {
             
         }
     }
+}
+
+-(void) shootDownBullet : (EnemyTank *) t atBullet : (Bullet *) b {
+    [self fireBulletWithType: (int) [tanks indexOfObject:t] withPoint:b.position];
 }
 
 #pragma mark Tank AI helper methods

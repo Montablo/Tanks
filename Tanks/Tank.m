@@ -8,13 +8,10 @@
 
 #import "Tank.h"
 
-@implementation Tank {
-    SKSpriteNode *turret;
-}
+@implementation Tank
 
--(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position {
-    
-    self = [super initWithImageNamed: name];
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position {
+    self = [super init];
     self.size = size;
     self.position = position;
     
@@ -26,10 +23,12 @@
 
 -(void) setUp {
     
-    
-    turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:CGSizeMake(5, sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2)))];
-    turret.position = CGPointMake(turret.position.x, turret.position.y + turret.size.height / 2);
-    [self addChild:turret];
+    self.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5 withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))].size];
+    self.turret.anchorPoint = CGPointMake(0, 0);
+    self.turret.zRotation = M_PI / 2;
+    //self.turret.position = CGPointMake(self.turret.position.x - 2.5, self.turret.position.y);
+    //turret.size = [self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5 withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))].size;
+    [self addChild:self.turret];
     
     self.maxCurrentBullets = 5;
     
@@ -40,6 +39,10 @@
     
     self.bullets = [NSMutableArray array];
     
+}
+
+-(CGRect) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {
+    return CGRectMake(x + width/2, y + height/2, width, height);
 }
 
 @end

@@ -22,8 +22,6 @@
 
 @property BOOL isObliterated;
 
--(void) advanceBullet;
-
 @property float speed;
 
 @end

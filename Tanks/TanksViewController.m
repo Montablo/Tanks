@@ -7,7 +7,7 @@
 //
 
 #import "TanksViewController.h"
-#import "TanksGamePage.h"
+#import "TanksHomePage.h"
 
 @implementation TanksViewController
 
@@ -23,10 +23,7 @@
         
         
         // Create and configure the scene.
-        SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
-        
-        scene.userData = [NSMutableDictionary dictionary];
-        [scene.userData setObject:[NSNumber numberWithInt:0] forKey:@"level"];
+        SKScene * scene = [TanksHomePage sceneWithSize:skView.bounds.size];
         
         scene.scaleMode = SKSceneScaleModeAspectFill;
         

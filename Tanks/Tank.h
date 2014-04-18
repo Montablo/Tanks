@@ -11,7 +11,7 @@
 
 @interface Tank : SKSpriteNode
 
--(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position;
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position;
 
 -(void) setUp;
 
@@ -20,5 +20,7 @@
 @property (strong, nonatomic) NSMutableArray* bullets;
 
 @property BOOL isObliterated;
+
+@property (strong, nonatomic) SKSpriteNode *turret;
 
 @end
