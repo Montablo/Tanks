@@ -8,10 +8,7 @@
 
 #import "Bullet.h"
 
-@implementation Bullet {
-    float speed;
-}
-
+@implementation Bullet
 -(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction withOwnerType : (int) ownerType {
     
     self = [super initWithImageNamed: @"bullet"];
@@ -41,19 +38,7 @@
     self.physicsBody.usesPreciseCollisionDetection = YES;
     self.name = @"bullet";
     
-    speed = .008;
-    
-}
-
--(void) advanceBullet {
-    
-    if(self.isObliterated) return;
-    
-    CGPoint newPos = CGPointMake(self.position.x + cosf(self.zRotation), self.position.y + sinf(self.zRotation));
-    
-    self.position = newPos;
-    
-    [self performSelector:@selector(advanceBullet) withObject:nil afterDelay: speed];
+    self.speed = .008;
     
 }
 

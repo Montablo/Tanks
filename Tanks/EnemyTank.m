@@ -29,13 +29,19 @@
         
         self.isMoving = NO;
         self.canMove = YES;
-        self.rangeOfSight = 500;
+        self.rangeOfSight = 1000;
         self.maximumDistance = 50;
+        self.bulletSensingDistance = 50;
         
         self.direction = M_PI;
+        self.turningDirection = arc4random_uniform(1);
+        if(self.turningDirection == 0) self.turningDirection = -1;
         
         self.initialTrackingCooldown = 5.0;
         self.trackingCooldown = 0;
+        
+        self.bulletSpeed = .008;
+        self.bulletFrequency = 2;
         
         self.physicsBody.categoryBitMask = enemyCategory;
         self.physicsBody.dynamic = YES;

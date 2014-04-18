@@ -8,7 +8,9 @@
 
 #import "Tank.h"
 
-@implementation Tank
+@implementation Tank {
+    SKSpriteNode *turret;
+}
 
 -(instancetype) initWithImageNamed:(NSString *)name withSize : (CGSize) size withPosition : (CGPoint) position {
     
@@ -23,6 +25,11 @@
 }
 
 -(void) setUp {
+    
+    
+    turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:CGSizeMake(5, sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2)))];
+    turret.position = CGPointMake(turret.position.x, turret.position.y + turret.size.height / 2);
+    [self addChild:turret];
     
     self.maxCurrentBullets = 5;
     

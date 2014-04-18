@@ -16,5 +16,6 @@
 @interface TanksGamePage : SKScene
 
 @property (strong, nonatomic) JCImageJoystick *joystick;
+@property int currentLevel;
 
 @end

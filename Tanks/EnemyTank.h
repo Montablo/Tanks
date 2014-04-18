@@ -25,5 +25,11 @@
 @property float trackingCooldown;
 @property float initialTrackingCooldown;
 
+@property float turningDirection;
+
+@property int bulletSensingDistance;
+
+@property int bulletSpeed;
+@property int bulletFrequency;
 
 @end

@@ -24,6 +24,10 @@
         
         // Create and configure the scene.
         SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
+        
+        scene.userData = [NSMutableDictionary dictionary];
+        [scene.userData setObject:[NSNumber numberWithInt:0] forKey:@"level"];
+        
         scene.scaleMode = SKSceneScaleModeAspectFill;
         
         

@@ -24,4 +24,6 @@
 
 -(void) advanceBullet;
 
+@property float speed;
+
 @end
