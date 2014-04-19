@@ -27,7 +27,7 @@
 
 @property float turningDirection;
 
-@property int bulletSensingDistance;
+@property float bulletSensingDistance;
 
 @property float bulletSpeed;
 @property int bulletFrequency;

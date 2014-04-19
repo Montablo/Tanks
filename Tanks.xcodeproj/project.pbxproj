@@ -112,6 +112,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		049CA0BC1901E8D900FD6FAB /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
 		04F9CE8118FB31AF009B0D7D /* Joystick */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +180,7 @@
 		1A32CCDD18FB07DD00C51717 /* Tanks */ = {
 			isa = PBXGroup;
 			children = (
+				049CA0BC1901E8D900FD6FAB /* iPad */,
 				04F9CE8218FB31B8009B0D7D /* Classes */,
 				04F9CE8118FB31AF009B0D7D /* Joystick */,
 				1A32CCE618FB07DD00C51717 /* TanksAppDelegate.h */,
@@ -470,9 +478,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
 				INFOPLIST_FILE = "Tanks/Tanks-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -485,9 +494,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tanks/Tanks-Prefix.pch";
 				INFOPLIST_FILE = "Tanks/Tanks-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

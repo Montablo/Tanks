@@ -22,6 +22,13 @@
     int currentLevel;
     
     BOOL userWon;
+    
+    float X_OFFSET;
+    float Y_OFFSET;
+    
+    float screenMultWidth;
+    float screenMultHeight;
+
 }
 
 #pragma mark Initialization methods
@@ -31,6 +38,8 @@
         
         self.backgroundColor = [SKColor whiteColor];
         NSLog(@"%f, %f", self.frame.size.width, self.frame.size.height);
+        screenMultWidth = self.frame.size.width / 672;
+        screenMultHeight = self.frame.size.height / 444;
     }
     return self;
 }
@@ -47,6 +56,9 @@
 }
 
 -(void) initGame {
+    
+    X_OFFSET = 52;
+    Y_OFFSET = 52;
     
     tanks = [NSMutableArray array];
     
@@ -68,11 +80,23 @@
 
 -(void) displayWalls {
     
+    SKSpriteNode *floor = [SKSpriteNode spriteNodeWithImageNamed:@"background"];
+    SKSpriteNode *border = [SKSpriteNode spriteNodeWithImageNamed:@"floor_walls"];
+    floor.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+    border.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));    floor.size = self.frame.size;
+    floor.zPosition = -10;
+    border.size = self.frame.size;
+    border.zPosition = -5;
+    [self addChild:floor];
+    [self addChild:border];
+    
     for (int i=0; i<walls.count; i++) {
         
         CGRect wall = [walls[i] CGRectValue];
         
-        SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithColor:[SKColor blueColor] size:wall.size];
+        SKTexture *wallTexture = [SKTexture textureWithImageNamed:@"wood-1"];
+        
+        SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithTexture:wallTexture size:wall.size];
         wallNode.position = wall.origin;
         
         [self addChild:wallNode];
@@ -88,6 +112,9 @@
 
 -(void) addJoystick {
     self.joystick = [[JCImageJoystick alloc]initWithJoystickImage:(@"redStick.png") baseImage:@"stickbase.png"];
+    //self.joystick.size = CGSizeMake(self.joystick.size.width * screenMultWidth, self.joystick.size.height * screenMultHeight);
+    self.joystick.xScale = 1.5*screenMultWidth;
+    self.joystick.yScale = 1.5*screenMultWidth;
     [self.joystick setPosition:CGPointMake(self.joystick.size.width / 2 + 10, self.joystick.size.height / 2 + 10)];
     self.joystick.zPosition = -1;
     self.joystick.alpha = .5;
@@ -254,7 +281,7 @@
     
     if(b.isObliterated) return;
     
-    CGPoint newPos = CGPointMake(b.position.x + cosf(b.zRotation), b.position.y + sinf(b.zRotation));
+    CGPoint newPos = CGPointMake(b.position.x + cosf(b.zRotation)*screenMultWidth, b.position.y + sinf(b.zRotation)*screenMultHeight);
 
     float x = newPos.x;
     float y = newPos.y;
@@ -401,8 +428,8 @@
     Tank *userTank = tanks[0];
     //Tank *enemyTank = tanks[1];
     
-    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x;
-    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y;
+    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth;
+    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;
     
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height]) {
         [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
@@ -484,7 +511,7 @@
     for (int i=0; i<2; i++) {
         int val = i == 0 ? -1 : 1;
         float angle = M_PI*val / 2 + b.zRotation;
-        CGPoint newPoint = CGPointMake(t.position.x + cosf(angle), t.position.y + sinf(angle));
+        CGPoint newPoint = CGPointMake(t.position.x + cosf(angle)*screenMultWidth, t.position.y + sinf(angle)*screenMultHeight);
         if(i==0) p1 = newPoint;
         else p2 = newPoint;
     }
@@ -512,7 +539,7 @@
     
     if(t.isObliterated) return;
     
-    CGPoint newPos = CGPointMake(t.position.x + cosf(direction), t.position.y + sinf(direction));
+    CGPoint newPos = CGPointMake(t.position.x + cosf(direction)*screenMultWidth, t.position.y + sinf(direction)*screenMultHeight);
     
     if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
         t.trackingCooldown = t.initialTrackingCooldown;
@@ -554,8 +581,8 @@
     if(t.trackingCooldown > 0) t.trackingCooldown -= .01;
     else t.trackingCooldown = 0;
     
-    float newX = t.position.x + cosf(t.direction);
-    float newY = t.position.y + sinf(t.direction);
+    float newX = t.position.x + cosf(t.direction)*screenMultWidth;
+    float newY = t.position.y + sinf(t.direction)*screenMultHeight;
     
     CGPoint newPos = CGPointMake(newX, newY);
     

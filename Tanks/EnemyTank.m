@@ -27,7 +27,7 @@
     
     if(self) {
         NSLog(@"%i", self.type);
-        if(self.type == 0) {
+        /*if(self.type == 0) {
             
             self.color = [SKColor grayColor];
             
@@ -84,7 +84,7 @@
             
             self.bulletShootingDownFrequency = 1;
             
-        }
+        }*/
         
         self.isMoving = NO;
         self.direction = M_PI;
