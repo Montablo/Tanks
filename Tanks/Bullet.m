@@ -8,10 +8,17 @@
 
 #import "Bullet.h"
 
-@implementation Bullet
--(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction withOwnerType : (int) ownerType {
+@implementation Bullet {
+    float screenMultHeight;
+    float screenMultWidth;
+}
+
+
+-(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction withOwnerType : (int) ownerType : (float) screenMuWidth : (float) screenMuHeight {
     
     self = [super initWithImageNamed: @"bullet"];
+    screenMultHeight = screenMuHeight;
+    screenMultWidth = screenMuWidth;
     self.position = position;
     self.zRotation = direction;
     self.ownerType = ownerType;
@@ -27,7 +34,7 @@
     _numRicochets = 0;
     _maxRicochets = 1;
     
-    self.size = CGSizeMake(BULLET_WIDTH, BULLET_HEIGHT);
+    self.size = CGSizeMake(BULLET_WIDTH*screenMultWidth, BULLET_HEIGHT*screenMultHeight);
     
     self.name = @"bullet";
     

@@ -16,6 +16,7 @@
     NSMutableArray *tanks;
     
     BOOL gameIsPaused;
+    BOOL gameHasStarted;
     
     NSMutableArray *levels;
     
@@ -28,6 +29,8 @@
     
     float screenMultWidth;
     float screenMultHeight;
+    
+    SKLabelNode *startMessage;
 
 }
 
@@ -50,12 +53,27 @@
     
     [self initGame];
     
-    [self startGame];
-    
     
 }
 
+-(void) countDown {
+    gameHasStarted = NO;
+}
+
 -(void) initGame {
+    SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    levelNode.position = CGPointMake(CGRectGetMidX(self.frame), 25);
+    levelNode.text = [NSString stringWithFormat:@"Level : %i" , currentLevel + 1];
+    levelNode.fontColor = [SKColor blackColor];
+    [self addChild:levelNode];
+    
+    startMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+    startMessage.text = @"Touch the screen to begin.";
+    startMessage.fontSize = 40;
+    startMessage.fontColor = [SKColor blackColor];
+    startMessage.zPosition = 100;
+    [self addChild:startMessage];
     
     X_OFFSET = 52;
     Y_OFFSET = 52;
@@ -73,9 +91,20 @@
     tanks = levels[currentLevel][2];
     for(int i=0; i<tanks.count; i++) {
         [self addChild:tanks[i]];
+        
+        Tank *t = tanks[i];
+        
+        t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:self.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*t.screenMultHeight].size];
+        t.turret.anchorPoint = CGPointMake(0, 0);
+        t.turret.zRotation = M_PI / 2;
+        [t addChild:t.turret];
     }
     
     [self addJoystick];
+    
+    [self displayWalls];
+    
+    [self countDown];
 }
 
 -(void) displayWalls {
@@ -122,10 +151,10 @@
 }
 
 -(void) startGame {
-        
-    //[self addTanks];
     
-    [self displayWalls];
+    gameHasStarted = YES;
+    
+    [startMessage removeFromParent];
     
     [self initAITankLogic];
     
@@ -191,7 +220,8 @@
         
         if(userWon) {
             if(currentLevel == levels.count - 1) {
-                levelNum = 0;
+                [TanksNavigation loadTanksHomePage:self];
+                return;
             } else {
                 levelNum = currentLevel + 1;
             }
@@ -232,6 +262,11 @@
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
+    if(!gameHasStarted) {
+        [self startGame];
+        return;
+    }
+    
     [self checkButtons : touches];
     
     if(gameIsPaused) return;
@@ -248,17 +283,25 @@
     if(t.bullets.count == t.maxCurrentBullets) return;
     
     float angle = [self getAngleP1 : t.position P2 : point];
-    
+    [t.turret removeFromParent];
+    t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:self.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*t.screenMultHeight].size];
+    t.turret.anchorPoint = CGPointMake(0, 0);
     t.turret.zRotation = angle - M_PI / 2;
+    [t addChild:t.turret];
     
-    CGPoint startingPoint = CGPointMake(t.position.x + (t.frame.size.width)*cosf(angle), t.position.y + (t.frame.size.height)*sinf(angle));
     
-    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type];
+    CGPoint startingPoint = CGPointMake(t.position.x + (t.frame.size.width*1.25)*screenMultWidth*cosf(angle), t.position.y + (t.frame.size.height*1.25)*screenMultHeight*sinf(angle));
+    
+    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type : screenMultWidth : screenMultHeight];
     
     if(type != 0) {
         EnemyTank *et = tanks[type];
         newBullet.speed = et.bulletSpeed;
         newBullet.maxRicochets = et.numRicochets;
+        float accuracy = et.bulletAccuracy;
+        float direction = [self randomInt:0 withUpperBound:1] == 0 ? -1 : 1;
+        float rand = [self randomInt:0 withUpperBound:15];
+        newBullet.zRotation += accuracy * direction * rand;
     }
     
     [self addChild:newBullet];
@@ -274,7 +317,7 @@
     Bullet *b = args[0];
     Tank *owner = args[1];
     
-    if(gameIsPaused) {
+    if(gameIsPaused || !gameHasStarted) {
         [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.speed];
         return;
     }
@@ -423,7 +466,7 @@
 
 -(void) update:(NSTimeInterval)currentTime {
     
-    if(gameIsPaused) return;
+    if(gameIsPaused || !gameHasStarted) return;
     
     Tank *userTank = tanks[0];
     //Tank *enemyTank = tanks[1];
@@ -431,11 +474,53 @@
     float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth;
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;
     
+    BOOL moved = YES;
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height]) {
-        [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
+        for(int i=1; i<tanks.count; i++) {
+            EnemyTank *t = tanks[i];
+            
+            
+            float newPositionXT = t.position.x + ((TANK_SPEED * self.joystick.x * screenMultWidth)) * 1.5;
+            float newPositionYT = t.position.y + ((TANK_SPEED * self.joystick.y * screenMultHeight)) * 1.5;
+            
+            if([userTank intersectsNode:t]) {
+                if([self isXinBounds:newPositionXT withY:newPositionYT withWidth:t.size.width withHeight:t.size.height]) {
+                    
+                    [t setPosition:CGPointMake(newPositionXT, newPositionYT)];
+                    
+                } else {
+                    moved = NO;
+                }
+            }
+            
+        }
+        
+        if(moved) {
+            [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
+        }
     }
+    moved = YES;
     if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height]) {
-        [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
+        for(int i=1; i<tanks.count; i++) {
+            EnemyTank *t = tanks[i];
+            
+            float newPositionXT = t.position.x + ((TANK_SPEED * self.joystick.x * screenMultWidth)) * 1.5;
+            float newPositionYT = t.position.y + ((TANK_SPEED * self.joystick.y * screenMultHeight)) * 1.5;
+            if([userTank intersectsNode:t]) {
+                if([self isXinBounds:newPositionXT withY:newPositionYT withWidth:t.size.width withHeight:t.size.height]) {
+                    
+                    [t setPosition:CGPointMake(newPositionXT, newPositionYT)];
+                    
+                } else {
+                    moved = NO;
+                }
+            }
+            
+        }
+        
+        if(moved) {
+            [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
+        }
     }
     
     //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
@@ -454,8 +539,16 @@
     if(!gameIsPaused) {
     
         for(int i=1; i<tanks.count; i++) {
+            
             EnemyTank *t = tanks[i];
-            [self processTankMovement : t];
+            
+            int randomNum = [self randomInt:0 withUpperBound:t.tankSpeed];
+            
+            if(randomNum <= 100) {
+                
+                [self processTankMovement : t];
+                
+            }
         }
         
     }
@@ -502,6 +595,8 @@
         }
         
     }
+    if([self randomInt:0 withUpperBound:250] == 0) t.turretTurningDirection *= -1;
+    t.turret.zRotation += .005*t.turretTurningDirection;
 }
 
 -(void) avoidBullet : (Bullet *) b : (EnemyTank *) t { //finds the perpendicular paths from the bullet, goes furthest one away
@@ -669,6 +764,21 @@
            return true;
        }
    }
+    
+    for(int i=1; i<tanks.count; i++) {
+        
+        Tank *t = tanks[i];
+        
+        if(CGPointEqualToPoint(t.position, P1) || CGPointEqualToPoint(t.position, P2)) {
+            continue;
+        }
+        
+        CGRect tank = t.frame;
+        
+        if([self RectContainsLine:tank withStart:P1 andEnd:P2]) {
+            return true;
+        }
+    }
    return false;
 }
 

@@ -10,10 +10,13 @@
 
 @implementation Tank
 
--(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position {
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight{
     self = [super init];
     self.size = size;
     self.position = position;
+    
+    self.screenMultHeight = screenMultHeight;
+    self.screenMultWidth = screenMultWidth;
     
     if (self)
         [self setUp];
@@ -23,12 +26,11 @@
 
 -(void) setUp {
     
-    self.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5 withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))].size];
+    /*self.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5*self.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*self.screenMultHeight].size];
     self.turret.anchorPoint = CGPointMake(0, 0);
-    self.turret.zRotation = M_PI / 2;
     //self.turret.position = CGPointMake(self.turret.position.x - 2.5, self.turret.position.y);
     //turret.size = [self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5 withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))].size;
-    [self addChild:self.turret];
+    [self addChild:self.turret];*/
     
     self.maxCurrentBullets = 5;
     

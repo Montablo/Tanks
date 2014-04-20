@@ -11,8 +11,8 @@
 
 @interface Tank : SKSpriteNode
 
--(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position;
-
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight;
+-(CGRect) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height;
 -(void) setUp;
 
 @property int maxCurrentBullets;
@@ -22,5 +22,8 @@
 @property BOOL isObliterated;
 
 @property (strong, nonatomic) SKSpriteNode *turret;
+
+@property float screenMultWidth;
+@property float screenMultHeight;
 
 @end

@@ -10,11 +10,11 @@
 
 @implementation EnemyTank
 
--(instancetype) initWithType : (int) type withSize : (CGSize) size withPosition : (CGPoint) position {
+-(instancetype) initWithType : (int) type withSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight {
     
     self.type = type;
     
-    self = [super initWithSize: size withPosition: position];
+    self = [super initWithSize: size withPosition: position : screenMultWidth : screenMultHeight];
     
     if (self)
         [self setUpSelf];
@@ -89,7 +89,9 @@
         self.isMoving = NO;
         self.direction = M_PI;
         self.turningDirection = arc4random_uniform(1);
+        self.turretTurningDirection = arc4random_uniform(1);
         if(self.turningDirection == 0) self.turningDirection = -1;
+        if(self.turretTurningDirection == 0) self.turretTurningDirection = -1;
         
         self.trackingCooldown = 0;
         

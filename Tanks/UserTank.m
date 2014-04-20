@@ -10,9 +10,9 @@
 
 @implementation UserTank
 
--(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position {
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight {
     
-    self = [super initWithSize: size withPosition: position];
+    self = [super initWithSize: size withPosition: position : screenMultWidth : screenMultHeight];
     
     if (self)
         [self setUpSelf];
