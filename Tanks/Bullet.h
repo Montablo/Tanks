@@ -13,12 +13,10 @@
     
 }
 
--(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) bdirection withOwnerType : (int) ownerType : (float) screenMultWidth : (float) screenMultHeight;
+-(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) bdirection : (float) screenMuWidth : (float) screenMuHeight;
 
 @property int numRicochets;
 @property int maxRicochets;
-
-@property int ownerType;
 
 @property BOOL isObliterated;
 

@@ -13,6 +13,7 @@
 #import "EnemyTank.h"
 #import "Bullet.h"
 #import "TanksNavigation.h"
+#import "Mine.h"
 
 @interface TanksGamePage : SKScene
 

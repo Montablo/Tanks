@@ -21,6 +21,7 @@
     NSMutableArray *levels;
     
     int currentLevel;
+    int lives;
     
     BOOL userWon;
     
@@ -32,6 +33,8 @@
     
     SKLabelNode *startMessage;
 
+    CGPoint initialTankPosition;
+    
 }
 
 #pragma mark Initialization methods
@@ -48,8 +51,8 @@
 }
 
 -(void) didMoveToView:(SKView *)view {
-    
-    currentLevel = [[self.userData objectForKey:@"level"] intValue];
+    lives = [[self.userData objectForKey:@"lives"] intValue];
+
     
     [self initGame];
     
@@ -61,11 +64,21 @@
 }
 
 -(void) initGame {
+    
+    currentLevel = [[self.userData objectForKey:@"level"] intValue];
+    
     SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     levelNode.position = CGPointMake(CGRectGetMidX(self.frame), 25);
     levelNode.text = [NSString stringWithFormat:@"Level : %i" , currentLevel + 1];
     levelNode.fontColor = [SKColor blackColor];
     [self addChild:levelNode];
+    
+    SKLabelNode *livesNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    livesNode.fontSize = 25;
+    livesNode.text = [NSString stringWithFormat:@"Lives : %i" , lives];
+    livesNode.position = CGPointMake(CGRectGetMaxX(self.frame) - livesNode.frame.size.width / 2, CGRectGetMaxY(self.frame) - 25);
+    livesNode.fontColor = [SKColor blackColor];
+    [self addChild:livesNode];
     
     startMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
@@ -84,17 +97,18 @@
     
     gameIsPaused = NO;
     
-    currentLevel = [[self.userData objectForKey:@"level"] intValue];
-    
     walls = levels[currentLevel][0];
     containers = levels[currentLevel][1];
     tanks = levels[currentLevel][2];
     for(int i=0; i<tanks.count; i++) {
+        
         [self addChild:tanks[i]];
         
         Tank *t = tanks[i];
         
-        t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:self.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*t.screenMultHeight].size];
+        if(i == 0) initialTankPosition = t.position;
+        
+        t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:t.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(1.5*t.size.width / 2, 2) + powf(1.5* t.size.height / 2, 2))*t.screenMultHeight].size];
         t.turret.anchorPoint = CGPointMake(0, 0);
         t.turret.zRotation = M_PI / 2;
         [t addChild:t.turret];
@@ -123,20 +137,28 @@
         
         CGRect wall = [walls[i] CGRectValue];
         
-        SKTexture *wallTexture = [SKTexture textureWithImageNamed:@"wood-1"];
+        /*SKTexture *wallTexture = [SKTexture textureWithImageNamed:@"wood-1"];
         
         SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithTexture:wallTexture size:wall.size];
         wallNode.position = wall.origin;
         
-        [self addChild:wallNode];
+        [self addChild:wallNode];*/
         
+        CGSize coverageSize = CGSizeMake(wall.size.width, wall.size.height); //the size of the entire image you want tiled
+        CGRect textureSize = CGRectMake(0, 0, 50, 50); //the size of the tile.
+        CGImageRef backgroundCGImage = [UIImage imageNamed:@"wood-1"].CGImage; //change the string to your image name
+        UIGraphicsBeginImageContext(CGSizeMake(coverageSize.width, coverageSize.height));
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextDrawTiledImage(context, textureSize, backgroundCGImage);
+        UIImage *tiledBackground = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        SKTexture *backgroundTexture = [SKTexture textureWithCGImage:tiledBackground.CGImage];
+        SKSpriteNode *backgroundTiles = [SKSpriteNode spriteNodeWithTexture:backgroundTexture];
+        backgroundTiles.yScale = -1; //upon closer inspection, I noticed my source tile was flipped vertically, so this just flipped it back.
+        backgroundTiles.position = CGPointMake(wall.origin.x, wall.origin.y);
+        [self addChild:backgroundTiles];
     }
     
-}
-
-
--(void) readContainers {
-    containers = [NSMutableArray arrayWithArray:@[[self makeRectWithBottomLeftX:0 withY:0 withWidth:self.frame.size.width withHeight:self.frame.size.height]]];
 }
 
 -(void) addJoystick {
@@ -148,6 +170,14 @@
     self.joystick.zPosition = -1;
     self.joystick.alpha = .5;
     [self addChild:self.joystick];
+    
+    SKSpriteNode *mineButton = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
+    mineButton.size = CGSizeMake(80 * screenMultHeight, 80 * screenMultHeight);
+    [mineButton setPosition:CGPointMake(CGRectGetMaxX(self.frame) - (mineButton.size.width / 2 + 10), mineButton.size.height / 2 + 10)];
+    mineButton.zPosition = -1;
+    mineButton.name = @"mineButton";
+    [self addChild:mineButton];
+
 }
 
 -(void) startGame {
@@ -209,29 +239,41 @@
 
 #pragma mark Onclick functions
 
--(void) checkButtons : (NSSet *) touches {
+-(BOOL) checkButtons : (NSSet *) touches {
     UITouch *p = [touches anyObject];
     CGPoint orgin = [p locationInNode:self];
     SKNode *n = [self nodeAtPoint:orgin];
     
     if([n.name isEqualToString:@"endText"]) {
         
-        int levelNum = 0;
+        int levelNum = currentLevel;
         
         if(userWon) {
             if(currentLevel == levels.count - 1) {
                 [TanksNavigation loadTanksHomePage:self];
-                return;
+                return YES;
             } else {
                 levelNum = currentLevel + 1;
             }
         } else {
-            [TanksNavigation loadTanksHomePage:self];
-            return;
+            lives--;
+            //if(lives == 0) {
+                [TanksNavigation loadTanksHomePage:self];
+                return YES;
+            //}
         }
         
-        [TanksNavigation loadTanksGamePage:self :levelNum :levels];
+        [self pauseGame];
+        [self removeAllChildren];
+        
+        [TanksNavigation loadTanksGamePage:self :levelNum :levels : lives];
+        return YES;
+    } else if([n.name isEqualToString:@"mineButton"]) {
+        [self dropUserMine];
+        return YES;
     }
+    
+    return NO;
 }
 
 #pragma mark Game logic - boundaries
@@ -267,7 +309,7 @@
         return;
     }
     
-    [self checkButtons : touches];
+    if([self checkButtons : touches]) return;
     
     if(gameIsPaused) return;
     
@@ -283,16 +325,15 @@
     if(t.bullets.count == t.maxCurrentBullets) return;
     
     float angle = [self getAngleP1 : t.position P2 : point];
-    [t.turret removeFromParent];
-    t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:self.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*t.screenMultHeight].size];
-    t.turret.anchorPoint = CGPointMake(0, 0);
+    
     t.turret.zRotation = angle - M_PI / 2;
-    [t addChild:t.turret];
     
     
-    CGPoint startingPoint = CGPointMake(t.position.x + (t.frame.size.width*1.25)*screenMultWidth*cosf(angle), t.position.y + (t.frame.size.height*1.25)*screenMultHeight*sinf(angle));
+    CGPoint startingPoint = CGPointMake(t.position.x + (t.size.width)*cosf(angle), t.position.y + (t.size.height)*sinf(angle));
+    //NSLog(@"%f, %f", newPos.x, newPos.y);
+    //CGPoint startingPoint = CGPointMake(newPos.x + (t.turret.size.height*cosf(angle)), newPos.y + (t.turret.size.height*sinf(angle)));
     
-    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle withOwnerType : type : screenMultWidth : screenMultHeight];
+    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle : screenMultWidth : screenMultHeight];
     
     if(type != 0) {
         EnemyTank *et = tanks[type];
@@ -425,13 +466,123 @@
             }
         }
         
+        for(Mine *m in t.mines) {
+            if([b intersectsNode:m]) {
+                [b removeFromParent];
+                [owner.bullets removeObjectIdenticalTo:b];
+                b.isObliterated = YES;
+                [self blowUpMine:m];
+                return;
+            }
+        }
+        
     }
 
     
-        b.position = newPos;
+    b.position = newPos;
     
     [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.speed];
     
+}
+
+#pragma mark Mine dropping
+
+-(void) dropUserMine {
+    
+    if(!gameHasStarted || gameIsPaused) return;
+    
+    [self dropMineWithType:0];
+}
+
+-(void) dropMineWithType : (int) type {
+    
+    if(!gameHasStarted || gameIsPaused) return;
+    
+    Tank *t = tanks[type];
+    
+    if(t.mines.count == t.maxCurrentMines) return;
+    
+    Mine *m = [[Mine alloc] initWithPosition:t.position :screenMultWidth :screenMultHeight];
+    [self addChild:m];
+    [t.mines addObject:m];
+    
+    [self performSelector:@selector(prepMine:) withObject:m afterDelay:(float) [self randomInt:25 withUpperBound:25] / 10];
+}
+
+-(void) prepMine : (Mine *) m {
+    
+    if(m.isObliterated) return;
+    
+    SKAction *action = [SKAction setTexture:[SKTexture textureWithImageNamed: @"mineRED"]];
+    
+    [m runAction:action];
+    
+    [self performSelector:@selector(blowUpMine:) withObject:m afterDelay:(float) [self randomInt:5 withUpperBound:10] / 10];
+}
+
+-(void) blowUpMine : (Mine *) m {
+    
+    if(!gameHasStarted || gameIsPaused) return;
+    
+    if(m.isObliterated) return;
+    
+    m.isObliterated = YES;
+    
+    SKAction *action = [SKAction setTexture:[SKTexture textureWithImageNamed: @"mineExplode"]];
+    
+    [m runAction:action];
+    
+    m.zPosition = 1;
+    
+    m.size = CGSizeMake(150*screenMultHeight, 150*screenMultHeight);
+    
+    Tank *owner;
+    
+    for(int i=0; i<tanks.count; i++) {
+        
+        Tank *t = tanks[i];
+        
+        for(Mine *other in t.mines) {
+            BOOL isEqual = CGPointEqualToPoint(m.position, other.position);
+            if(isEqual) {
+                owner = t;
+                continue;
+            }
+            else {
+                if([m intersectsNode:other]) {
+                    [self blowUpMine:other];
+                    break;
+                }
+            }
+        }
+        
+        if([m intersectsNode:t]) {
+            
+            [t removeFromParent];
+            t.isObliterated = YES;
+            
+            if(i == 0) { //user lost
+                [self endGame : YES];
+                return;
+            }
+            
+            [tanks removeObjectAtIndex:i];
+            
+            if(tanks.count == 1) { //user won
+                [self endGame : NO];
+                return;
+            }
+        }
+    }
+    
+    [owner.mines removeObjectIdenticalTo:m];
+
+    
+    [self performSelector:@selector(cleanUpMine:) withObject:m afterDelay:[self randomInt:15 withUpperBound:5] / 10];
+}
+
+-(void) cleanUpMine : (Mine *) m {
+    [m removeFromParent];
 }
 
 #pragma mark Math functions
@@ -532,6 +683,7 @@
 -(void) initAITankLogic {
     [self processTankActionMoving];
     [self processTankActionFiring];
+    [self processTankActionMineDropping];
 }
 
 -(void) processTankActionMoving {
@@ -572,6 +724,27 @@
     [self performSelector:@selector(processTankActionFiring) withObject:nil afterDelay: .1];
 }
 
+-(void) processTankActionMineDropping {
+    
+    if(!gameIsPaused) {
+        
+        for(int i=1; i<tanks.count; i++) {
+            EnemyTank *t = tanks[i];
+            if(t.doesDropMines) {
+                int rand = [self randomInt:0 withUpperBound:t.mineDroppingFrequency];
+                if(rand == 0) {
+                    
+                    [self dropMineWithType:i];
+                    return;
+                }
+            }
+        }
+        
+    }
+    
+    [self performSelector:@selector(processTankActionMineDropping) withObject:nil afterDelay: .1];
+}
+
 #pragma mark Tank AI - Moving
 
 -(void) processTankMovement : (EnemyTank *) t {
@@ -582,8 +755,13 @@
         
         CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:userTank.position];
         Bullet *b = [self isBulletNearTank : t];
+        
+        Mine *m = [self isMineNearTank : t];
+        
         if(b != nil) {
             [self avoidBullet : b : t];
+        } else if(m != nil) {
+            [self avoidMine : m : t];
         }
         else if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
@@ -627,6 +805,17 @@
     CGPoint greater = [self distanceBetweenPoints:p1 P2:b.position] >= [self distanceBetweenPoints:p2 P2:b.position] ? p1 : p2;
     t.position = greater;
 }
+
+-(void) avoidMine : (Mine *) m : (EnemyTank *) t {
+    
+    float angle = M_PI - [self getAngleP1:t.position P2:m.position];
+    
+    CGPoint newPos = CGPointMake(t.position.x + cosf(angle)*screenMultWidth, t.position.y + sinf(angle)*screenMultHeight);
+    
+    if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height])
+        t.position = newPos;
+}
+
 
 -(void) moveTank : (EnemyTank *) t toPoint : (CGPoint) goalPoint {
     
@@ -789,6 +978,18 @@
                 if([self bulletWillHitTank:t withBullet:b]) {
                     return b;
                 }
+            }
+        }
+    }
+    
+    return nil;
+}
+
+-(Mine *) isMineNearTank : (EnemyTank *) t {
+    for(Tank *otherTank in tanks) {
+        for(Mine *m in otherTank.mines) {
+            if([self distanceBetweenPoints:t.position P2:m.position] <= t.mineAvoidingDistance) { //close to tank
+                return m;
             }
         }
     }

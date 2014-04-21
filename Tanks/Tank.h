@@ -16,8 +16,10 @@
 -(void) setUp;
 
 @property int maxCurrentBullets;
+@property int maxCurrentMines;
 
 @property (strong, nonatomic) NSMutableArray* bullets;
+@property (strong, nonatomic) NSMutableArray* mines;
 
 @property BOOL isObliterated;
 

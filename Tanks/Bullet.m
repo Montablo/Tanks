@@ -14,14 +14,13 @@
 }
 
 
--(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction withOwnerType : (int) ownerType : (float) screenMuWidth : (float) screenMuHeight {
+-(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction : (float) screenMuWidth : (float) screenMuHeight {
     
     self = [super initWithImageNamed: @"bullet"];
     screenMultHeight = screenMuHeight;
     screenMultWidth = screenMuWidth;
     self.position = position;
     self.zRotation = direction;
-    self.ownerType = ownerType;
     
     if (self)
         [self setUp];

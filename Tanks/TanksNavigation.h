@@ -12,7 +12,7 @@
 
 @interface TanksNavigation : NSObject
 
-+(void) loadTanksGamePage : (SKScene *) currentPage : (int) level : (NSArray *) levels;
++(void) loadTanksGamePage : (SKScene *) currentPage : (int) level : (NSArray *) levels : (int) lives;
 +(void) loadTanksHomePage : (SKScene *) currentPage;
 
 @end

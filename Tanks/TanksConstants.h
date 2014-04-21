@@ -12,7 +12,10 @@
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 5
 
-#define TANK_SPEED 1.75
+#define MINE_WIDTH 20
+#define MINE_HEIGHT 20
+
+#define TANK_SPEED 2
 
 #define TANK_AI_UPDATE_SPEED 1
 

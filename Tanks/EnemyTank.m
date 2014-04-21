@@ -86,6 +86,10 @@
             
         }*/
         
+        //self.mineAvoidingDistance = 300;
+        //self.doesDropMines = YES;
+        //self.mineDroppingFrequency = 100;
+        
         self.isMoving = NO;
         self.direction = M_PI;
         self.turningDirection = arc4random_uniform(1);

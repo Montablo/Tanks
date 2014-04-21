@@ -36,6 +36,10 @@
     
     self.bullets = [NSMutableArray array];
     
+    self.maxCurrentMines = 2;
+    
+    self.mines = [NSMutableArray array];
+    
 }
 
 -(CGRect) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {

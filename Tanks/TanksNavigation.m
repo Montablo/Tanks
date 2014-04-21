@@ -10,16 +10,17 @@
 
 @implementation TanksNavigation
 
-+(void) loadTanksGamePage:(SKScene *)currentPage :(int) level :(NSArray *)levels {
++(void) loadTanksGamePage:(SKScene *)currentPage :(int) level :(NSArray *)levels : (int) lives{
     SKView * skView = currentPage.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
+    //skView.showsFPS = YES;
+    //skView.showsNodeCount = YES;
     // Create and configure the scene.
     SKScene * scene = [TanksGamePage sceneWithSize:skView.bounds.size];
     
     scene.userData = [NSMutableDictionary dictionary];
     [scene.userData setObject:[NSNumber numberWithInt:level] forKey:@"level"];
     [scene.userData setObject:levels forKey:@"levels"];
+    [scene.userData setObject:[NSNumber numberWithInt:lives] forKey:@"lives"];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
@@ -28,8 +29,8 @@
 
 +(void) loadTanksHomePage:(SKScene *)currentPage {
     SKView * skView = currentPage.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
+    //skView.showsFPS = YES;
+    //skView.showsNodeCount = YES;
     // Create and configure the scene.
     SKScene * scene = [TanksHomePage sceneWithSize:skView.bounds.size];
     

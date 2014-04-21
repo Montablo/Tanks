@@ -119,31 +119,27 @@
     SKNode *n = [self nodeAtPoint:orgin];
     
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
-        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levels];
+        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levels : 3];
         return;
     } else if([n.name isEqual:@"arrow1"]) {
-        if(currentLevelPack != 0) {
-            currentLevelPack--;
-            [self displaycurrentLevelPack];
-        }
+        currentLevelPack--;
+        if(currentLevelPack == -1) currentLevelPack = levelPacks.count - 1;
+        [self displaycurrentLevelPack];
     } else if([n.name isEqual:@"arrow2"]) {
-        if(currentLevelPack != levelPacks.count - 1) {
-            currentLevelPack++;
-            [self displaycurrentLevelPack];
-        }
+        currentLevelPack++;
+        if(currentLevelPack == levelPacks.count) currentLevelPack = 0;
+        [self displaycurrentLevelPack];
     } else if([n.name isEqualToString:@"refresh"]) {
         [self saveLevelsToFile];
         [self saveTankTypesToFile];
     } else if([n.name isEqual:@"arrow3"]) {
-        if(STARTING_LEVEL != 1) {
-            STARTING_LEVEL--;
-            levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
-        }
+        STARTING_LEVEL--;
+        if(STARTING_LEVEL == 0) STARTING_LEVEL = levels.count;
+        levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
     } else if([n.name isEqual:@"arrow4"]) {
-        if(STARTING_LEVEL != levels.count) {
-            STARTING_LEVEL++;
-            levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
-        }
+        STARTING_LEVEL++;
+        if(STARTING_LEVEL == levels.count + 1) STARTING_LEVEL = 1;
+        levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
     }
     
 }
@@ -177,7 +173,7 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY"];
+    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY", @"MINE_AVOIDING_DISTANCE", @"DOES_DROP_MINES", @"MINE_DROPPING_FREQUENCY"];
     
     BOOL inTank = NO;
     int ti = 0;
@@ -200,9 +196,9 @@
             else if(ti == 1) { //color
                 [tank setObject:[self colorWithHexString:line] forKey:labels[ti]];
             }
-            else if(ti == 2) { //bool
+            else if(ti == 2 || ti == 15) { //bool
                 [tank setObject:[NSNumber numberWithBool: [line boolValue]] forKey:labels[ti]];
-            } else if(ti == 3 || ti == 4 || ti == 5 || ti == 6 || ti == 8 || ti == 13) { //float
+            } else if(ti == 3 || ti == 4 || ti == 5 || ti == 6 || ti == 8 || ti == 13 || ti == 14 || ti == 16) { //float
                 [tank setObject:[NSNumber numberWithFloat: [line floatValue]] forKey:labels[ti]];
             }
             
@@ -396,6 +392,9 @@
                         tank.bulletShootingDownFrequency = [tankModel[@"BULLET_SHOOTING_DOWN_FREQUENCY"] floatValue];
                         tank.tankSpeed = [tankModel[@"TANK_SPEED"] intValue];
                         tank.bulletAccuracy = [tankModel[@"BULLET_ACCURACY"] floatValue];
+                        tank.mineAvoidingDistance = [tankModel[@"MINE_AVOIDING_DISTANCE"] floatValue];
+                        tank.doesDropMines = [tankModel[@"DOES_DROP_MINES"] boolValue];
+                        tank.mineDroppingFrequency = [tankModel[@"MINE_DROPPING_FREQUENCY"] floatValue];
                         
                         [level[2] addObject: tank];
                     }

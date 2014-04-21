@@ -15,6 +15,7 @@
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
 		04F9CE8B18FB339E009B0D7D /* EnemyTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8A18FB339E009B0D7D /* EnemyTank.m */; };
+		04FEA9641904162F00A9CFB6 /* Mine.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FEA9631904162F00A9CFB6 /* Mine.m */; };
 		1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
 		1A32CCD818FB07DD00C51717 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */; };
 		1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
@@ -62,6 +63,8 @@
 		04F9CE8918FB339E009B0D7D /* EnemyTank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyTank.h; sourceTree = "<group>"; };
 		04F9CE8A18FB339E009B0D7D /* EnemyTank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnemyTank.m; sourceTree = "<group>"; };
 		04F9CE8C18FB3522009B0D7D /* TanksConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksConstants.h; sourceTree = "<group>"; };
+		04FEA9621904162F00A9CFB6 /* Mine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mine.h; sourceTree = "<group>"; };
+		04FEA9631904162F00A9CFB6 /* Mine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mine.m; sourceTree = "<group>"; };
 		1A32CCD218FB07DD00C51717 /* Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tanks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A32CCD518FB07DD00C51717 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -142,6 +145,8 @@
 				04F9CE8C18FB3522009B0D7D /* TanksConstants.h */,
 				04C0E9D118FB504E00B73711 /* Bullet.h */,
 				04C0E9D218FB504E00B73711 /* Bullet.m */,
+				04FEA9621904162F00A9CFB6 /* Mine.h */,
+				04FEA9631904162F00A9CFB6 /* Mine.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -329,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04FEA9641904162F00A9CFB6 /* Mine.m in Sources */,
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
 				040BCF1B1901A6E80020F925 /* TanksNavigation.m in Sources */,
