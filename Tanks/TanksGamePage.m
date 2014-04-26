@@ -285,7 +285,7 @@
 
 #pragma mark Game logic - boundaries
 
--(BOOL) isXinBounds : (float) x withY : (float) y  withWidth : (float) width withHeight : (float) height {
+-(BOOL) isXinBounds : (float) x withY : (float) y  withWidth : (float) width withHeight : (float) height : (BOOL) checkTanks {
     for (int i=0; i<containers.count; i++) {
         
         CGRect container = [self getRectWithBottomLeftX:containers[i]];
@@ -304,14 +304,17 @@
         
     }
     
-    for (int i=0; i<tanks.count; i++) {
-        Tank *t = tanks[i];
-        if(t.position.x + 3 >= x && t.position.x - 3 <= x && t.position.y + 3 >= y && t.position.y - 3 <= y) continue;
-        CGRect tank = t.frame;
-        if((x + width / 2 > tank.origin.x && x - width / 2 < tank.origin.x + tank.size.width) && (y + height / 2 > tank.origin.y && y - height / 2 < tank.origin.y + tank.size.height)) {
-            return false;
+    if(checkTanks) {
+    
+        for (int i=0; i<tanks.count; i++) {
+            Tank *t = tanks[i];
+            if(t.position.x + 3 >= x && t.position.x - 3 <= x && t.position.y + 3 >= y && t.position.y - 3 <= y) continue;
+            CGRect tank = t.frame;
+            if((x + width / 2 > tank.origin.x && x - width / 2 < tank.origin.x + tank.size.width) && (y + height / 2 > tank.origin.y && y - height / 2 < tank.origin.y + tank.size.height)) {
+                return false;
+            }
+            
         }
-        
     }
     
     return true;
@@ -349,6 +352,8 @@
     CGPoint startingPoint = CGPointMake(t.position.x + (t.size.width)*cosf(angle), t.position.y + (t.size.height)*sinf(angle));
     //NSLog(@"%f, %f", newPos.x, newPos.y);
     //CGPoint startingPoint = CGPointMake(newPos.x + (t.turret.size.height*cosf(angle)), newPos.y + (t.turret.size.height*sinf(angle)));
+    
+    if([self isWallBetweenPoints:startingPoint P2:t.position]) return;
     
     Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:startingPoint withDirection : angle : screenMultWidth : screenMultHeight];
     
@@ -645,11 +650,11 @@
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;
     
     BOOL moved = YES;
-    if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height]) {
+    if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height : true]) {
         [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
     }
     moved = YES;
-    if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height]) {
+    if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height : true]) {
         [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
     }
     
@@ -861,7 +866,7 @@
             for(int j=-1; j<=1; j++) {
                 if(i == 0 && j == 0) continue;
                 
-                if(![self isXinBounds:currentPoint.point.x + j withY:currentPoint.point.y + i withWidth:t.size.width withHeight:t.size.height]) continue;
+                if(![self isXinBounds:currentPoint.point.x + j withY:currentPoint.point.y + i withWidth:t.size.width withHeight:t.size.height : false]) continue;
                 
                 CGPoint cgptVal = CGPointMake(currentPoint.point.x + j, currentPoint.point.y + i);
                 
@@ -932,8 +937,8 @@
         else p2 = newPoint;
     }
     
-    BOOL p1InBounds = [self isXinBounds:p1.x withY:p1.y withWidth:t.frame.size.width withHeight:t.frame.size.height];
-    BOOL p2InBounds = [self isXinBounds:p2.x withY:p2.y withWidth:t.frame.size.width withHeight:t.frame.size.height];
+    BOOL p1InBounds = [self isXinBounds:p1.x withY:p1.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false];
+    BOOL p2InBounds = [self isXinBounds:p2.x withY:p2.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false];
     
     if(!p1InBounds && !p2InBounds) {
         return;
@@ -955,7 +960,7 @@
     
     CGPoint newPos = CGPointMake(t.position.x + cosf(angle)*screenMultWidth, t.position.y + sinf(angle)*screenMultHeight);
     
-    if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height])
+    if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false])
         t.position = newPos;
 }
 
@@ -968,7 +973,7 @@
     
     CGPoint newPos = CGPointMake(t.position.x + cosf(direction)*screenMultWidth, t.position.y + sinf(direction)*screenMultHeight);
     
-    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
+    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false]) {
         t.trackingCooldown = t.initialTrackingCooldown;
         [self moveTankAimlessly:t];
         return;
@@ -1013,7 +1018,7 @@
     
     CGPoint newPos = CGPointMake(newX, newY);
     
-    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height]) {
+    if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false]) {
         
         float width = t.frame.size.width;
         float height = t.frame.size.height;
