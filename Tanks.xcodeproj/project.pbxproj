@@ -11,6 +11,7 @@
 		040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1D1901A8130020F925 /* TanksHomePage.m */; };
 		044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */; };
 		044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03E18FB2AB30007F2DE /* JCJoystick.m */; };
+		048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 048217C61909C3F1004A2188 /* AStarCGPoint.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
@@ -54,6 +55,8 @@
 		044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCImageJoystick.m; sourceTree = "<group>"; };
 		044DF03D18FB2AB30007F2DE /* JCJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCJoystick.h; sourceTree = "<group>"; };
 		044DF03E18FB2AB30007F2DE /* JCJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCJoystick.m; sourceTree = "<group>"; };
+		048217C51909C3F1004A2188 /* AStarCGPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AStarCGPoint.h; sourceTree = "<group>"; };
+		048217C61909C3F1004A2188 /* AStarCGPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AStarCGPoint.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
 		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				04C0E9D218FB504E00B73711 /* Bullet.m */,
 				04FEA9621904162F00A9CFB6 /* Mine.h */,
 				04FEA9631904162F00A9CFB6 /* Mine.m */,
+				048217C51909C3F1004A2188 /* AStarCGPoint.h */,
+				048217C61909C3F1004A2188 /* AStarCGPoint.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -346,6 +351,7 @@
 				04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */,
 				044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */,
 				1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */,
+				048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */,
 				1A32CCE418FB07DD00C51717 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -44,8 +44,8 @@
         
         self.backgroundColor = [SKColor whiteColor];
         
-        screenMultWidth = self.frame.size.width / 672;
-        screenMultHeight = self.frame.size.height / 444;
+        screenMultWidth = self.frame.size.width / screenWidth;
+        screenMultHeight = self.frame.size.height / screenHeight;
         X_OFFSET = 54*screenMultWidth;
         Y_BOTTOM_OFFSET = 64*screenMultHeight;
         Y_TOP_OFFSET = 64*screenMultHeight;
@@ -132,6 +132,9 @@
     } else if([n.name isEqualToString:@"refresh"]) {
         [self saveLevelsToFile];
         [self saveTankTypesToFile];
+        [self readLevels];
+        [self readTankTypes];
+        [self displaycurrentLevelPack];
     } else if([n.name isEqual:@"arrow3"]) {
         STARTING_LEVEL--;
         if(STARTING_LEVEL == 0) STARTING_LEVEL = levels.count;

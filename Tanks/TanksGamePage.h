@@ -14,6 +14,7 @@
 #import "Bullet.h"
 #import "TanksNavigation.h"
 #import "Mine.h"
+#import "AStarCGPoint.h"
 
 @interface TanksGamePage : SKScene
 

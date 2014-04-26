@@ -44,8 +44,8 @@
         
         self.backgroundColor = [SKColor whiteColor];
         NSLog(@"%f, %f", self.frame.size.width, self.frame.size.height);
-        screenMultWidth = self.frame.size.width / 672;
-        screenMultHeight = self.frame.size.height / 444;
+        screenMultWidth = self.frame.size.width / screenWidth;
+        screenMultHeight = self.frame.size.height / screenHeight;
     }
     return self;
 }
@@ -112,6 +112,13 @@
         t.turret.anchorPoint = CGPointMake(0, 0);
         t.turret.zRotation = M_PI / 2;
         [t addChild:t.turret];
+        
+        if(i >= 1) {
+            
+            UserTank *userTank = tanks[0];
+            
+            //[self generatePath : t : userTank.position];
+        }
     }
     
     [self addJoystick];
@@ -292,6 +299,16 @@
         
         CGRect wall = [self getRectWithBottomLeftX:walls[i]];
         if((x + width / 2 > wall.origin.x && x - width / 2 < wall.origin.x + wall.size.width) && (y + height / 2 > wall.origin.y && y - height / 2 < wall.origin.y + wall.size.height)) {
+            return false;
+        }
+        
+    }
+    
+    for (int i=0; i<tanks.count; i++) {
+        Tank *t = tanks[i];
+        if(t.position.x + 3 >= x && t.position.x - 3 <= x && t.position.y + 3 >= y && t.position.y - 3 <= y) continue;
+        CGRect tank = t.frame;
+        if((x + width / 2 > tank.origin.x && x - width / 2 < tank.origin.x + tank.size.width) && (y + height / 2 > tank.origin.y && y - height / 2 < tank.origin.y + tank.size.height)) {
             return false;
         }
         
@@ -622,56 +639,18 @@
     Tank *userTank = tanks[0];
     //Tank *enemyTank = tanks[1];
     
+    if(self.joystick.x == 0 && self.joystick.y == 0) return;
+    
     float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth;
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;
     
     BOOL moved = YES;
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height]) {
-        for(int i=1; i<tanks.count; i++) {
-            EnemyTank *t = tanks[i];
-            
-            
-            float newPositionXT = t.position.x + ((TANK_SPEED * self.joystick.x * screenMultWidth)) * 1.5;
-            float newPositionYT = t.position.y + ((TANK_SPEED * self.joystick.y * screenMultHeight)) * 1.5;
-            
-            if([userTank intersectsNode:t]) {
-                if([self isXinBounds:newPositionXT withY:newPositionYT withWidth:t.size.width withHeight:t.size.height]) {
-                    
-                    [t setPosition:CGPointMake(newPositionXT, newPositionYT)];
-                    
-                } else {
-                    moved = NO;
-                }
-            }
-            
-        }
-        
-        if(moved) {
-            [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
-        }
+        [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
     }
     moved = YES;
     if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height]) {
-        for(int i=1; i<tanks.count; i++) {
-            EnemyTank *t = tanks[i];
-            
-            float newPositionXT = t.position.x + ((TANK_SPEED * self.joystick.x * screenMultWidth)) * 1.5;
-            float newPositionYT = t.position.y + ((TANK_SPEED * self.joystick.y * screenMultHeight)) * 1.5;
-            if([userTank intersectsNode:t]) {
-                if([self isXinBounds:newPositionXT withY:newPositionYT withWidth:t.size.width withHeight:t.size.height]) {
-                    
-                    [t setPosition:CGPointMake(newPositionXT, newPositionYT)];
-                    
-                } else {
-                    moved = NO;
-                }
-            }
-            
-        }
-        
-        if(moved) {
-            [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
-        }
+        [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
     }
     
     //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
@@ -765,16 +744,180 @@
         }
         else if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:userTank.position] || ![self tankCanSeeUser:t withUser:userTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
+            //[self processTankPathfinding : t toPoint : userTank.position];
+            
+            //[self moveOnPath : t];
         } else { //No wall
                 
                 //t.isMoving = true;
-                
+            
                 [self moveTank : t toPoint: newPoint];
         }
         
     }
     if([self randomInt:0 withUpperBound:250] == 0) t.turretTurningDirection *= -1;
     t.turret.zRotation += .005*t.turretTurningDirection;
+}
+
+-(void) moveOnPath : (EnemyTank *) t {
+    
+    AStarCGPoint *point = [t.currentPath firstObject];
+    
+    t.position = point.point;
+    
+    
+}
+
+/*-(void) processTankPathfinding : (EnemyTank *) t toPoint : (CGPoint) p {
+    
+    NSMutableArray *points = [NSMutableArray array];
+    NSMutableArray *diagonals = [NSMutableArray array];
+    
+    for(int i=-1; i<=1; i++) {
+        for(int j=-1; j<=1; j++) {
+            if(i == 0 && j == 0) continue;
+            
+            
+            
+            [diagonals addObject:[NSNumber numberWithBool: abs(i) == 1 && abs(j) == 1]];
+            
+            if([self isXinBounds:t.position.x + j withY:t.position.y + i withWidth:t.size.width withHeight:t.size.height]) { //point is valid
+                [points addObject:[NSValue valueWithCGPoint:CGPointMake(t.position.x + j, t.position.y + i)]];
+            }
+        }
+    }
+    
+    int minF = -1;
+    int minIndex = -1;
+    
+    for(int i=0; i<points.count; i++) {
+        CGPoint newPoint = [points[i] CGPointValue];
+        
+        BOOL b = NO;
+        for(NSValue *v in t.closedPoints) {
+            
+            if(CGPointEqualToPoint([v CGPointValue], newPoint)) {
+                b = YES;
+                break;
+            }
+        }
+        
+        if(b) continue;
+        
+        int G = [diagonals[i] boolValue] ? 14 : 10;
+        int H = abs(p.x - newPoint.x) + abs(p.y - newPoint.y);
+        int F = G + H;
+        
+        if(minF == -1 || F < minF) {
+            minF = F;
+            minIndex = i;
+        }
+    }
+    
+    if(minIndex == -1) {
+        //t.closedPoints = [NSMutableArray array];
+        return;
+    }
+    
+    t.position = [points[minIndex] CGPointValue];
+    [t.closedPoints addObject:points[minIndex]];
+    
+}*/
+
+-(void) generatePath : (EnemyTank *) t : (CGPoint) p {
+    t.openList = [NSMutableArray array];
+    t.closedList = [NSMutableArray array];
+    
+    [t.openList addObject:[[AStarCGPoint alloc] initWithPoint:t.position withParent:nil withF:0 G:0 H:0]];
+    
+    do {
+        
+        AStarCGPoint *currentPoint = [self getMaxFValue : t.openList];
+        
+        [t.openList removeObject:currentPoint];
+        
+        [t.closedList addObject:currentPoint];
+        
+        if(CGPointEqualToPoint(currentPoint.point, p)) { //Found the target!
+            
+            AStarCGPoint *current = currentPoint;
+            
+            while (true) {
+                [t.currentPath addObject:current];
+                
+                if(current.parent == nil) {
+                    break;
+                }
+                
+                current = current.parent;
+            }
+            
+            t.currentPath = [NSMutableArray arrayWithArray: [[t.currentPath reverseObjectEnumerator] allObjects]];
+            
+            return;
+        }
+        
+        for(int i=-1; i<=1; i++) {
+            for(int j=-1; j<=1; j++) {
+                if(i == 0 && j == 0) continue;
+                
+                if(![self isXinBounds:currentPoint.point.x + j withY:currentPoint.point.y + i withWidth:t.size.width withHeight:t.size.height]) continue;
+                
+                CGPoint cgptVal = CGPointMake(currentPoint.point.x + j, currentPoint.point.y + i);
+                
+                int G = currentPoint.G + abs(i) == 1 && abs(j) == 1 ? 14 : 10;
+                int H = 10 * (abs(p.x - cgptVal.x) + abs(p.y - cgptVal.y));
+                
+                int F = G + H;
+                
+                if(![self openListContainsPoint:t.openList :cgptVal]) {
+                    
+                    AStarCGPoint *newPoint = [[AStarCGPoint alloc] initWithPoint:cgptVal withParent:currentPoint withF:F G:G H:H];
+                    
+                    [t.openList addObject:newPoint];
+                } else {
+                    AStarCGPoint *current = [self getPointWithPoint:t.openList :cgptVal];
+                    
+                    if(G < current.G) { //better path
+                        current.parent = currentPoint;
+                        current.G = G;
+                        current.F = current.H + current.G;
+                    }
+                }
+                
+            }
+        }
+        
+    } while (t.openList.count != 0);
+     
+}
+
+-(AStarCGPoint *) getPointWithPoint : (NSArray *) openList : (CGPoint) p {
+    
+    for(AStarCGPoint *po in openList) {
+        if(CGPointEqualToPoint(po.point, p)) return po;
+    }
+    
+    return nil;
+    
+}
+
+-(BOOL) openListContainsPoint : (NSArray *) openList : (CGPoint) p {
+    
+    for(AStarCGPoint *po in openList) {
+        if(CGPointEqualToPoint(po.point, p)) return true;
+    }
+    
+   return false;
+}
+
+-(AStarCGPoint *) getMaxFValue : (NSArray *) openList {
+    AStarCGPoint *max;
+    for(AStarCGPoint *p in openList) {
+        if(max == nil || p.F > max.F) max = p;
+    }
+    
+    return max;
 }
 
 -(void) avoidBullet : (Bullet *) b : (EnemyTank *) t { //finds the perpendicular paths from the bullet, goes furthest one away

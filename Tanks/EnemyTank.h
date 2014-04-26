@@ -43,4 +43,10 @@
 @property BOOL doesDropMines;
 @property float mineDroppingFrequency;
 
+@property (strong, nonatomic) NSMutableArray *closedList;
+@property (strong, nonatomic) NSMutableArray *openList;
+
+@property (strong, nonatomic) NSMutableArray *currentPath;
+
+
 @end
