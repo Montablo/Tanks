@@ -12,7 +12,7 @@
 
 -(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight {
     
-    self = [super initWithSize: size withPosition: position : screenMultWidth : screenMultHeight];
+    self = [super initWithSize: size withPosition: position : screenMultWidth : screenMultHeight : 0];
     
     if (self)
         [self setUpSelf];

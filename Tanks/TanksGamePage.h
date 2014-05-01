@@ -10,7 +10,7 @@
 #import "JCImageJoystick.h"
 #import "TanksConstants.h"
 #import "UserTank.h"
-#import "EnemyTank.h"
+#import "AITank.h"
 #import "Bullet.h"
 #import "TanksNavigation.h"
 #import "Mine.h"

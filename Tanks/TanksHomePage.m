@@ -19,7 +19,8 @@
     
     float screenMultWidth;
     float screenMultHeight;
-    float X_OFFSET;
+    float X_LEFT_OFFSET;
+    float X_RIGHT_OFFSET;
     float Y_BOTTOM_OFFSET;
     float Y_TOP_OFFSET;
     
@@ -46,7 +47,8 @@
         
         screenMultWidth = self.frame.size.width / screenWidth;
         screenMultHeight = self.frame.size.height / screenHeight;
-        X_OFFSET = 54*screenMultWidth;
+        X_LEFT_OFFSET = 54*screenMultWidth;
+        X_RIGHT_OFFSET = 54*screenMultWidth;
         Y_BOTTOM_OFFSET = 64*screenMultHeight;
         Y_TOP_OFFSET = 64*screenMultHeight;
         
@@ -176,7 +178,7 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY", @"MINE_AVOIDING_DISTANCE", @"DOES_DROP_MINES", @"MINE_DROPPING_FREQUENCY"];
+    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY", @"MINE_AVOIDING_DISTANCE", @"DOES_DROP_MINES", @"MINE_DROPPING_FREQUENCY", @"AIType"];
     
     BOOL inTank = NO;
     int ti = 0;
@@ -193,7 +195,7 @@
             
             NSMutableDictionary *tank = [tanks lastObject];
             
-            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 12) { //int
+            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 12 || ti == 17) { //int
                 [tank setObject:[NSNumber numberWithInt:[line intValue]] forKey:labels[ti]];
             }
             else if(ti == 1) { //color
@@ -366,7 +368,7 @@
                         else if(i == 1) {
                             if([strings[i] isEqualToString:@"center"]) x = CGRectGetMidX(self.frame);
                             else if([strings[i] isEqualToString:@"max"]) x = CGRectGetMaxX(self.frame);
-                            else x = ([strings[i] floatValue])*screenMultWidth + X_OFFSET;
+                            else x = ([strings[i] floatValue])*screenMultWidth + X_LEFT_OFFSET;
                         }
                         else if(i == 2) {
                             if([strings[i] isEqualToString:@"center"]) y = CGRectGetMidY(self.frame);
@@ -380,7 +382,9 @@
                         
                         NSDictionary *tankModel = tanks[ttype];
                         
-                        EnemyTank *tank = [[EnemyTank alloc] initWithType:ttype withSize: CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight];
+                        AITank *tank = [[AITank alloc] initWithType:ttype withAIType : [tankModel[@"AIType"] intValue] withSize: CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight];
+                        
+                        
                         
                         tank.color = tankModel[@"COLOR"];
                         tank.canMove = [tankModel[@"CAN_MOVE"] boolValue];
@@ -415,17 +419,17 @@
                     if(i == 0) wtype = strings[i];
                     else if(i == 1) {
                         if([strings[i] isEqualToString:@"center"]) x = (CGRectGetMidX(self.frame));
-                        else if([strings[i] isEqualToString:@"max"]) x = CGRectGetMaxX(self.frame) - X_OFFSET;
-                        else x = ([strings[i] floatValue])*screenMultWidth + X_OFFSET;
+                        else if([strings[i] isEqualToString:@"max"]) x = CGRectGetMaxX(self.frame) - X_RIGHT_OFFSET;
+                        else x = ([strings[i] floatValue])*screenMultWidth + X_LEFT_OFFSET;
                     }
                     else if(i == 2) {
                         if([strings[i] isEqualToString:@"center"]) y = CGRectGetMidY(self.frame);
                         else if([strings[i] isEqualToString:@"max"]) y = CGRectGetMaxY(self.frame) - Y_TOP_OFFSET;
-                        else y = ([strings[i] floatValue])*screenMultHeight + Y_TOP_OFFSET;
+                        else y = ([strings[i] floatValue])*screenMultHeight + Y_BOTTOM_OFFSET;
                     }
                     else if(i == 3) {
-                        if([strings[i] isEqualToString:@"mid"]) width = (CGRectGetMidX(self.frame) - X_OFFSET);
-                        else if([strings[i] isEqualToString:@"max"]) width = CGRectGetMaxX(self.frame) - 2 * X_OFFSET;
+                        if([strings[i] isEqualToString:@"mid"]) width = (CGRectGetMidX(self.frame) - X_RIGHT_OFFSET);
+                        else if([strings[i] isEqualToString:@"max"]) width = CGRectGetMaxX(self.frame) - X_LEFT_OFFSET - X_RIGHT_OFFSET;
                         else width = [strings[i] floatValue]*screenMultWidth;
                     }
                     else if(i == 4) {

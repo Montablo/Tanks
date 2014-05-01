@@ -10,10 +10,11 @@
 
 @implementation Tank
 
--(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight{
+-(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight : (int) type {
     self = [super init];
     self.size = size;
     self.position = position;
+    self.globalTankType = type;
     
     self.screenMultHeight = screenMultHeight;
     self.screenMultWidth = screenMultWidth;
