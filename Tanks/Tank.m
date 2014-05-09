@@ -15,6 +15,7 @@
     self.size = size;
     self.position = position;
     self.globalTankType = type;
+    self.zPosition = 50;
     
     self.screenMultHeight = screenMultHeight;
     self.screenMultWidth = screenMultWidth;
@@ -23,6 +24,19 @@
         [self setUp];
     
     return self;
+}
+
++(Tank *) tankWithTank : (Tank*) tank {
+    Tank *newTank = [[Tank alloc] initWithSize:tank.size withPosition:tank.position :tank.screenMultWidth :tank.screenMultHeight :tank.globalTankType];
+    
+    if(newTank) {
+        newTank.maxCurrentBullets = tank.maxCurrentBullets;
+        newTank.bullets = [NSMutableArray array];
+        newTank.maxCurrentMines = tank.maxCurrentMines;
+        newTank.mines = [NSMutableArray array];
+    }
+    
+    return newTank;
 }
 
 -(void) setUp {

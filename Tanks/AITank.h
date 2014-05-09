@@ -48,5 +48,7 @@
 
 @property (strong, nonatomic) NSMutableArray *currentPath;
 
++(AITank *) tankWithTank:(AITank *)tank;
+
 
 @end

@@ -1,4 +1,4 @@
-3//
+//
 //  TanksGamePage.m
 //  Tanks
 //
@@ -19,8 +19,9 @@
     BOOL gameHasStarted;
     BOOL gameHasFinished;
     
+    NSArray *levelPack;
     NSMutableArray *levels;
-    NSArray *originalLevel;
+    NSArray *levelsInfo;
     
     int currentLevel;
     int lives;
@@ -31,8 +32,19 @@
     float screenMultHeight;
     
     SKLabelNode *startMessage;
+    
+    SKLabelNode *pauseMessage;
 
     CGPoint initialTankPosition;
+    
+    SKLabelNode *endText;
+    
+    SKSpriteNode *pauseButton;
+    SKSpriteNode *exitButton;
+    
+    NSMutableArray *shells;
+    
+    BOOL usesLives;
     
 }
 
@@ -62,7 +74,21 @@
 
 -(void) initGame {
     
+    shells = [NSMutableArray array];
+    
     currentLevel = [[self.userData objectForKey:@"level"] intValue];
+    
+    levelPack = [self.userData objectForKey:@"levels"];
+    
+    levelsInfo = levelPack[0];
+    
+    levels = levelPack[1];
+    
+    if([levelsInfo[1]  isEqual: @"0"]) { //solo
+        usesLives = YES;
+    } else if([levelsInfo[1] isEqualToString:@"2"]) { // co-op
+        
+    }
     
     SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     levelNode.position = CGPointMake(CGRectGetMidX(self.frame), 25);
@@ -70,12 +96,22 @@
     levelNode.fontColor = [SKColor blackColor];
     [self addChild:levelNode];
     
-    SKLabelNode *livesNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-    livesNode.fontSize = 25;
-    livesNode.text = [NSString stringWithFormat:@"Lives : %i" , lives];
-    livesNode.position = CGPointMake(CGRectGetMaxX(self.frame) - livesNode.frame.size.width / 2, CGRectGetMaxY(self.frame) - 25);
-    livesNode.fontColor = [SKColor blackColor];
-    [self addChild:livesNode];
+    
+    if(usesLives) {
+        SKLabelNode *livesNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        livesNode.fontSize = 25;
+        livesNode.text = [NSString stringWithFormat:@"Lives : %i" , lives];
+        livesNode.position = CGPointMake(CGRectGetMaxX(self.frame) - livesNode.frame.size.width / 2, CGRectGetMaxY(self.frame) - 25);
+        livesNode.fontColor = [SKColor blackColor];
+        [self addChild:livesNode];
+    }
+    
+    pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
+    pauseButton.size = CGSizeMake(40, 40);
+    pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
+    pauseButton.zPosition = 25;
+    pauseButton.name = @"pauseButton";
+    [self addChild:pauseButton];
     
     startMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
@@ -85,17 +121,25 @@
     startMessage.zPosition = 100;
     [self addChild:startMessage];
     
-    tanks = [NSMutableArray array];
+    float turretMult = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 2.5 : 1.75;
     
-    levels = [self.userData objectForKey:@"levels"];
-    originalLevel = [levels[currentLevel] copy];
+    tanks = [NSMutableArray array];
     
     gameIsPaused = NO;
     gameHasFinished = NO;
     
     walls = levels[currentLevel][0];
     containers = levels[currentLevel][1];
-    tanks = levels[currentLevel][2];
+    tanks = [NSMutableArray array];
+    for(int i=0; i<((NSArray *)levels[currentLevel][2]).count; i++) {
+        if([levels[currentLevel][2][i] isKindOfClass: [UserTank class]]) { //is a usertank
+            [tanks addObject:[UserTank tankWithTank:((UserTank *)levels[currentLevel][2][i])]];
+        } else { //AITank
+            [tanks addObject:[AITank tankWithTank:((AITank *)levels[currentLevel][2][i])]];
+        }
+
+    }
+    
     for(int i=0; i<tanks.count; i++) {
         
         [self addChild:tanks[i]];
@@ -104,7 +148,7 @@
         
         if(i == 0) initialTankPosition = t.position;
         
-        t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:t.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(t.size.width / 1.75, 2)*t.screenMultHeight + powf(t.size.height / 1.75, 2)*t.screenMultHeight)].size];
+        t.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[t makeRectWithBottomLeftX:t.position.x withY:t.position.y withWidth:5*t.screenMultWidth withHeight:sqrtf(powf(t.size.width / turretMult, 2)*t.screenMultHeight + powf(t.size.height / turretMult, 2)*t.screenMultHeight)].size];
         t.turret.anchorPoint = CGPointMake(0, 0);
         t.turret.zRotation = M_PI / 2;
         [t addChild:t.turret];
@@ -120,8 +164,25 @@
     [self addJoystick];
     
     [self displayWalls];
+    [self displayBulletShells];
     
     [self countDown];
+}
+
+-(void) displayBulletShells {
+    for(SKSpriteNode *shell in shells) [shell removeFromParent];
+    shells = [NSMutableArray array];
+    
+    for(int i = 0; i<((Tank *) tanks[0]).maxCurrentBullets; i++) {
+        SKSpriteNode *shell = [SKSpriteNode spriteNodeWithImageNamed:@"bullet"];
+        shell.zRotation = M_PI/2;
+        shell.zPosition = 25;
+        shell.size = CGSizeMake(60*screenMultHeight, 20*screenMultWidth);
+        shell.position = CGPointMake((CGRectGetMidX(self.frame) - shell.size.height / 2) + (i) * (shell.size.height + 5) - (shell.size.height*(((Tank *) tanks[0]).maxCurrentBullets / 2)), CGRectGetMaxY(self.frame) - shell.size.width / 2 - 5*screenMultHeight);
+        if(((Tank *) tanks[0]).maxCurrentBullets - i <= ((Tank *) tanks[0]).bullets.count) shell.alpha = .5;
+        [self addChild:shell];
+        [shells addObject:shell];
+    }
 }
 
 -(void) displayWalls {
@@ -170,14 +231,14 @@
     self.joystick.xScale = 1.5*screenMultWidth;
     self.joystick.yScale = 1.5*screenMultWidth;
     [self.joystick setPosition:CGPointMake(self.joystick.size.width / 2 + 10, self.joystick.size.height / 2 + 10)];
-    self.joystick.zPosition = -1;
+    self.joystick.zPosition = 25;
     self.joystick.alpha = .5;
     [self addChild:self.joystick];
     
     SKSpriteNode *mineButton = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
     mineButton.size = CGSizeMake(80 * screenMultHeight, 80 * screenMultHeight);
     [mineButton setPosition:CGPointMake(CGRectGetMaxX(self.frame) - (mineButton.size.width / 2 + 10), mineButton.size.height / 2 + 10)];
-    mineButton.zPosition = -1;
+    mineButton.zPosition = 25;
     mineButton.name = @"mineButton";
     [self addChild:mineButton];
 
@@ -232,9 +293,14 @@
     
     userWon = !userHit;
     
-    SKLabelNode *endText = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    endText = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     endText.text = userHit ? @"You lost!" : @"You won!";
     endText.fontSize = 45;
+    if(usesLives && userWon && (currentLevel+1) % 5 == 0) {
+        endText.text = [NSString stringWithFormat:@"%@%@", endText.text, @" You earned a life!"];
+        endText.fontSize = 35;
+        lives ++;
+    }
     endText.name = @"endText";
     endText.fontColor = [UIColor blackColor];
     endText.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
@@ -257,32 +323,81 @@
                 [TanksNavigation loadTanksHomePage:self];
                 return YES;
             } else {
+                
                 levelNum = currentLevel + 1;
             }
         } else {
-            lives--;
             
-            /*for(int i=0; i<tanks.count; i++) {
+            if(usesLives) {
+                lives--;
                 
-                Tank *original = originalLevel[2][i];
+                int numRemoved = 0;
                 
-                if(original.isObliterated && i != 0) continue;
-                
-                tanks[i] = original;
+                for(int i=0; i<tanks.count; i++) { //skips usertank
+                    Tank *t = tanks[i];
+                    if(i == 0) t.isObliterated = NO;
+                    else if(t.isObliterated) {
+                        [((NSMutableArray *)levels[currentLevel][2]) removeObjectAtIndex:i - numRemoved];
+                        numRemoved ++;
+                    }
+                }
             }
             
-            if(lives == 0) {*/
+            if(!usesLives || lives == 0) {
                 [TanksNavigation loadTanksHomePage:self];
                 return YES;
-            //}
+            }
         }
         
-        [self removeAllChildren];
-        
-        [TanksNavigation loadTanksGamePage:self :levelNum :levels : lives];
+        [TanksNavigation loadTanksGamePage:self :levelNum :levelPack : lives];
         return YES;
     } else if([n.name isEqualToString:@"mineButton"]) {
         [self dropUserMine];
+        return YES;
+    } else if([n.name isEqualToString:@"exitButton"]) {
+        [TanksNavigation loadTanksHomePage:self];
+        return YES;
+    } else if([n.name isEqualToString:@"pauseButton"] && !gameIsPaused) {
+        [self pauseGame];
+        
+        [pauseButton removeFromParent];
+        pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"play"];
+        pauseButton.size = CGSizeMake(40, 40);
+        pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
+        pauseButton.zPosition = 25;
+        pauseButton.name = @"pauseButton";
+        [self addChild:pauseButton];
+        
+        pauseMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        pauseMessage.zPosition = 50;
+        pauseMessage.text = @"Tap the screen to resume.";
+        pauseMessage.fontSize = 35;
+        pauseMessage.fontColor = [SKColor blackColor];
+        pauseMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+        [self addChild:pauseMessage];
+        
+        
+        exitButton = [SKSpriteNode spriteNodeWithImageNamed:@"exit"];
+        exitButton.size = CGSizeMake(60, 60);
+        exitButton.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - 75);
+        exitButton.zPosition = 50;
+        exitButton.name = @"exitButton";
+        [self addChild:exitButton];
+        
+        return YES;
+    } else if(gameIsPaused && gameHasStarted && !gameHasFinished) {
+        [self pauseGame];
+        [pauseButton removeFromParent];
+        [pauseMessage removeFromParent];
+        [exitButton removeFromParent];
+        
+        pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
+        pauseButton.size = CGSizeMake(40, 40);
+        pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
+        pauseButton.zPosition = 25;
+        pauseButton.name = @"pauseButton";
+        [self addChild:pauseButton];
+        
         return YES;
     }
     
@@ -377,9 +492,13 @@
         newBullet.zRotation += accuracy * direction * rand;
     }
     
+    newBullet.zPosition = 50;
+    
     [self addChild:newBullet];
     
     [t.bullets addObject:newBullet];
+    
+    if(type == 0) [self displayBulletShells];
     
     [self advanceBullet : @[newBullet, t]];
     
@@ -422,6 +541,8 @@
             [b removeFromParent];
             [owner.bullets removeObjectIdenticalTo:b];
             
+            [self displayBulletShells];
+            
             return;
         }
         
@@ -448,6 +569,8 @@
             [b removeFromParent];
             [owner.bullets removeObjectIdenticalTo:b];
             
+            [self displayBulletShells];
+            
             return;
         }
         
@@ -458,11 +581,13 @@
     for(Tank *t in tanks) {
         #pragma mark Check for bullet hit
         if([b intersectsNode:t]) {
-            if(t.isObliterated == NO) {
+            if(!t.isObliterated) {
                 [t removeFromParent];
                 [b removeFromParent];
                 
                 [owner.bullets removeObjectIdenticalTo:b];
+                
+                [self displayBulletShells];
                 
                 t.isObliterated = YES;
                 b.isObliterated = YES;
@@ -503,6 +628,8 @@
                     other.isObliterated = YES;
                     b.isObliterated = YES;
                     
+                    [self displayBulletShells];
+                    
                     return;
                 }
             }
@@ -514,6 +641,9 @@
                 [owner.bullets removeObjectIdenticalTo:b];
                 b.isObliterated = YES;
                 [self blowUpMine:m];
+                
+                [self displayBulletShells];
+                
                 return;
             }
         }
@@ -609,9 +739,6 @@
             
             if(!t.isObliterated) {
                 [t removeFromParent];
-                [m removeFromParent];
-                
-                [owner.mines removeObjectIdenticalTo:m];
                 
                 t.isObliterated = YES;
                 m.isObliterated = YES;
@@ -633,8 +760,6 @@
                     return;
                 }
                 
-                [self performSelector:@selector(cleanUpMine:) withObject:m afterDelay:[self randomInt:15 withUpperBound:5] / 10];
-                return;
             }
         }
     }
@@ -824,167 +949,6 @@
     if([self randomInt:0 withUpperBound:250] == 0) t.turretTurningDirection *= -1;
     t.turret.zRotation += .005*t.turretTurningDirection;
 }
-
-/*-(void) moveOnPath : (AITank *) t {
-    
-    AStarCGPoint *point = [t.currentPath firstObject];
-    
-    t.position = point.point;
-    
-    
-}*/
-
-/*-(void) processTankPathfinding : (EnemyTank *) t toPoint : (CGPoint) p {
-    
-    NSMutableArray *points = [NSMutableArray array];
-    NSMutableArray *diagonals = [NSMutableArray array];
-    
-    for(int i=-1; i<=1; i++) {
-        for(int j=-1; j<=1; j++) {
-            if(i == 0 && j == 0) continue;
-            
-            
-            
-            [diagonals addObject:[NSNumber numberWithBool: abs(i) == 1 && abs(j) == 1]];
-            
-            if([self isXinBounds:t.position.x + j withY:t.position.y + i withWidth:t.size.width withHeight:t.size.height]) { //point is valid
-                [points addObject:[NSValue valueWithCGPoint:CGPointMake(t.position.x + j, t.position.y + i)]];
-            }
-        }
-    }
-    
-    int minF = -1;
-    int minIndex = -1;
-    
-    for(int i=0; i<points.count; i++) {
-        CGPoint newPoint = [points[i] CGPointValue];
-        
-        BOOL b = NO;
-        for(NSValue *v in t.closedPoints) {
-            
-            if(CGPointEqualToPoint([v CGPointValue], newPoint)) {
-                b = YES;
-                break;
-            }
-        }
-        
-        if(b) continue;
-        
-        int G = [diagonals[i] boolValue] ? 14 : 10;
-        int H = abs(p.x - newPoint.x) + abs(p.y - newPoint.y);
-        int F = G + H;
-        
-        if(minF == -1 || F < minF) {
-            minF = F;
-            minIndex = i;
-        }
-    }
-    
-    if(minIndex == -1) {
-        //t.closedPoints = [NSMutableArray array];
-        return;
-    }
-    
-    t.position = [points[minIndex] CGPointValue];
-    [t.closedPoints addObject:points[minIndex]];
-    
-}*/
-
-/*-(void) generatePath : (EnemyTank *) t : (CGPoint) p {
-    t.openList = [NSMutableArray array];
-    t.closedList = [NSMutableArray array];
-    
-    [t.openList addObject:[[AStarCGPoint alloc] initWithPoint:t.position withParent:nil withF:0 G:0 H:0]];
-    
-    do {
-        
-        AStarCGPoint *currentPoint = [self getMaxFValue : t.openList];
-        
-        [t.openList removeObject:currentPoint];
-        
-        [t.closedList addObject:currentPoint];
-        
-        if(CGPointEqualToPoint(currentPoint.point, p)) { //Found the target!
-            
-            AStarCGPoint *current = currentPoint;
-            
-            while (true) {
-                [t.currentPath addObject:current];
-                
-                if(current.parent == nil) {
-                    break;
-                }
-                
-                current = current.parent;
-            }
-            
-            t.currentPath = [NSMutableArray arrayWithArray: [[t.currentPath reverseObjectEnumerator] allObjects]];
-            
-            return;
-        }
-        
-        for(int i=-1; i<=1; i++) {
-            for(int j=-1; j<=1; j++) {
-                if(i == 0 && j == 0) continue;
-                
-                if(![self isXinBounds:currentPoint.point.x + j withY:currentPoint.point.y + i withWidth:t.size.width withHeight:t.size.height : false]) continue;
-                
-                CGPoint cgptVal = CGPointMake(currentPoint.point.x + j, currentPoint.point.y + i);
-                
-                int G = currentPoint.G + abs(i) == 1 && abs(j) == 1 ? 14 : 10;
-                int H = 10 * (abs(p.x - cgptVal.x) + abs(p.y - cgptVal.y));
-                
-                int F = G + H;
-                
-                if(![self openListContainsPoint:t.openList :cgptVal]) {
-                    
-                    AStarCGPoint *newPoint = [[AStarCGPoint alloc] initWithPoint:cgptVal withParent:currentPoint withF:F G:G H:H];
-                    
-                    [t.openList addObject:newPoint];
-                } else {
-                    AStarCGPoint *current = [self getPointWithPoint:t.openList :cgptVal];
-                    
-                    if(G < current.G) { //better path
-                        current.parent = currentPoint;
-                        current.G = G;
-                        current.F = current.H + current.G;
-                    }
-                }
-                
-            }
-        }
-        
-    } while (t.openList.count != 0);
-     
-}
-
--(AStarCGPoint *) getPointWithPoint : (NSArray *) openList : (CGPoint) p {
-    
-    for(AStarCGPoint *po in openList) {
-        if(CGPointEqualToPoint(po.point, p)) return po;
-    }
-    
-    return nil;
-    
-}
-
--(BOOL) openListContainsPoint : (NSArray *) openList : (CGPoint) p {
-    
-    for(AStarCGPoint *po in openList) {
-        if(CGPointEqualToPoint(po.point, p)) return true;
-    }
-    
-   return false;
-}
-
--(AStarCGPoint *) getMaxFValue : (NSArray *) openList {
-    AStarCGPoint *max;
-    for(AStarCGPoint *p in openList) {
-        if(max == nil || p.F > max.F) max = p;
-    }
-    
-    return max;
-}*/
 
 -(void) avoidBullet : (Bullet *) b : (AITank *) t { //finds the perpendicular paths from the bullet, goes furthest one away
     CGPoint p1;
@@ -1215,6 +1179,8 @@
     for(int i=1; i<tanks.count; i++) {
         
         Tank *t = tanks[i];
+        
+        if(t.isObliterated) continue;
         
         if(CGPointEqualToPoint(t.position, P1) || CGPointEqualToPoint(t.position, P2)) {
             continue;

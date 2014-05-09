@@ -11,5 +11,5 @@
 @interface UserTank : Tank
 
 -(instancetype) initWithSize : (CGSize) size withPosition : (CGPoint) position : (float) screenMultWidth : (float) screenMultHeight;
-
++(UserTank *) tankWithTank : (Tank*) tank;
 @end

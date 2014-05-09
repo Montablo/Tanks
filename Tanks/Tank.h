@@ -30,4 +30,6 @@
 
 @property int globalTankType; //0 : user 1 : enemy ai 2 : friend ai
 
++(Tank *) tankWithTank : (Tank*) tank;
+
 @end

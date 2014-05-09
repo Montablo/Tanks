@@ -103,6 +103,8 @@
         
         currentLevelPack = 0;
         
+        //[self saveLevelsToFile];
+        
         [self readTankTypes];
         [self readLevels];
         
@@ -121,7 +123,7 @@
     SKNode *n = [self nodeAtPoint:orgin];
     
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
-        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levels : 3];
+        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[currentLevelPack] : 3];
         return;
     } else if([n.name isEqual:@"arrow1"]) {
         currentLevelPack--;
@@ -156,7 +158,16 @@
     image.size = CGSizeMake(CGRectGetMaxX(self.frame)*.7, CGRectGetMaxY(self.frame) - 200);
     image.name = @"playLabel";
     [self addChild:image];
-    statusLabel.text = levelPacks[currentLevelPack][0];
+    
+    [statusLabel removeFromParent];
+    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    statusLabel.text = levelPacks[currentLevelPack][0][0];
+    
+    statusLabel.fontColor = [SKColor blackColor];
+    statusLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - feedback.size.height - 10);
+    statusLabel.fontSize = 15;
+    [self addChild:statusLabel];
+    
     levels = levelPacks[currentLevelPack][1];
     STARTING_LEVEL = 1;
     levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
@@ -220,8 +231,6 @@
 
 -(void) saveLevelsToFile {
     [statusLabel removeFromParent];
-    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-    statusLabel.text = @"...";
     
     NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
     
@@ -229,8 +238,11 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
+    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+
     
     BOOL re;
+    [feedback removeFromParent];
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         feedback = [SKSpriteNode spriteNodeWithImageNamed:@"x"];
         statusLabel.text = @"Error connecting to the server. Play locally in the meantime.";
@@ -266,7 +278,6 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         return;
     }
@@ -293,6 +304,9 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
+    [feedback removeFromParent];
+    [statusLabel removeFromParent];
+
     statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     BOOL re = NO;
     if([allLinedStrings[0]  isEqual: @"<html><head>"]) {
@@ -327,10 +341,10 @@
         if([line isEqual:@"START"]) {
             inLevelPack = YES;
             [levelPacks addObject:[NSMutableArray array]];
-            [[levelPacks lastObject] addObject:allLinedStrings[i+1]];
+            [[levelPacks lastObject] addObject:@[allLinedStrings[i+1], allLinedStrings[i+2]]];
             [[levelPacks lastObject] addObject:[NSMutableArray array]];
             levels = [levelPacks lastObject][1];
-            i++;
+            i += 2;
             continue;
          } else if([line isEqual:@"END"]) {
              inLevelPack = NO;
@@ -377,7 +391,15 @@
                         }
                     }
                     
-                    if(ttype == -1) [level[2] addObject : [[UserTank alloc] initWithSize:CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight]];
+                    if(ttype <= -1) {
+                        
+                        UserTank *t = [[UserTank alloc] initWithSize:CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight];
+                        
+                        t.globalTankType = 0;
+                        
+                        [level[2] addObject:t];
+                        
+                    }
                     else {
                         
                         NSDictionary *tankModel = tanks[ttype];

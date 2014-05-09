@@ -9,7 +9,34 @@
 #import "TanksViewController.h"
 #import "TanksHomePage.h"
 
+
+
 @implementation TanksViewController
+
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(showAuthenticationViewController)
+     name:PresentAuthenticationViewController
+     object:nil];
+    
+    [[GameKitHelper sharedGameKitHelper] authenticateLocalPlayer];
+}
+
+- (void)showAuthenticationViewController
+{
+    GameKitHelper *gameKitHelper =
+    [GameKitHelper sharedGameKitHelper];
+    
+    [self presentViewController:
+     gameKitHelper.authenticationViewController
+                       animated:YES
+                     completion:nil];
+}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

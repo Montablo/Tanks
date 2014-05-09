@@ -26,68 +26,6 @@
     [self setUp];
     
     if(self) {
-        /*if(self.type == 0) {
-            
-            self.color = [SKColor grayColor];
-            
-            self.canMove = NO;
-            self.rangeOfSight = 500;
-            self.maximumDistance = 0;
-            self.bulletSensingDistance = 0;
-            
-            self.initialTrackingCooldown = 0;
-            
-            self.numRicochets = 1;
-            self.bulletSpeed = .008;
-            self.bulletFrequency = 30;
-            
-            self.maxCurrentBullets = 1;
-            
-            self.bulletShootingDownFrequency = -1;
-            
-        } else if(self.type == 1) {
-            
-            self.color = [SKColor yellowColor];
-            
-            self.canMove = YES;
-            self.rangeOfSight = 750;
-            self.maximumDistance = 100;
-            self.bulletSensingDistance = 25;
-            
-            self.initialTrackingCooldown = 5.0;
-            
-            self.numRicochets = 1;
-            self.bulletSpeed = .008;
-            self.bulletFrequency = 20;
-            
-            self.maxCurrentBullets = 2;
-            
-            self.bulletShootingDownFrequency = 3;
-            
-        } else if(self.type == 2) {
-            
-            self.color = [SKColor greenColor];
-            
-            self.canMove = YES;
-            self.rangeOfSight = 1000;
-            self.maximumDistance = 150;
-            self.bulletSensingDistance = 35;
-            
-            self.initialTrackingCooldown = 5.0;
-            
-            self.numRicochets = 0;
-            self.bulletSpeed = .006;
-            self.bulletFrequency = 20;
-            
-            self.maxCurrentBullets = 1;
-            
-            self.bulletShootingDownFrequency = 1;
-            
-        }*/
-        
-        //self.mineAvoidingDistance = 300;
-        //self.doesDropMines = YES;
-        //self.mineDroppingFrequency = 100;
         
         self.isMoving = NO;
         self.direction = M_PI;
@@ -101,6 +39,49 @@
         self.name = @"enemyTank";
 
     }
+}
+
++(AITank *) tankWithTank:(AITank *)tank {
+    AITank *t = [[self alloc] initWithType:tank.tankType withAIType:tank.tankType withSize:tank.size withPosition:tank.position :tank.screenMultWidth :tank.screenMultHeight];
+    
+    if(t) {
+        
+        t.color = tank.color;
+        t.globalTankType = tank.globalTankType;
+        
+        t.maxCurrentBullets = tank.maxCurrentBullets;
+        t.bullets = [NSMutableArray array];
+        t.maxCurrentMines = tank.maxCurrentMines;
+        t.mines = [NSMutableArray array];
+        
+        t.isMoving = NO;
+        t.direction = M_PI;
+        t.turningDirection = arc4random_uniform(1);
+        t.turretTurningDirection = arc4random_uniform(1);
+        if(t.turningDirection == 0) t.turningDirection = -1;
+        if(t.turretTurningDirection == 0) t.turretTurningDirection = -1;
+        
+        t.trackingCooldown = 0;
+        t.name = @"enemyTank";
+        
+        t.canMove = tank.canMove;
+        t.rangeOfSight = tank.rangeOfSight;
+        t.maximumDistance = tank.maximumDistance;
+        t.direction = tank.direction;
+        t.initialTrackingCooldown = tank.initialTrackingCooldown;
+        t.bulletSensingDistance = tank.bulletSensingDistance;
+        t.bulletSpeed = tank.bulletSpeed;
+        t.bulletFrequency = tank.bulletFrequency;
+        t.numRicochets = tank.numRicochets;
+        t.bulletShootingDownFrequency = tank.bulletShootingDownFrequency;
+        t.tankSpeed = tank.tankSpeed;
+        t.bulletAccuracy = tank.bulletAccuracy;
+        t.mineAvoidingDistance = tank.mineAvoidingDistance;
+        t.doesDropMines = tank.doesDropMines;
+        t.mineDroppingFrequency = tank.mineDroppingFrequency;
+    }
+    
+    return t;
 }
 
 @end

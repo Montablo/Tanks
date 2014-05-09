@@ -31,4 +31,14 @@
     }
 }
 
++(UserTank *) tankWithTank : (Tank*) tank {
+    Tank *t = [super tankWithTank:tank];
+    
+    if(t) {
+        t.color = [SKColor blueColor];
+        t.name = @"userTank";
+    }
+    return t;
+}
+
 @end
