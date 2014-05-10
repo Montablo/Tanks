@@ -8,15 +8,16 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "JCImageJoystick.h"
+#import "JCJoystick.h"
 #import "TanksConstants.h"
 #import "UserTank.h"
 #import "AITank.h"
 #import "Bullet.h"
 #import "TanksNavigation.h"
-#import "Mine.h"
+//#import "Mine.h"
 
 @interface TanksGamePage : SKScene
 
-@property (strong, nonatomic) JCImageJoystick *joystick;
+@property (strong, nonatomic) JCJoystick *joystick;
 
 @end

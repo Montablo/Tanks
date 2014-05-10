@@ -47,10 +47,10 @@
         
         screenMultWidth = self.frame.size.width / screenWidth;
         screenMultHeight = self.frame.size.height / screenHeight;
-        X_LEFT_OFFSET = 54*screenMultWidth;
-        X_RIGHT_OFFSET = 54*screenMultWidth;
-        Y_BOTTOM_OFFSET = 64*screenMultHeight;
-        Y_TOP_OFFSET = 64*screenMultHeight;
+        X_LEFT_OFFSET = 0*screenMultWidth;
+        X_RIGHT_OFFSET = 0*screenMultWidth;
+        Y_BOTTOM_OFFSET = 0*screenMultHeight;
+        Y_TOP_OFFSET = 0*screenMultHeight;
         
         [self addChild:playLabel];
         
@@ -128,7 +128,7 @@
         return;
     } else if([n.name isEqual:@"arrow1"]) {
         currentLevelPack--;
-        if(currentLevelPack == -1) currentLevelPack = levelPacks.count - 1;
+        if(currentLevelPack == -1) currentLevelPack = (int) levelPacks.count - 1;
         [self displaycurrentLevelPack];
     } else if([n.name isEqual:@"arrow2"]) {
         currentLevelPack++;
@@ -146,7 +146,7 @@
         [self displaycurrentLevelPack];
     } else if([n.name isEqual:@"arrow3"]) {
         STARTING_LEVEL--;
-        if(STARTING_LEVEL == 0) STARTING_LEVEL = levels.count;
+        if(STARTING_LEVEL == 0) STARTING_LEVEL = (int) levels.count;
         levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
     } else if([n.name isEqual:@"arrow4"]) {
         STARTING_LEVEL++;

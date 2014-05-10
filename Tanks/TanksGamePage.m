@@ -46,6 +46,8 @@
     
     BOOL usesLives;
     
+    int backgroundIndex;
+    
 }
 
 #pragma mark Initialization methods
@@ -92,7 +94,7 @@
     SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     levelNode.position = CGPointMake(CGRectGetMidX(self.frame), 25);
     levelNode.text = [NSString stringWithFormat:@"Level : %i" , currentLevel + 1];
-    levelNode.fontColor = [SKColor blackColor];
+    levelNode.fontColor = [SKColor whiteColor];
     [self addChild:levelNode];
     
     
@@ -101,7 +103,7 @@
         livesNode.fontSize = 25;
         livesNode.text = [NSString stringWithFormat:@"Lives : %i" , lives];
         livesNode.position = CGPointMake(CGRectGetMaxX(self.frame) - livesNode.frame.size.width / 2, CGRectGetMaxY(self.frame) - 25);
-        livesNode.fontColor = [SKColor blackColor];
+        livesNode.fontColor = [SKColor whiteColor];
         [self addChild:livesNode];
     }
     
@@ -116,11 +118,11 @@
     startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
     startMessage.text = @"Touch the screen to begin.";
     startMessage.fontSize = 40;
-    startMessage.fontColor = [SKColor blackColor];
+    startMessage.fontColor = [SKColor whiteColor];
     startMessage.zPosition = 100;
     [self addChild:startMessage];
     
-    float turretMult = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 2.5 : 1.75;
+    float turretMult = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 3 : 2;
     
     tanks = [NSMutableArray array];
     
@@ -160,9 +162,9 @@
         }
     }
     
-    [self addJoystick];
-    
     [self displayWalls];
+    
+    [self addJoystick];
     [self displayBulletShells];
     
     [self countDown];
@@ -173,12 +175,14 @@
     shells = [NSMutableArray array];
     
     for(int i = 0; i<((Tank *) tanks[0]).maxCurrentBullets; i++) {
-        SKSpriteNode *shell = [SKSpriteNode spriteNodeWithImageNamed:@"bullet"];
+        
+        NSString *imgName = ((Tank *) tanks[0]).maxCurrentBullets - i <= ((Tank *) tanks[0]).bullets.count ? @"RoundWhiteCircleBorder" : @"RoundWhiteCircle";
+        
+        SKSpriteNode *shell = [SKSpriteNode spriteNodeWithImageNamed:imgName];
         shell.zRotation = M_PI/2;
         shell.zPosition = 25;
-        shell.size = CGSizeMake(60*screenMultHeight, 20*screenMultWidth);
+        shell.size = CGSizeMake(10*screenMultHeight, 10*screenMultWidth);
         shell.position = CGPointMake((CGRectGetMidX(self.frame) - shell.size.height / 2) + (i) * (shell.size.height + 5) - (shell.size.height*(((Tank *) tanks[0]).maxCurrentBullets / 2)), CGRectGetMaxY(self.frame) - shell.size.width / 2 - 5*screenMultHeight);
-        if(((Tank *) tanks[0]).maxCurrentBullets - i <= ((Tank *) tanks[0]).bullets.count) shell.alpha = .5;
         [self addChild:shell];
         [shells addObject:shell];
     }
@@ -186,7 +190,9 @@
 
 -(void) displayWalls {
     
-    SKSpriteNode *floor = [SKSpriteNode spriteNodeWithImageNamed:@"background"];
+    NSMutableArray *wallColors = [self generateColors];
+    
+    /*SKSpriteNode *floor = [SKSpriteNode spriteNodeWithImageNamed:@"background"];
     SKSpriteNode *border = [SKSpriteNode spriteNodeWithImageNamed:@"floor_walls"];
     floor.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
     border.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));    floor.size = self.frame.size;
@@ -194,7 +200,17 @@
     border.size = self.frame.size;
     border.zPosition = -5;
     [self addChild:floor];
-    [self addChild:border];
+     [self addChild:border];*/
+    
+    CGRect inGameFrame = [containers[0] CGRectValue];
+    self.backgroundColor = [UIColor whiteColor];
+    backgroundIndex = [self randomInt:0 withUpperBound:wallColors.count];
+    UIColor *color = wallColors[backgroundIndex];
+    [wallColors removeObjectAtIndex:backgroundIndex];
+    SKSpriteNode *background = [SKSpriteNode spriteNodeWithColor:color size:inGameFrame.size];
+    background.position = inGameFrame.origin;
+    background.zPosition = -25;
+    [self addChild:background];
     
     for (int i=0; i<walls.count; i++) {
         
@@ -207,7 +223,7 @@
         
         [self addChild:wallNode];*/
         
-        CGSize coverageSize = CGSizeMake(wall.size.width, wall.size.height); //the size of the entire image you want tiled
+        /*CGSize coverageSize = CGSizeMake(wall.size.width, wall.size.height); //the size of the entire image you want tiled
         CGRect textureSize = CGRectMake(0, 0, 50, 50); //the size of the tile.
         CGImageRef backgroundCGImage = [UIImage imageNamed:@"wood-1"].CGImage; //change the string to your image name
         UIGraphicsBeginImageContext(CGSizeMake(coverageSize.width, coverageSize.height));
@@ -219,27 +235,47 @@
         SKSpriteNode *backgroundTiles = [SKSpriteNode spriteNodeWithTexture:backgroundTexture];
         backgroundTiles.yScale = -1; //upon closer inspection, I noticed my source tile was flipped vertically, so this just flipped it back.
         backgroundTiles.position = CGPointMake(wall.origin.x, wall.origin.y);
-        [self addChild:backgroundTiles];
+        [self addChild:backgroundTiles];*/
+        
+        SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithColor:wallColors[[self randomInt:0 withUpperBound:(int) wallColors.count]] size:wall.size];
+        wallNode.position = wall.origin;
+        wallNode.zPosition = -5;
+        [self addChild:wallNode];
     }
     
 }
 
+-(NSMutableArray *) generateColors {
+    return [NSMutableArray arrayWithArray: @[[self c:@"556270"], [self c:@"4ECDC4"], [self c:@"C7F464"], [self c:@"FF6B6B"], [self c:@"C44D58"]]];
+}
+
 -(void) addJoystick {
-    self.joystick = [[JCImageJoystick alloc]initWithJoystickImage:(@"redStick.png") baseImage:@"stickbase.png"];
+    //self.joystick = [[JCImageJoystick alloc]initWithJoystickImage:(@"redStick.png") baseImage:@"stickbase.png"];
     //self.joystick.size = CGSizeMake(self.joystick.size.width * screenMultWidth, self.joystick.size.height * screenMultHeight);
-    self.joystick.xScale = 1.5*screenMultWidth;
-    self.joystick.yScale = 1.5*screenMultWidth;
-    [self.joystick setPosition:CGPointMake(self.joystick.size.width / 2 + 10, self.joystick.size.height / 2 + 10)];
+    
+    NSMutableArray *colors = [self generateColors];
+    
+    [colors removeObjectAtIndex:backgroundIndex];
+    
+    int colorIndex1 = [self randomInt:0 withUpperBound:colors.count];
+    UIColor *color1 = colors[colorIndex1];
+    [colors removeObjectAtIndex:colorIndex1];
+    UIColor *color2 = colors[[self randomInt:0 withUpperBound:colors.count]];
+    
+    self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
+    //self.joystick.xScale = 1*screenMultWidth;
+    //self.joystick.yScale = 1*screenMultWidth;
+    [self.joystick setPosition:CGPointMake(50, 50)];
     self.joystick.zPosition = 25;
-    self.joystick.alpha = .5;
+    self.joystick.alpha = 1;
     [self addChild:self.joystick];
     
-    SKSpriteNode *mineButton = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
-    mineButton.size = CGSizeMake(80 * screenMultHeight, 80 * screenMultHeight);
+    /*SKSpriteNode *mineButton = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
+    mineButton.size = CGSizeMake(40 * screenMultHeight, 40 * screenMultHeight);
     [mineButton setPosition:CGPointMake(CGRectGetMaxX(self.frame) - (mineButton.size.width / 2 + 10), mineButton.size.height / 2 + 10)];
     mineButton.zPosition = 25;
     mineButton.name = @"mineButton";
-    [self addChild:mineButton];
+    [self addChild:mineButton];*/
 
 }
 
@@ -301,7 +337,8 @@
         lives ++;
     }
     endText.name = @"endText";
-    endText.fontColor = [UIColor blackColor];
+    endText.zPosition = 150;
+    endText.fontColor = [UIColor whiteColor];
     endText.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
     [self addChild:endText];
 }
@@ -312,6 +349,8 @@
     UITouch *p = [touches anyObject];
     CGPoint orgin = [p locationInNode:self];
     SKNode *n = [self nodeAtPoint:orgin];
+    
+    BOOL ret = NO;
     
     if([n.name isEqualToString:@"endText"]) {
         
@@ -350,13 +389,15 @@
         
         [TanksNavigation loadTanksGamePage:self :levelNum :levelPack : lives];
         return YES;
-    } else if([n.name isEqualToString:@"mineButton"]) {
+    } /*else if([n.name isEqualToString:@"mineButton"]) {
         [self dropUserMine];
         return YES;
-    } else if([n.name isEqualToString:@"exitButton"]) {
+    }*/ else if([n.name isEqualToString:@"exitButton"]) {
         [TanksNavigation loadTanksHomePage:self];
         return YES;
-    } else if([n.name isEqualToString:@"pauseButton"] && !gameIsPaused) {
+    }
+    
+    if([n.name isEqualToString:@"pauseButton"] && !gameIsPaused) {
         [self pauseGame];
         
         [pauseButton removeFromParent];
@@ -368,10 +409,10 @@
         [self addChild:pauseButton];
         
         pauseMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-        pauseMessage.zPosition = 50;
+        pauseMessage.zPosition = 150;
         pauseMessage.text = @"Tap the screen to resume.";
         pauseMessage.fontSize = 35;
-        pauseMessage.fontColor = [SKColor blackColor];
+        pauseMessage.fontColor = [SKColor whiteColor];
         pauseMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
         [self addChild:pauseMessage];
         
@@ -383,7 +424,7 @@
         exitButton.name = @"exitButton";
         [self addChild:exitButton];
         
-        return YES;
+        ret = YES;
     } else if(gameIsPaused && gameHasStarted && !gameHasFinished) {
         [self pauseGame];
         [pauseButton removeFromParent];
@@ -397,10 +438,10 @@
         pauseButton.name = @"pauseButton";
         [self addChild:pauseButton];
         
-        return YES;
+        ret = YES;
     }
     
-    return NO;
+    return ret;
 }
 
 #pragma mark Game logic - boundaries
@@ -634,7 +675,7 @@
             }
         }
         
-        for(Mine *m in t.mines) {
+        /*for(Mine *m in t.mines) {
             if([b intersectsNode:m]) {
                 [b removeFromParent];
                 [owner.bullets removeObjectIdenticalTo:b];
@@ -645,7 +686,7 @@
                 
                 return;
             }
-        }
+        }*/
         
     }
 
@@ -658,7 +699,7 @@
 
 #pragma mark Mine dropping
 
--(void) dropUserMine {
+/*-(void) dropUserMine {
     
     if(!gameHasStarted || gameIsPaused || gameHasFinished) return;
     
@@ -771,7 +812,7 @@
 
 -(void) cleanUpMine : (Mine *) m {
     [m removeFromParent];
-}
+}*/
 
 #pragma mark Math functions
 
@@ -835,7 +876,7 @@
 -(void) initAITankLogic {
     [self processTankActionMoving];
     [self processTankActionFiring];
-    [self processTankActionMineDropping];
+    //[self processTankActionMineDropping];
 }
 
 -(void) processTankActionMoving {
@@ -886,7 +927,7 @@
     [self performSelector:@selector(processTankActionFiring) withObject:nil afterDelay: .1];
 }
 
--(void) processTankActionMineDropping {
+/*-(void) processTankActionMineDropping {
     
     if(gameHasFinished) return;
     
@@ -908,7 +949,7 @@
     }
     
     [self performSelector:@selector(processTankActionMineDropping) withObject:nil afterDelay: .1];
-}
+}*/
 
 #pragma mark Tank AI - Moving
 
@@ -921,13 +962,13 @@
         CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:goalTank.position];
         Bullet *b = [self isBulletNearTank : t];
         
-        Mine *m = [self isMineNearTank : t];
+        //Mine *m = [self isMineNearTank : t];
         
         if(b != nil) {
             [self avoidBullet : b : t];
-        } else if(m != nil) {
+        }/* else if(m != nil) {
             [self avoidMine : m : t];
-        }
+        }*/
         else if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:goalTank.position] || ![self tankCanSeeTank:t withTank:goalTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
             //[self processTankPathfinding : t toPoint : userTank.position];
@@ -974,7 +1015,7 @@
     t.position = greater;
 }
 
--(void) avoidMine : (Mine *) m : (AITank *) t {
+/*-(void) avoidMine : (Mine *) m : (AITank *) t {
     
     float angle = M_PI - [self getAngleP1:t.position P2:m.position];
     
@@ -982,7 +1023,7 @@
     
     if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false])
         t.position = newPos;
-}
+}*/
 
 
 -(void) moveTank : (AITank *) t toPoint : (CGPoint) goalPoint {
@@ -1204,7 +1245,7 @@
     return nil;
 }
 
--(Mine *) isMineNearTank : (AITank *) t {
+/*-(Mine *) isMineNearTank : (AITank *) t {
     for(Tank *otherTank in tanks) {
         for(Mine *m in otherTank.mines) {
             if([self distanceBetweenPoints:t.position P2:m.position] <= t.mineAvoidingDistance) { //close to tank
@@ -1214,7 +1255,7 @@
     }
     
     return nil;
-}
+}*/
 
 -(BOOL) bulletWillHitTank : (AITank *) t withBullet : (Bullet *) b {
     float angle = [self getAngleP1:t.position P2:b.position];
@@ -1277,6 +1318,50 @@
             LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x + r.size.width, r.origin.y + r.size.height), CGPointMake(r.origin.x, r.origin.y + r.size.height)) ||
             LineIntersectsLine(lineStart, lineEnd, CGPointMake(r.origin.x, r.origin.y + r.size.height), CGPointMake(r.origin.x, r.origin.y)) ||
             (CGRectContainsPoint(r, lineStart) && CGRectContainsPoint(r, lineEnd)));
+}
+
+#pragma mark Color
+- (UIColor *) c: (NSString *) hexString {
+    NSString *colorString = [[hexString stringByReplacingOccurrencesOfString: @"#" withString: @""] uppercaseString];
+    CGFloat alpha, red, blue, green;
+    switch ([colorString length]) {
+        case 3: // #RGB
+            alpha = 1.0f;
+            red   = [self colorComponentFrom: colorString start: 0 length: 1];
+            green = [self colorComponentFrom: colorString start: 1 length: 1];
+            blue  = [self colorComponentFrom: colorString start: 2 length: 1];
+            break;
+        case 4: // #ARGB
+            alpha = [self colorComponentFrom: colorString start: 0 length: 1];
+            red   = [self colorComponentFrom: colorString start: 1 length: 1];
+            green = [self colorComponentFrom: colorString start: 2 length: 1];
+            blue  = [self colorComponentFrom: colorString start: 3 length: 1];
+            break;
+        case 6: // #RRGGBB
+            alpha = 1.0f;
+            red   = [self colorComponentFrom: colorString start: 0 length: 2];
+            green = [self colorComponentFrom: colorString start: 2 length: 2];
+            blue  = [self colorComponentFrom: colorString start: 4 length: 2];
+            break;
+        case 8: // #AARRGGBB
+            alpha = [self colorComponentFrom: colorString start: 0 length: 2];
+            red   = [self colorComponentFrom: colorString start: 2 length: 2];
+            green = [self colorComponentFrom: colorString start: 4 length: 2];
+            blue  = [self colorComponentFrom: colorString start: 6 length: 2];
+            break;
+        default:
+            [NSException raise:@"Invalid color value" format: @"Color value %@ is invalid.  It should be a hex value of the form #RBG, #ARGB, #RRGGBB, or #AARRGGBB", hexString];
+            break;
+    }
+    return [UIColor colorWithRed: red green: green blue: blue alpha: alpha];
+}
+
+- (CGFloat) colorComponentFrom: (NSString *) string start: (NSUInteger) start length: (NSUInteger) length {
+    NSString *substring = [string substringWithRange: NSMakeRange(start, length)];
+    NSString *fullHex = length == 2 ? substring : [NSString stringWithFormat: @"%@%@", substring, substring];
+    unsigned hexComponent;
+    [[NSScanner scannerWithString: fullHex] scanHexInt: &hexComponent];
+    return hexComponent / 255.0;
 }
 
 @end

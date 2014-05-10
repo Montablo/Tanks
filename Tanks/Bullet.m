@@ -16,7 +16,7 @@
 
 -(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction : (float) screenMuWidth : (float) screenMuHeight {
     
-    self = [super initWithImageNamed: @"bullet"];
+    self = [super initWithImageNamed: @"RoundWhiteCircle"];
     screenMultHeight = screenMuHeight;
     screenMultWidth = screenMuWidth;
     self.position = position;
