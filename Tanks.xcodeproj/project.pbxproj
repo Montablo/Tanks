@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		040BCF1B1901A6E80020F925 /* TanksNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1A1901A6E80020F925 /* TanksNavigation.m */; };
 		040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1D1901A8130020F925 /* TanksHomePage.m */; };
+		0412AFF1191E4FF3008EF441 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0412AFF0191E4FF3008EF441 /* GameKit.framework */; };
+		0412AFF4191E5251008EF441 /* TanksHomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */; };
 		044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */; };
 		044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03E18FB2AB30007F2DE /* JCJoystick.m */; };
 		048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 048217C61909C3F1004A2188 /* AStarCGPoint.m */; };
-		049788191919C26B007FFCAC /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 049788181919C26B007FFCAC /* GameKitHelper.m */; };
-		04A50161191D9AF500DB4335 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A50160191D9AF500DB4335 /* GameKit.framework */; };
+		04A50166191D9E1000DB4335 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A50163191D9E1000DB4335 /* GameKitHelper.m */; };
+		04A50167191D9E1000DB4335 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
@@ -53,15 +55,19 @@
 		040BCF1A1901A6E80020F925 /* TanksNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksNavigation.m; sourceTree = "<group>"; };
 		040BCF1C1901A8130020F925 /* TanksHomePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksHomePage.h; sourceTree = "<group>"; };
 		040BCF1D1901A8130020F925 /* TanksHomePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksHomePage.m; sourceTree = "<group>"; };
+		0412AFF0191E4FF3008EF441 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		0412AFF2191E5251008EF441 /* TanksHomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksHomePageViewController.h; sourceTree = SOURCE_ROOT; };
+		0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksHomePageViewController.m; sourceTree = SOURCE_ROOT; };
 		044DF03B18FB2AB30007F2DE /* JCImageJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCImageJoystick.h; sourceTree = "<group>"; };
 		044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCImageJoystick.m; sourceTree = "<group>"; };
 		044DF03D18FB2AB30007F2DE /* JCJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCJoystick.h; sourceTree = "<group>"; };
 		044DF03E18FB2AB30007F2DE /* JCJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCJoystick.m; sourceTree = "<group>"; };
 		048217C51909C3F1004A2188 /* AStarCGPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AStarCGPoint.h; sourceTree = "<group>"; };
 		048217C61909C3F1004A2188 /* AStarCGPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AStarCGPoint.m; sourceTree = "<group>"; };
-		049788171919C26B007FFCAC /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
-		049788181919C26B007FFCAC /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
-		04A50160191D9AF500DB4335 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		04A50162191D9E0800DB4335 /* GameKitHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameKitHelper.h; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/GameKitHelper.h; sourceTree = "<group>"; };
+		04A50163191D9E1000DB4335 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameKitHelper.m; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/GameKitHelper.m; sourceTree = "<group>"; };
+		04A50164191D9E1000DB4335 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerNetworking.h; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/MultiplayerNetworking.h; sourceTree = "<group>"; };
+		04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiplayerNetworking.m; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/MultiplayerNetworking.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
 		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
@@ -107,7 +113,7 @@
 				1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */,
 				1A32CCDC18FB07DD00C51717 /* SpriteKit.framework in Frameworks */,
 				1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */,
-				04A50161191D9AF500DB4335 /* GameKit.framework in Frameworks */,
+				0412AFF1191E4FF3008EF441 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,11 +130,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0412AFF5191E525F008EF441 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0412AFF2191E5251008EF441 /* TanksHomePageViewController.h */,
+				0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */,
+				1A32CCEF18FB07DD00C51717 /* TanksViewController.h */,
+				1A32CCF018FB07DD00C51717 /* TanksViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 		0497881A1919C273007FFCAC /* GameKit */ = {
 			isa = PBXGroup;
 			children = (
-				049788171919C26B007FFCAC /* GameKitHelper.h */,
-				049788181919C26B007FFCAC /* GameKitHelper.m */,
+				04A50162191D9E0800DB4335 /* GameKitHelper.h */,
+				04A50163191D9E1000DB4335 /* GameKitHelper.m */,
+				04A50164191D9E1000DB4335 /* MultiplayerNetworking.h */,
+				04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */,
 			);
 			name = GameKit;
 			sourceTree = "<group>";
@@ -193,7 +212,7 @@
 		1A32CCD418FB07DD00C51717 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04A50160191D9AF500DB4335 /* GameKit.framework */,
+				0412AFF0191E4FF3008EF441 /* GameKit.framework */,
 				1A32CCD518FB07DD00C51717 /* Foundation.framework */,
 				1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */,
 				1A32CCD918FB07DD00C51717 /* UIKit.framework */,
@@ -206,6 +225,7 @@
 		1A32CCDD18FB07DD00C51717 /* Tanks */ = {
 			isa = PBXGroup;
 			children = (
+				0412AFF5191E525F008EF441 /* ViewControllers */,
 				0497881A1919C273007FFCAC /* GameKit */,
 				049CA0BC1901E8D900FD6FAB /* iPad */,
 				04F9CE8218FB31B8009B0D7D /* Classes */,
@@ -214,8 +234,6 @@
 				1A32CCE718FB07DD00C51717 /* TanksAppDelegate.m */,
 				1A32CCE918FB07DD00C51717 /* Main_iPhone.storyboard */,
 				1A32CCEC18FB07DD00C51717 /* Main_iPad.storyboard */,
-				1A32CCEF18FB07DD00C51717 /* TanksViewController.h */,
-				1A32CCF018FB07DD00C51717 /* TanksViewController.m */,
 				1A32CCF718FB07DD00C51717 /* Images.xcassets */,
 				1A32CCDE18FB07DD00C51717 /* Supporting Files */,
 				1A32CD1418FB092E00C51717 /* TanksGamePage.h */,
@@ -366,8 +384,10 @@
 			files = (
 				04FEA9641904162F00A9CFB6 /* Mine.m in Sources */,
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
+				0412AFF4191E5251008EF441 /* TanksHomePageViewController.m in Sources */,
+				04A50167191D9E1000DB4335 /* MultiplayerNetworking.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
-				049788191919C26B007FFCAC /* GameKitHelper.m in Sources */,
+				04A50166191D9E1000DB4335 /* GameKitHelper.m in Sources */,
 				040BCF1B1901A6E80020F925 /* TanksNavigation.m in Sources */,
 				04F9CE8B18FB339E009B0D7D /* AITank.m in Sources */,
 				04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */,

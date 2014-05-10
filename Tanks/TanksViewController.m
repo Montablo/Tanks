@@ -8,14 +8,13 @@
 
 #import "TanksViewController.h"
 #import "TanksHomePage.h"
-
-
+#import "TanksHomePageViewController.h"
 
 @implementation TanksViewController
 
 
 
-- (void)viewDidAppear:(BOOL)animated {
+/*- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [[NSNotificationCenter defaultCenter]
@@ -25,6 +24,12 @@
      object:nil];
     
     [[GameKitHelper sharedGameKitHelper] authenticateLocalPlayer];
+    
+    
+    UIWindow *window = self.view.window;
+    
+    TanksHomePageViewController *gameNavController = [self.storyboard instantiateViewControllerWithIdentifier:@"TanksHomePageViewController"];
+    window.rootViewController = gameNavController;
 }
 
 - (void)showAuthenticationViewController
@@ -36,7 +41,7 @@
      gameKitHelper.authenticationViewController
                        animated:YES
                      completion:nil];
-}
+}*/
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

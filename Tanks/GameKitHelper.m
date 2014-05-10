@@ -1,25 +1,20 @@
 //
 //  GameKitHelper.m
-//  Bit Maze
+//  CatRaceStarter
 //
-//  Created by Jack on 5/2/14.
-//  Copyright (c) 2014 Montablo. All rights reserved.
+//  Created by Kauserali on 02/01/14.
+//  Copyright (c) 2014 Raywenderlich. All rights reserved.
 //
 
 #import "GameKitHelper.h"
+
+NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
+NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 
 @implementation GameKitHelper {
     BOOL _enableGameCenter;
     BOOL _matchStarted;
 }
-
-// Add to the top of the file
-NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
-
-
-NSString* const kLeaderBoardIdentifier = @"Montablo.Tanks";
-
-NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 
 + (instancetype)sharedGameKitHelper
 {
@@ -45,6 +40,10 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     //1
     GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     
+    if (localPlayer.isAuthenticated) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
+        return;
+    }
     //2
     localPlayer.authenticateHandler  =
     ^(UIViewController *viewController, NSError *error) {
@@ -57,11 +56,39 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
         } else if([GKLocalPlayer localPlayer].isAuthenticated) {
             //5
             _enableGameCenter = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
         } else {
             //6
             _enableGameCenter = NO;
         }
     };
+}
+
+- (void)lookupPlayers {
+    
+    NSLog(@"Looking up %lu players...", (unsigned long)_match.playerIDs.count);
+    
+    [GKPlayer loadPlayersForIdentifiers:_match.playerIDs withCompletionHandler:^(NSArray *players, NSError *error) {
+        
+        if (error != nil) {
+            NSLog(@"Error retrieving player info: %@", error.localizedDescription);
+            _matchStarted = NO;
+            [_delegate matchEnded];
+        } else {
+            
+            // Populate players dict
+            _playersDict = [NSMutableDictionary dictionaryWithCapacity:players.count];
+            for (GKPlayer *player in players) {
+                NSLog(@"Found player: %@", player.alias);
+                [_playersDict setObject:player forKey:player.playerID];
+            }
+            [_playersDict setObject:[GKLocalPlayer localPlayer] forKey:[GKLocalPlayer localPlayer].playerID];
+            
+            // Notify delegate match can begin
+            _matchStarted = YES;
+            [_delegate matchStarted];
+        }
+    }];
 }
 
 - (void)findMatchWithMinPlayers:(int)minPlayers maxPlayers:(int)maxPlayers
@@ -80,11 +107,34 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     request.maxPlayers = maxPlayers;
     
     GKMatchmakerViewController *mmvc =
-    [[GKMatchmakerViewController alloc] initWithMatchRequest:request];
+        [[GKMatchmakerViewController alloc] initWithMatchRequest:request];
     mmvc.matchmakerDelegate = self;
     
     [viewController presentViewController:mmvc animated:YES completion:nil];
 }
+
+- (void)setAuthenticationViewController:
+(UIViewController *)authenticationViewController
+{
+    if (authenticationViewController != nil) {
+        _authenticationViewController = authenticationViewController;
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:PresentAuthenticationViewController
+         object:self];
+    }
+    
+}
+
+- (void)setLastError:(NSError *)error
+{
+    _lastError = [error copy];
+    if (_lastError) {
+        NSLog(@"GameKitHelper ERROR: %@",
+              [[_lastError userInfo] description]);
+    }
+}
+
+#pragma mark GKMatchmakerViewControllerDelegate
 
 // The user has cancelled matchmaking
 - (void)matchmakerViewControllerWasCancelled:(GKMatchmakerViewController *)viewController {
@@ -104,6 +154,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     match.delegate = self;
     if (!_matchStarted && match.expectedPlayerCount == 0) {
         NSLog(@"Ready to start match!");
+        [self lookupPlayers];
     }
 }
 
@@ -127,6 +178,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
             
             if (!_matchStarted && match.expectedPlayerCount == 0) {
                 NSLog(@"Ready to start match!");
+                [self lookupPlayers];
             }
             
             break;
@@ -158,68 +210,4 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     _matchStarted = NO;
     [_delegate matchEnded];
 }
-
-
-
-- (void)setAuthenticationViewController:(UIViewController *)authenticationViewController
-{
-    if (authenticationViewController != nil) {
-        _authenticationViewController = authenticationViewController;
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:PresentAuthenticationViewController
-         object:self];
-    }
-}
-
-- (void)setLastError:(NSError *)error
-{
-    _lastError = [error copy];
-    if (_lastError) {
-        NSLog(@"GameKitHelper ERROR: %@",
-              [[_lastError userInfo] description]);
-    }
-}
-
-- (void)loadLeaderBoardInfo
-{
-    [GKLeaderboard loadLeaderboardsWithCompletionHandler:^(NSArray *leaderboards, NSError *error) {
-        self.leaderboards = leaderboards;
-    }];
-}
-
-- (void)reportScore:(int64_t)score forLeaderboardID:(NSString*)identifier
-{
-    GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier: identifier];
-    scoreReporter.value = score;
-    scoreReporter.context = 0;
-    
-    [GKScore reportScores:@[scoreReporter] withCompletionHandler:^(NSError *error) {
-        if (error == nil) {
-            NSLog(@"Score reported successfully!");
-        } else {
-            NSLog(@"Unable to report score!");
-        }
-    }];
-}
-
-- (void)showLeaderboardOnViewController:(UIViewController*)viewController
-{
-    GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
-    if (gameCenterController != nil) {
-        gameCenterController.gameCenterDelegate = self;
-        gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
-        gameCenterController.leaderboardIdentifier = kLeaderBoardIdentifier;
-        
-        [viewController presentViewController: gameCenterController animated: YES completion:nil];
-    }
-}
-
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
-{
-    [gameCenterViewController dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-}
-
-
 @end

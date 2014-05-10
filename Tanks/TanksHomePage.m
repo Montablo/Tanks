@@ -104,6 +104,7 @@
         currentLevelPack = 0;
         
         //[self saveLevelsToFile];
+        //[self saveTankTypesToFile];
         
         [self readTankTypes];
         [self readLevels];
@@ -134,6 +135,10 @@
         if(currentLevelPack == levelPacks.count) currentLevelPack = 0;
         [self displaycurrentLevelPack];
     } else if([n.name isEqualToString:@"refresh"]) {
+        
+        
+        currentLevelPack = 0;
+        
         [self saveLevelsToFile];
         [self saveTankTypesToFile];
         [self readLevels];
@@ -167,7 +172,6 @@
     statusLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - feedback.size.height - 10);
     statusLabel.fontSize = 15;
     [self addChild:statusLabel];
-    
     levels = levelPacks[currentLevelPack][1];
     STARTING_LEVEL = 1;
     levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
@@ -206,7 +210,7 @@
             
             NSMutableDictionary *tank = [tanks lastObject];
             
-            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 12 || ti == 17) { //int
+            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 17) { //int
                 [tank setObject:[NSNumber numberWithInt:[line intValue]] forKey:labels[ti]];
             }
             else if(ti == 1) { //color
@@ -214,7 +218,7 @@
             }
             else if(ti == 2 || ti == 15) { //bool
                 [tank setObject:[NSNumber numberWithBool: [line boolValue]] forKey:labels[ti]];
-            } else if(ti == 3 || ti == 4 || ti == 5 || ti == 6 || ti == 8 || ti == 13 || ti == 14 || ti == 16) { //float
+            } else if(ti == 3 || ti == 4 || ti == 5 || ti == 6 || ti == 8 || ti == 13 || ti == 14 || ti == 16|| ti == 12 ) { //float
                 [tank setObject:[NSNumber numberWithFloat: [line floatValue]] forKey:labels[ti]];
             }
             
@@ -292,6 +296,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *stringsTxtPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"levels.txt"];
     
+    levelPacks = [NSMutableArray array];
     levels = [NSMutableArray array];
     
     NSString *content = [NSString stringWithContentsOfFile:stringsTxtPath encoding:NSUTF8StringEncoding error:nil];
@@ -419,7 +424,7 @@
                         tank.bulletFrequency = [tankModel[@"BULLET_FREQUENCY"] intValue];
                         tank.maxCurrentBullets = [tankModel[@"MAX_CURRENT_BULLETS"] intValue];
                         tank.bulletShootingDownFrequency = [tankModel[@"BULLET_SHOOTING_DOWN_FREQUENCY"] floatValue];
-                        tank.tankSpeed = [tankModel[@"TANK_SPEED"] intValue];
+                        tank.tankSpeed = [tankModel[@"TANK_SPEED"] floatValue];
                         tank.bulletAccuracy = [tankModel[@"BULLET_ACCURACY"] floatValue];
                         tank.mineAvoidingDistance = [tankModel[@"MINE_AVOIDING_DISTANCE"] floatValue];
                         tank.doesDropMines = [tankModel[@"DOES_DROP_MINES"] boolValue];

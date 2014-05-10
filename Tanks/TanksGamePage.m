@@ -87,7 +87,6 @@
     if([levelsInfo[1]  isEqual: @"0"]) { //solo
         usesLives = YES;
     } else if([levelsInfo[1] isEqualToString:@"2"]) { // co-op
-        
     }
     
     SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
@@ -851,13 +850,7 @@
             
             if(t.isObliterated == YES) continue;
             
-            int randomNum = [self randomInt:0 withUpperBound:t.tankSpeed];
-            
-            if(randomNum <= 100) {
-                
-                [self processTankMovement : t];
-                
-            }
+            [self processTankMovement : t];
         }
         
     }
@@ -879,10 +872,12 @@
             
             float dist = [self distanceBetweenPoints:t.position P2:target.position];
             
-            dist = dist <= t.rangeOfSight ? dist : t.rangeOfSight;
+            float tracking = 300;
             
-            int rand = [self randomInt:0 withUpperBound:t.bulletFrequency * t.rangeOfSight];
-            if(rand <= t.rangeOfSight)
+            dist = dist <= tracking ? dist : tracking;
+            
+            int rand = [self randomInt:0 withUpperBound:t.bulletFrequency * dist];
+            if(rand <= tracking)
                 [self processTankFiring : t];
         }
         
@@ -957,7 +952,7 @@
     for (int i=0; i<2; i++) {
         int val = i == 0 ? -1 : 1;
         float angle = M_PI*val / 2 + b.zRotation;
-        CGPoint newPoint = CGPointMake(t.position.x + cosf(angle)*screenMultWidth, t.position.y + sinf(angle)*screenMultHeight);
+        CGPoint newPoint = CGPointMake(t.position.x + cosf(angle)*screenMultWidth*t.tankSpeed, t.position.y + sinf(angle)*screenMultHeight*t.tankSpeed);
         if(i==0) p1 = newPoint;
         else p2 = newPoint;
     }
@@ -983,7 +978,7 @@
     
     float angle = M_PI - [self getAngleP1:t.position P2:m.position];
     
-    CGPoint newPos = CGPointMake(t.position.x + cosf(angle)*screenMultWidth, t.position.y + sinf(angle)*screenMultHeight);
+    CGPoint newPos = CGPointMake(t.position.x + cosf(angle)*screenMultWidth*t.tankSpeed, t.position.y + sinf(angle)*screenMultHeight*t.tankSpeed);
     
     if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false])
         t.position = newPos;
@@ -996,7 +991,7 @@
     
     if(t.isObliterated) return;
     
-    CGPoint newPos = CGPointMake(t.position.x + cosf(direction)*screenMultWidth, t.position.y + sinf(direction)*screenMultHeight);
+    CGPoint newPos = CGPointMake(t.position.x + cosf(direction)*screenMultWidth*t.tankSpeed, t.position.y + sinf(direction)*screenMultHeight*t.tankSpeed);
     
     if(![self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false]) {
         t.trackingCooldown = t.initialTrackingCooldown;
@@ -1038,8 +1033,8 @@
     if(t.trackingCooldown > 0) t.trackingCooldown -= .01;
     else t.trackingCooldown = 0;
     
-    float newX = t.position.x + cosf(t.direction)*screenMultWidth;
-    float newY = t.position.y + sinf(t.direction)*screenMultHeight;
+    float newX = t.position.x + cosf(t.direction)*screenMultWidth*t.tankSpeed;
+    float newY = t.position.y + sinf(t.direction)*screenMultHeight*t.tankSpeed;
     
     CGPoint newPos = CGPointMake(newX, newY);
     
@@ -1224,7 +1219,7 @@
 -(BOOL) bulletWillHitTank : (AITank *) t withBullet : (Bullet *) b {
     float angle = [self getAngleP1:t.position P2:b.position];
     if([self isWallBetweenPoints:t.position P2:b.position]) return false;
-    return !([self unitCircleValueIsGreater: angle + M_PI / 6 withOther:b.zRotation] && [self unitCircleValueIsGreater: b.zRotation withOther:angle - M_PI / 6 ]);
+    return !([self unitCircleValueIsGreater: angle + (M_PI / 6) withOther:b.zRotation] && [self unitCircleValueIsGreater: b.zRotation withOther:angle - (M_PI / 6) ]);
 }
 
 -(CGPoint) getPointAtMaxDistance : (AITank *) t withGoal : (CGPoint) goalPoint {

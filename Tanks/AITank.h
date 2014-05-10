@@ -36,7 +36,7 @@
 
 @property int bulletShootingDownFrequency;
 
-@property int tankSpeed;
+@property float tankSpeed;
 @property float bulletAccuracy;
 
 @property float mineAvoidingDistance;

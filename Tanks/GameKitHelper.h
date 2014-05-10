@@ -1,12 +1,12 @@
 //
 //  GameKitHelper.h
-//  Bit Maze
+//  CatRaceStarter
 //
-//  Created by Jack on 5/2/14.
-//  Copyright (c) 2014 Montablo. All rights reserved.
+//  Created by Kauserali on 02/01/14.
+//  Copyright (c) 2014 Raywenderlich. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+
 @import GameKit;
 
 @protocol GameKitHelperDelegate
@@ -16,27 +16,22 @@
    fromPlayer:(NSString *)playerID;
 @end
 
-@interface GameKitHelper : NSObject <GKMatchmakerViewControllerDelegate, GKMatchDelegate>
-
-extern NSString *const LocalPlayerIsAuthenticated;
 extern NSString *const PresentAuthenticationViewController;
-@property (nonatomic, strong) NSArray* leaderboards;
+extern NSString *const LocalPlayerIsAuthenticated;
+
+@interface GameKitHelper : NSObject<GKMatchmakerViewControllerDelegate, GKMatchDelegate>
 
 @property (nonatomic, readonly) UIViewController *authenticationViewController;
 @property (nonatomic, readonly) NSError *lastError;
 
-+ (instancetype)sharedGameKitHelper;
-
-- (void)authenticateLocalPlayer;
-
-- (void)reportScore:(int64_t)score forLeaderboardID:(NSString*)identifier;
-- (void)showLeaderboardOnViewController:(UIViewController*)viewController;
-
 @property (nonatomic, strong) GKMatch *match;
 @property (nonatomic, assign) id <GameKitHelperDelegate> delegate;
+@property (nonatomic, strong) NSMutableDictionary *playersDict;
+
++ (instancetype)sharedGameKitHelper;
+- (void)authenticateLocalPlayer;
 
 - (void)findMatchWithMinPlayers:(int)minPlayers maxPlayers:(int)maxPlayers
                  viewController:(UIViewController *)viewController
-                       delegate:(id<GameKitHelperDelegate>)delegate;
-
+                       delegate:(id<GameKitHelperDelegate>)theDelegate;
 @end
