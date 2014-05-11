@@ -348,6 +348,9 @@
 -(void) startNewGame {
     int levelNum = currentLevel;
     
+    GameKitHelper *sharedHelper = [GameKitHelper sharedGameKitHelper];
+    [sharedHelper ];
+    
     SKTransition *transition;
     
     if(userWon) {
@@ -928,12 +931,14 @@
             
             float dist = [self distanceBetweenPoints:t.position P2:target.position];
             
-            float tracking = 300;
+            float tracking = 500;
             
             dist = dist <= tracking ? dist : tracking;
             
-            int rand = [self randomInt:0 withUpperBound:t.bulletFrequency * dist];
-            if(rand <= tracking)
+            float mult = 1 - (((tracking - dist) / 100))*.03;
+            
+            int rand = [self randomInt:0 withUpperBound:t.bulletFrequency*mult];
+            if(rand == 0)
                 [self processTankFiring : t];
         }
         

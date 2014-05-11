@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Montablo. All rights reserved.
 //
 
+#import "GameKitHelper.h"
 #import <SpriteKit/SpriteKit.h>
 #import "JCImageJoystick.h"
 #import "JCJoystick.h"
@@ -14,7 +15,6 @@
 #import "AITank.h"
 #import "Bullet.h"
 #import "TanksNavigation.h"
-//#import "Mine.h"
 
 @interface TanksGamePage : SKScene
 

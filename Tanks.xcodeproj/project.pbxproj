@@ -16,7 +16,6 @@
 		044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03E18FB2AB30007F2DE /* JCJoystick.m */; };
 		048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 048217C61909C3F1004A2188 /* AStarCGPoint.m */; };
 		04A50166191D9E1000DB4335 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A50163191D9E1000DB4335 /* GameKitHelper.m */; };
-		04A50167191D9E1000DB4335 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
@@ -69,8 +68,6 @@
 		048217C61909C3F1004A2188 /* AStarCGPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AStarCGPoint.m; sourceTree = "<group>"; };
 		04A50162191D9E0800DB4335 /* GameKitHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameKitHelper.h; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/GameKitHelper.h; sourceTree = "<group>"; };
 		04A50163191D9E1000DB4335 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameKitHelper.m; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/GameKitHelper.m; sourceTree = "<group>"; };
-		04A50164191D9E1000DB4335 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerNetworking.h; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/MultiplayerNetworking.h; sourceTree = "<group>"; };
-		04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiplayerNetworking.m; path = ../../../Downloads/CatRaceStarter/CatRaceStarter/MultiplayerNetworking.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
 		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
@@ -149,17 +146,8 @@
 			children = (
 				04A50162191D9E0800DB4335 /* GameKitHelper.h */,
 				04A50163191D9E1000DB4335 /* GameKitHelper.m */,
-				04A50164191D9E1000DB4335 /* MultiplayerNetworking.h */,
-				04A50165191D9E1000DB4335 /* MultiplayerNetworking.m */,
 			);
 			name = GameKit;
-			sourceTree = "<group>";
-		};
-		049CA0BC1901E8D900FD6FAB /* iPad */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = iPad;
 			sourceTree = "<group>";
 		};
 		04F9CE8118FB31AF009B0D7D /* Joystick */ = {
@@ -230,7 +218,6 @@
 			children = (
 				0412AFF5191E525F008EF441 /* ViewControllers */,
 				0497881A1919C273007FFCAC /* GameKit */,
-				049CA0BC1901E8D900FD6FAB /* iPad */,
 				04F9CE8218FB31B8009B0D7D /* Classes */,
 				04F9CE8118FB31AF009B0D7D /* Joystick */,
 				1A32CCE618FB07DD00C51717 /* TanksAppDelegate.h */,
@@ -390,7 +377,6 @@
 				04FEA9641904162F00A9CFB6 /* Mine.m in Sources */,
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
 				0412AFF4191E5251008EF441 /* TanksHomePageViewController.m in Sources */,
-				04A50167191D9E1000DB4335 /* MultiplayerNetworking.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
 				04A50166191D9E1000DB4335 /* GameKitHelper.m in Sources */,
 				040BCF1B1901A6E80020F925 /* TanksNavigation.m in Sources */,
