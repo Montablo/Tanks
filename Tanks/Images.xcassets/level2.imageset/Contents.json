@@ -3,10 +3,19 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "iOS Simulator Screen shot May 10, 2014 1.34.43 PM.png"
+      "filename" : "level2.png"
     },
     {
       "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "1x",
+      "filename" : "level2-1.png"
+    },
+    {
+      "idiom" : "ipad",
       "scale" : "2x"
     }
   ],

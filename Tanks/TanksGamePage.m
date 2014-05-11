@@ -181,7 +181,7 @@
         SKSpriteNode *shell = [SKSpriteNode spriteNodeWithImageNamed:imgName];
         shell.zRotation = M_PI/2;
         shell.zPosition = 25;
-        shell.size = CGSizeMake(10*screenMultHeight, 10*screenMultWidth);
+        shell.size = CGSizeMake(10*screenMultWidth, 10*screenMultWidth);
         shell.position = CGPointMake((CGRectGetMidX(self.frame) - shell.size.height / 2) + (i) * (shell.size.height + 5) - (shell.size.height*(((Tank *) tanks[0]).maxCurrentBullets / 2)), CGRectGetMaxY(self.frame) - shell.size.width / 2 - 5*screenMultHeight);
         [self addChild:shell];
         [shells addObject:shell];
@@ -265,7 +265,7 @@
     self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
     //self.joystick.xScale = 1*screenMultWidth;
     //self.joystick.yScale = 1*screenMultWidth;
-    [self.joystick setPosition:CGPointMake(50, 50)];
+    [self.joystick setPosition:CGPointMake(60*screenMultWidth, 60*screenMultWidth)];
     self.joystick.zPosition = 25;
     self.joystick.alpha = 1;
     [self addChild:self.joystick];
@@ -341,6 +341,50 @@
     endText.fontColor = [UIColor whiteColor];
     endText.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
     [self addChild:endText];
+    
+    [self performSelector:@selector(startNewGame) withObject:nil afterDelay:.5];
+}
+
+-(void) startNewGame {
+    int levelNum = currentLevel;
+    
+    SKTransition *transition;
+    
+    if(userWon) {
+        if(currentLevel == levels.count - 1) {
+            [TanksNavigation loadTanksHomePage:self];
+            return;
+        } else {
+            
+            levelNum = currentLevel + 1;
+            transition = [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5];
+        }
+    } else {
+        
+        if(usesLives) {
+            lives--;
+            
+            int numRemoved = 0;
+            
+            for(int i=0; i<tanks.count; i++) { //skips usertank
+                Tank *t = tanks[i];
+                if(i == 0) t.isObliterated = NO;
+                else if(t.isObliterated) {
+                    [((NSMutableArray *)levels[currentLevel][2]) removeObjectAtIndex:i - numRemoved];
+                    numRemoved ++;
+                }
+            }
+            
+            transition = [SKTransition fadeWithDuration:.5];
+        }
+        
+        if(!usesLives || lives == 0) {
+            [TanksNavigation loadTanksHomePage:self];
+            return;
+        }
+    }
+    
+    [TanksNavigation loadTanksGamePage:self :levelNum :levelPack : lives : transition];
 }
 
 #pragma mark Onclick functions
@@ -352,47 +396,14 @@
     
     BOOL ret = NO;
     
-    if([n.name isEqualToString:@"endText"]) {
+    /*if([n.name isEqualToString:@"endText"]) {
         
-        int levelNum = currentLevel;
         
-        if(userWon) {
-            if(currentLevel == levels.count - 1) {
-                [TanksNavigation loadTanksHomePage:self];
-                return YES;
-            } else {
-                
-                levelNum = currentLevel + 1;
-            }
-        } else {
-            
-            if(usesLives) {
-                lives--;
-                
-                int numRemoved = 0;
-                
-                for(int i=0; i<tanks.count; i++) { //skips usertank
-                    Tank *t = tanks[i];
-                    if(i == 0) t.isObliterated = NO;
-                    else if(t.isObliterated) {
-                        [((NSMutableArray *)levels[currentLevel][2]) removeObjectAtIndex:i - numRemoved];
-                        numRemoved ++;
-                    }
-                }
-            }
-            
-            if(!usesLives || lives == 0) {
-                [TanksNavigation loadTanksHomePage:self];
-                return YES;
-            }
-        }
-        
-        [TanksNavigation loadTanksGamePage:self :levelNum :levelPack : lives];
-        return YES;
-    } /*else if([n.name isEqualToString:@"mineButton"]) {
+        return;
+    }*/ /*else if([n.name isEqualToString:@"mineButton"]) {
         [self dropUserMine];
         return YES;
-    }*/ else if([n.name isEqualToString:@"exitButton"]) {
+    }*/if([n.name isEqualToString:@"exitButton"]) {
         [TanksNavigation loadTanksHomePage:self];
         return YES;
     }
@@ -846,14 +857,18 @@
 
 -(void) update:(NSTimeInterval)currentTime {
     
-    if(gameIsPaused || !gameHasStarted || gameHasFinished) return;
+    if(self.joystick.x == 0 && self.joystick.y == 0) return;
+    
+    if(!gameHasStarted) {
+        [self startGame];
+    }
+    
+    if(gameIsPaused || gameHasFinished) return;
     
     Tank *userTank = tanks[0];
     //Tank *enemyTank = tanks[1];
     
     if(userTank.isObliterated) return;
-    
-    if(self.joystick.x == 0 && self.joystick.y == 0) return;
     
     float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth;
     float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;

@@ -10,7 +10,7 @@
 
 @implementation TanksNavigation
 
-+(void) loadTanksGamePage:(SKScene *)currentPage :(int) level :(NSArray *)levels : (int) lives{
++(void) loadTanksGamePage:(SKScene *)currentPage :(int) level :(NSArray *)levels : (int) lives : (SKTransition *) transition {
     SKView * skView = currentPage.view;
     //skView.showsFPS = YES;
     //skView.showsNodeCount = YES;
@@ -24,7 +24,8 @@
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
-    [skView presentScene:scene];
+    
+    [skView presentScene:scene transition:transition];
 }
 
 +(void) loadTanksHomePage:(SKScene *)currentPage {
@@ -37,7 +38,49 @@
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
-    [skView presentScene:scene];
+    [skView presentScene:scene transition:[SKTransition pushWithDirection:[self randomSKDirection] duration:.5]];
 }
 
++(void) loadTanksTutorial:(SKScene *)currentPage {
+    SKView * skView = currentPage.view;
+    //skView.showsFPS = YES;
+    //skView.showsNodeCount = YES;
+    // Create and configure the scene.
+    SKScene * scene = [TanksTutorial sceneWithSize:skView.bounds.size];
+    
+    scene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    // Present the scene.
+    [skView presentScene:scene transition:[SKTransition pushWithDirection:[self randomSKDirection] duration:.5]];
+}
+
++(SKTransitionDirection) randomSKDirection {
+    int i = [self randomInt:0 withUpperBound:3];
+    switch (i) {
+        case 0:
+            return SKTransitionDirectionDown;
+            break;
+            
+        case 1:
+            return SKTransitionDirectionUp;
+            break;
+            
+        case 2:
+            return SKTransitionDirectionLeft;
+            break;
+            
+        case 3:
+            return SKTransitionDirectionRight;
+            break;
+            
+        default:
+            return SKTransitionDirectionRight;
+            break;
+    }
+}
+
++(int) randomInt : (int) lowerBound withUpperBound : (int) upperBound {
+    int rand = arc4random_uniform(upperBound);
+    return rand + lowerBound;
+}
 @end

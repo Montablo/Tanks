@@ -3,10 +3,19 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "redStick.png"
+      "filename" : "tutorial1 copy.png"
     },
     {
       "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "1x",
+      "filename" : "tutorial1@2x.png"
+    },
+    {
+      "idiom" : "ipad",
       "scale" : "2x"
     }
   ],

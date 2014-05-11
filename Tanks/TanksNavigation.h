@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "TanksGamePage.h"
 #import "TanksHomePage.h"
+#import "TanksTutorial.h"
 
 @interface TanksNavigation : NSObject
 
-+(void) loadTanksGamePage : (SKScene *) currentPage : (int) level : (NSArray *) levels : (int) lives;
++(void) loadTanksGamePage : (SKScene *) currentPage : (int) level : (NSArray *) levels : (int) lives : (SKTransition *) transition;
 +(void) loadTanksHomePage : (SKScene *) currentPage;
++(void) loadTanksTutorial:(SKScene *)currentPage;
++(SKTransitionDirection) randomSKDirection;
 
 @end

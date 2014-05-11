@@ -16,7 +16,7 @@
 
 -(instancetype) initWithBulletType : (int) type withPosition : (CGPoint) position withDirection: (float) direction : (float) screenMuWidth : (float) screenMuHeight {
     
-    self = [super initWithImageNamed: @"RoundWhiteCircle"];
+    self = [super initWithImageNamed: @"bullet"];
     screenMultHeight = screenMuHeight;
     screenMultWidth = screenMuWidth;
     self.position = position;
@@ -33,7 +33,7 @@
     _numRicochets = 0;
     _maxRicochets = 1;
     
-    self.size = CGSizeMake(BULLET_WIDTH*screenMultWidth, BULLET_HEIGHT*screenMultHeight);
+    self.size = CGSizeMake(BULLET_WIDTH*screenMultWidth, BULLET_HEIGHT*screenMultWidth);
     
     self.name = @"bullet";
     

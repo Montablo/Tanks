@@ -99,6 +99,13 @@
         refresh.position = CGPointMake(CGRectGetMaxX(self.frame) - refresh.size.width, CGRectGetMaxY(self.frame) - refresh.size.height);
         refresh.name = @"refresh";
         [self addChild:refresh];
+        
+        SKSpriteNode *questionMark;
+        questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"questionmark"];
+        questionMark.size = CGSizeMake(64, 64);
+        questionMark.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - questionMark.size.width / 2, 5 + questionMark.size.height / 2);
+        questionMark.name = @"questionMark";
+        [self addChild:questionMark];
 
         
         currentLevelPack = 0;
@@ -117,6 +124,8 @@
     return self;
 }
 
+
+
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     UITouch *p = [touches anyObject];
@@ -124,7 +133,7 @@
     SKNode *n = [self nodeAtPoint:orgin];
     
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
-        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[currentLevelPack] : 3];
+        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[currentLevelPack] : 3 : [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5]];
         return;
     } else if([n.name isEqual:@"arrow1"]) {
         currentLevelPack--;
@@ -152,6 +161,8 @@
         STARTING_LEVEL++;
         if(STARTING_LEVEL == levels.count + 1) STARTING_LEVEL = 1;
         levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
+    } else if([n.name isEqual:@"questionMark"]) {
+        [TanksNavigation loadTanksTutorial:self];
     }
     
 }

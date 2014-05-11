@@ -9,7 +9,7 @@
 #define TANK_WIDTH 25
 #define TANK_HEIGHT 25
 
-#define BULLET_WIDTH 5
+#define BULLET_WIDTH 8
 #define BULLET_HEIGHT 5
 
 #define MINE_WIDTH 20
@@ -27,4 +27,4 @@
 #define screenWidth (568 + 0 + 0) //original screen width
 #define screenHeight (320 + 0 + 0) //original screen height
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define tutorialImages 4
