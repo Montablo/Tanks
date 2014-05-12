@@ -8,9 +8,9 @@
 //
 
 #import "TanksHomePage.h"
+#import "LevelsScroller.h"
 
 @implementation TanksHomePage {
-    CGPoint initialPosition, initialTouch;
     
     NSMutableArray *levelPacks;
     NSMutableArray *levels;
@@ -27,23 +27,23 @@
     SKLabelNode *statusLabel;
     SKSpriteNode *feedback;
     
-    int currentLevelPack;
-    
     SKSpriteNode *image;
     
     SKLabelNode *levelNum;
+    
+    NSMutableArray *pageContent;
+    
+    LevelsScroller *levelsScroller;
+    CGPoint initialPosition, initialTouch;
+    int minimum_detect_distance;
+    CGFloat moveAmtX;
+    
+    BOOL startCancelled;
 }
 
 -(id) initWithSize:(CGSize)size {
     if(self = [super initWithSize:size]) {
-        SKLabelNode *playLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-        playLabel.text = @"Play Game";
-        playLabel.fontSize = 40;
-        playLabel.name = @"playLabel";
-        playLabel.position = CGPointMake(CGRectGetMidX(self.frame), 100);
-        playLabel.fontColor = [SKColor blackColor];
         
-        self.backgroundColor = [SKColor whiteColor];
         
         screenMultWidth = self.frame.size.width / screenWidth;
         screenMultHeight = self.frame.size.height / screenHeight;
@@ -51,6 +51,24 @@
         X_RIGHT_OFFSET = 0*screenMultWidth;
         Y_BOTTOM_OFFSET = 0*screenMultHeight;
         Y_TOP_OFFSET = 0*screenMultHeight;
+        
+        pageContent = [[NSMutableArray alloc] init];
+        self.currentPage = 0;
+        //the minimum amount the user must scroll before the page gets flipped to the next or previous one
+        minimum_detect_distance = 100*screenMultWidth;
+        
+        levelsScroller = [[LevelsScroller alloc] initWithSize:self.size];
+        levelsScroller.scrollDirection = HORIZONTAL;
+        [self addChild:levelsScroller];
+        
+        SKLabelNode *playLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        playLabel.text = @"Play Game";
+        playLabel.fontSize = 40;
+        playLabel.name = @"playLabel";
+        playLabel.position = CGPointMake(CGRectGetMidX(self.frame), 10*screenMultHeight);
+        playLabel.fontColor = [SKColor blackColor];
+        
+        self.backgroundColor = [SKColor whiteColor];
         
         [self addChild:playLabel];
         
@@ -61,7 +79,7 @@
         
         //page = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"level%i", currentLevelPack+1]];
         
-        SKSpriteNode *arrow1 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
+        /*SKSpriteNode *arrow1 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
         arrow1.position = CGPointMake(CGRectGetMidX(self.frame) - 25, 20);
         arrow1.zRotation = M_PI;
         arrow1.size = CGSizeMake(40, 34);
@@ -72,11 +90,11 @@
         arrow2.position = CGPointMake(CGRectGetMidX(self.frame) + 25, 20);
         arrow2.size = CGSizeMake(40, 34);
         arrow2.name = @"arrow2";
-        [self addChild:arrow2];
+        [self addChild:arrow2];*/
         
         levelNum = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
         levelNum.text = @"Level: 1";
-        levelNum.position = CGPointMake(50, 50);
+        levelNum.position = CGPointMake(50, 45);
         levelNum.fontColor = [SKColor blackColor];
         [self addChild:levelNum];
         
@@ -93,12 +111,12 @@
         arrow4.name = @"arrow4";
         [self addChild:arrow4];
         
-        SKSpriteNode *refresh;
+        /*SKSpriteNode *refresh;
         refresh = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
         refresh.size = CGSizeMake(20, 20);
         refresh.position = CGPointMake(CGRectGetMaxX(self.frame) - refresh.size.width, CGRectGetMaxY(self.frame) - refresh.size.height);
         refresh.name = @"refresh";
-        [self addChild:refresh];
+        [self addChild:refresh];*/
         
         SKSpriteNode *questionMark;
         questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"questionmark"];
@@ -106,9 +124,13 @@
         questionMark.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - questionMark.size.width / 2, 5 + questionMark.size.height / 2);
         questionMark.name = @"questionMark";
         [self addChild:questionMark];
-
         
-        currentLevelPack = 0;
+        SKSpriteNode *gameCenterButton;
+        gameCenterButton = [SKSpriteNode spriteNodeWithImageNamed:@"gamecenter"];
+        gameCenterButton.size = CGSizeMake(64, 64);
+        gameCenterButton.position = CGPointMake(CGRectGetMaxX(self.frame) - 15 - questionMark.size.width / 2 - gameCenterButton.size.width, 5 + gameCenterButton.size.height / 2);
+        gameCenterButton.name = @"gameCenterButton";
+        [self addChild:gameCenterButton];
         
         //[self saveLevelsToFile];
         //[self saveTankTypesToFile];
@@ -116,7 +138,7 @@
         [self readTankTypes];
         [self readLevels];
         
-        levels = levelPacks[currentLevelPack][1];
+        levels = levelPacks[self.currentPage][1];
         
         [self displaycurrentLevelPack];
         
@@ -124,18 +146,30 @@
     return self;
 }
 
+-(void) loadGame {
+    
+    if(startCancelled) return;
+    
+    [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[self.currentPage] : 3 : [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5]];
+}
+
 
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    startCancelled = NO;
     
     UITouch *p = [touches anyObject];
     CGPoint orgin = [p locationInNode:self];
     SKNode *n = [self nodeAtPoint:orgin];
     
+    initialPosition = levelsScroller.position;
+    initialTouch = orgin;
+    
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
-        [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[currentLevelPack] : 3 : [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5]];
+        [self performSelector:@selector(loadGame) withObject:nil afterDelay:.05];
         return;
-    } else if([n.name isEqual:@"arrow1"]) {
+    }/* else if([n.name isEqual:@"arrow1"]) {
         currentLevelPack--;
         if(currentLevelPack == -1) currentLevelPack = (int) levelPacks.count - 1;
         [self displaycurrentLevelPack];
@@ -143,17 +177,18 @@
         currentLevelPack++;
         if(currentLevelPack == levelPacks.count) currentLevelPack = 0;
         [self displaycurrentLevelPack];
-    } else if([n.name isEqualToString:@"refresh"]) {
+    }*//* else if([n.name isEqualToString:@"refresh"]) {
         
         
-        currentLevelPack = 0;
+        self.currentPage = 0;
+        [self resetLevels];
         
         [self saveLevelsToFile];
         [self saveTankTypesToFile];
         [self readLevels];
         [self readTankTypes];
         [self displaycurrentLevelPack];
-    } else if([n.name isEqual:@"arrow3"]) {
+    }*/ else if([n.name isEqual:@"arrow3"]) {
         STARTING_LEVEL--;
         if(STARTING_LEVEL == 0) STARTING_LEVEL = (int) levels.count;
         levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
@@ -163,32 +198,157 @@
         levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
     } else if([n.name isEqual:@"questionMark"]) {
         [TanksNavigation loadTanksTutorial:self];
+    } else if([n.name isEqual:@"gameCenterButton"]) {
+        [[GameKitHelper sharedGameKitHelper] showLeaderboardOnViewController:self.scene.view.window.rootViewController];
     }
     
 }
 
+-(void) loadContent {
+    
+    for(int i = 0; i<levelPacks.count; i++) {
+        
+        image = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"level%i", i+1]];
+        
+        image.size = CGSizeMake(CGRectGetMaxX(self.frame)*.7, self.size.height*.7);
+        image.name = @"playLabel";
+        [pageContent addObject:image];
+
+    }
+    
+    if (levelsScroller.scrollDirection == HORIZONTAL)
+        levelsScroller.size = CGSizeMake(self.size.width * pageContent.count, self.size.height);
+    
+    [self positionPages];
+}
+
 -(void) displaycurrentLevelPack {
-    [image removeFromParent];
+    /*[image removeFromParent];
     image = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"level%i", currentLevelPack+1]];
     image.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 50);
     image.size = CGSizeMake(CGRectGetMaxX(self.frame)*.7, CGRectGetMaxY(self.frame) - 200);
     image.name = @"playLabel";
-    [self addChild:image];
+    [self addChild:image];*/
     
     [statusLabel removeFromParent];
     statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-    statusLabel.text = levelPacks[currentLevelPack][0][0];
+    statusLabel.text = levelPacks[self.currentPage][0][0];
     
     statusLabel.fontColor = [SKColor blackColor];
-    statusLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - feedback.size.height - 10);
+    statusLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - feedback.size.height - 8*screenMultHeight);
     statusLabel.fontSize = 15;
     [self addChild:statusLabel];
-    levels = levelPacks[currentLevelPack][1];
+    levels = levelPacks[self.currentPage][1];
     STARTING_LEVEL = 1;
     levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
 }
 
-#pragma mark - touch methods
+
+- (void)positionPages {
+    
+	for (int i = 0; i < pageContent.count; i++) {
+        
+        SKSpriteNode *page = [pageContent objectAtIndex:i];
+        
+        //load the levels grids in the scroller side by side
+        if (levelsScroller.scrollDirection == HORIZONTAL)
+            page.position = CGPointMake(CGRectGetMidX(self.frame) + .75*self.size.width*i, CGRectGetMidY(self.frame) + 25*screenMultHeight);
+        
+        [levelsScroller addChild:page];
+	}
+}
+
+- (void)swipeLeft {
+    
+    if (self.currentPage == pageContent.count - 1) {
+        
+        //they are on the last page and trying to go forwards so reset the page
+        [self resetLevels];
+        return;
+    }
+    //adjust the parallax backgrounds and levels scroll to the next or previous page based on their swipe direction
+    [self xMoveActions:-((self.currentPage + 1) * .75*self.size.width)];
+    
+    
+    self.currentPage++;
+    
+    
+    [self displaycurrentLevelPack];
+}
+
+- (void)swipeRight {
+    
+    if (self.currentPage == 0) {
+        
+        //they are on the first page and trying to go backwards so reset the page
+        [self resetLevels];
+        return;
+    }
+    
+    self.currentPage--;
+    
+    
+    //adjust the parallax backgrounds and levels scroll to the next or previous page based on their swipe direction
+    [self xMoveActions:-((self.currentPage) * .75*self.size.width)];
+    
+    [self displaycurrentLevelPack];
+}
+
+- (void)resetLevels {
+    
+    //just reset the levels scroller to the central position based on whatever the current page is
+    if (levelsScroller.scrollDirection == HORIZONTAL)
+        [self xMoveActions:-((self.currentPage) * .75*self.size.width)];
+}
+
+- (void)xMoveActions:(int)moveTo {
+    
+    SKAction *move = [SKAction moveToX:(moveTo * 0.2) duration:0.5];
+    move.timingMode = SKActionTimingEaseIn;
+    
+    //duration must be the same for all 3 or it looks like the backgrounds are trying to play catch up
+    move = [SKAction moveToX:moveTo duration:0.5];
+    move.timingMode = SKActionTimingEaseIn;
+    [levelsScroller runAction:move];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    startCancelled = YES;
+    
+    UITouch *touch = [touches anyObject];
+    CGPoint movingPoint = [touch locationInView:self.view];
+    
+    moveAmtX = movingPoint.x - initialTouch.x;
+    
+    if (levelsScroller.scrollDirection == HORIZONTAL) {
+        
+        //their finger is on the page and is moving around just move the scroller and parallax backgrounds around with them
+        //Check if it needs to scroll to the next page when they release their finger
+        levelsScroller.position = CGPointMake(initialPosition.x + moveAmtX, initialPosition.y);
+    }
+}
+
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    if (levelsScroller.scrollDirection == HORIZONTAL) {
+        
+        //they havent moved far enough so just reset the page to the original position
+        if (abs(moveAmtX) < minimum_detect_distance)
+            [self resetLevels];
+        
+        //the user has swiped past the designated distance, so assume that they want the page to scroll
+        if (moveAmtX < -minimum_detect_distance)
+            [self swipeLeft];
+        else if (moveAmtX > minimum_detect_distance)
+            [self swipeRight];
+        
+        //the scroller should never have a position higher than 0 so reset it
+        if (levelsScroller.position.x > 0)
+            [self resetLevels];
+    }
+}
 
 -(void) readTankTypes {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -357,7 +517,7 @@
         if([line isEqual:@"START"]) {
             inLevelPack = YES;
             [levelPacks addObject:[NSMutableArray array]];
-            [[levelPacks lastObject] addObject:@[allLinedStrings[i+1], allLinedStrings[i+2]]];
+            [[levelPacks lastObject] addObject:@[allLinedStrings[i+1], allLinedStrings[i+2], [NSNumber numberWithInt: levelPacks.count - 1]]];
             [[levelPacks lastObject] addObject:[NSMutableArray array]];
             levels = [levelPacks lastObject][1];
             i += 2;
@@ -487,6 +647,7 @@
             }
         }
     }
+    [self loadContent];
 }
 
 -(NSValue *) makeRectWithBottomLeftX : (float) x withY : (float) y withWidth: (float) width withHeight: (float) height {

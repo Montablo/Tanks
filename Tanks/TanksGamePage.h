@@ -14,10 +14,14 @@
 #import "UserTank.h"
 #import "AITank.h"
 #import "Bullet.h"
+#import "TanksAppDelegate.h"
 #import "TanksNavigation.h"
 
 @interface TanksGamePage : SKScene
 
 @property (strong, nonatomic) JCJoystick *joystick;
+
+-(void) pauseGame;
+-(void) unpauseGame;
 
 @end

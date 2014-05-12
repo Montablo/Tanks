@@ -11,4 +11,6 @@
 
 @interface TanksHomePage : SKScene
 
+@property (nonatomic, assign) int currentPage;
+
 @end

@@ -15,9 +15,9 @@
     
     NSMutableArray *tanks;
     
-    BOOL gameIsPaused;
     BOOL gameHasStarted;
     BOOL gameHasFinished;
+    BOOL gameIsPaused;
     
     NSArray *levelPack;
     NSMutableArray *levels;
@@ -62,6 +62,9 @@
 }
 
 -(void) didMoveToView:(SKView *)view {
+    
+    ((TanksAppDelegate*)[[UIApplication sharedApplication] delegate]).tanksGamePage = self;
+    
     lives = [[self.userData objectForKey:@"lives"] intValue];
 
     
@@ -319,10 +322,57 @@
 #pragma mark Game ending functions
 
 -(void) pauseGame {
-    gameIsPaused = !gameIsPaused;
+    
+    if(!gameHasStarted || gameHasFinished) return;
+    
+    gameIsPaused = YES;
+    
+    [pauseMessage removeFromParent];
+    [exitButton removeFromParent];
+    
+    [pauseButton removeFromParent];
+    pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"play"];
+    pauseButton.size = CGSizeMake(40, 40);
+    pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
+    pauseButton.zPosition = 25;
+    pauseButton.name = @"pauseButton";
+    [self addChild:pauseButton];
+    
+    pauseMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    pauseMessage.zPosition = 150;
+    pauseMessage.text = @"Tap the screen to resume.";
+    pauseMessage.fontSize = 35;
+    pauseMessage.fontColor = [SKColor whiteColor];
+    pauseMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+    [self addChild:pauseMessage];
+    
+    
+    exitButton = [SKSpriteNode spriteNodeWithImageNamed:@"exit"];
+    exitButton.size = CGSizeMake(60, 60);
+    exitButton.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - 75);
+    exitButton.zPosition = 50;
+    exitButton.name = @"exitButton";
+    [self addChild:exitButton];
+}
+
+-(void) unpauseGame {
+    gameIsPaused = NO;
+    [pauseButton removeFromParent];
+    [pauseMessage removeFromParent];
+    [exitButton removeFromParent];
+    
+    pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
+    pauseButton.size = CGSizeMake(40, 40);
+    pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
+    pauseButton.zPosition = 25;
+    pauseButton.name = @"pauseButton";
+    [self addChild:pauseButton];
 }
 
 -(void) endGame : (BOOL) userHit {
+    
+    ((TanksAppDelegate*)[[UIApplication sharedApplication] delegate]).tanksGamePage = nil;
+    
     gameIsPaused = YES;
     gameHasFinished = YES;
     
@@ -348,9 +398,6 @@
 -(void) startNewGame {
     int levelNum = currentLevel;
     
-    GameKitHelper *sharedHelper = [GameKitHelper sharedGameKitHelper];
-    [sharedHelper ];
-    
     SKTransition *transition;
     
     if(userWon) {
@@ -362,6 +409,10 @@
             levelNum = currentLevel + 1;
             transition = [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5];
         }
+        
+        GameKitHelper *sharedHelper = [GameKitHelper sharedGameKitHelper];
+        NSString *lID = [NSString stringWithFormat:@"LP_0%i", [levelsInfo[2] intValue] + 1];
+        [sharedHelper reportScore:currentLevel+1 forLeaderboardID: lID];
     } else {
         
         if(usesLives) {
@@ -414,49 +465,25 @@
     if([n.name isEqualToString:@"pauseButton"] && !gameIsPaused) {
         [self pauseGame];
         
-        [pauseButton removeFromParent];
-        pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"play"];
-        pauseButton.size = CGSizeMake(40, 40);
-        pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
-        pauseButton.zPosition = 25;
-        pauseButton.name = @"pauseButton";
-        [self addChild:pauseButton];
-        
-        pauseMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-        pauseMessage.zPosition = 150;
-        pauseMessage.text = @"Tap the screen to resume.";
-        pauseMessage.fontSize = 35;
-        pauseMessage.fontColor = [SKColor whiteColor];
-        pauseMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
-        [self addChild:pauseMessage];
-        
-        
-        exitButton = [SKSpriteNode spriteNodeWithImageNamed:@"exit"];
-        exitButton.size = CGSizeMake(60, 60);
-        exitButton.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - 75);
-        exitButton.zPosition = 50;
-        exitButton.name = @"exitButton";
-        [self addChild:exitButton];
-        
         ret = YES;
     } else if(gameIsPaused && gameHasStarted && !gameHasFinished) {
-        [self pauseGame];
-        [pauseButton removeFromParent];
-        [pauseMessage removeFromParent];
-        [exitButton removeFromParent];
-        
-        pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
-        pauseButton.size = CGSizeMake(40, 40);
-        pauseButton.position = CGPointMake(5 + pauseButton.size.width / 2, CGRectGetMaxY(self.frame) - (pauseButton.size.height / 2 + 5));
-        pauseButton.zPosition = 25;
-        pauseButton.name = @"pauseButton";
-        [self addChild:pauseButton];
+        [self unpauseGame];
         
         ret = YES;
     }
     
     return ret;
 }
+
+
+/*- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint pt = [touch locationInView:self.view];
+    float dist = [self distanceBetweenPoints:pt P2:self.joystick.position];
+    if(dist > 50*screenMultWidth) {
+        self.joystick.position = CGPointMake(pt.x, self.size.height - pt.y);
+    }
+}*/
 
 #pragma mark Game logic - boundaries
 
@@ -541,7 +568,8 @@
         newBullet.speed = aiTank.bulletSpeed;
         newBullet.maxRicochets = aiTank.numRicochets;
         float accuracy = aiTank.bulletAccuracy;
-        float direction = [self randomInt:0 withUpperBound:1] == 0 ? -1 : 1;
+        int randInt = [self randomInt:0 withUpperBound:2];
+        float direction =  randInt == 0 ? -1 : 1;
         float rand = [self randomInt:0 withUpperBound:15];
         newBullet.zRotation += accuracy * direction * rand;
     }
@@ -706,6 +734,8 @@
 
     
     b.position = newPos;
+    
+    //NSTimeInterval speed = b.speed;
     
     [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.speed];
     

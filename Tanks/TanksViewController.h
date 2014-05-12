@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <SpriteKit/SpriteKit.h>
 #import "GameKitHelper.h"
+#import "TanksAppDelegate.h"
 
 @interface TanksViewController : UIViewController
 

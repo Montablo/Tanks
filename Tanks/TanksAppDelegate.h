@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TanksGamePage.h"
 
+@class TanksGamePage;
 @interface TanksAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) TanksGamePage *tanksGamePage;
 
 @end
