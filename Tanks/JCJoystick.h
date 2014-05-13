@@ -20,4 +20,7 @@
            joystickColor:(SKColor *)joystickColor;
 @property float x;
 @property float y;
+
+@property (nonatomic,strong) UITouch *onlyTouch;
+
 @end

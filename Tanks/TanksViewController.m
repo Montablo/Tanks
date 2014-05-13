@@ -57,19 +57,22 @@
     
     SKView * skView = (SKView *)self.view;
     
-    if (!skView.scene) {
-        //skView.showsFPS = YES;
-        //skView.showsNodeCount = YES;
+    if (![@"1" isEqualToString:[[NSUserDefaults standardUserDefaults]
+                                objectForKey:@"userHasStarted"]]) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"userHasStarted"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         skView.frameInterval = 2;
-        
-        
-        // Create and configure the scene.
-        SKScene * scene = [TanksHomePage sceneWithSize:skView.bounds.size];
-        
+        SKScene * scene = [TanksTutorial sceneWithSize:skView.bounds.size];
         scene.scaleMode = SKSceneScaleModeAspectFill;
+        [skView presentScene:scene];
         
-        
-        // Present the scene.
+    }
+    
+    if (!skView.scene) {
+        skView.frameInterval = 2;
+        SKScene * scene = [TanksHomePage sceneWithSize:skView.bounds.size];
+        scene.scaleMode = SKSceneScaleModeAspectFill;
         [skView presentScene:scene];
     }
 }

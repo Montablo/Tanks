@@ -48,6 +48,8 @@
     
     int backgroundIndex;
     
+    BOOL userMovedJoystick;
+    
 }
 
 #pragma mark Initialization methods
@@ -268,7 +270,7 @@
     self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
     //self.joystick.xScale = 1*screenMultWidth;
     //self.joystick.yScale = 1*screenMultWidth;
-    [self.joystick setPosition:CGPointMake(60*screenMultWidth, 60*screenMultWidth)];
+    [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 5*screenMultWidth, self.joystick.frame.size.height/2 + 5*screenMultWidth)];
     self.joystick.zPosition = 25;
     self.joystick.alpha = 1;
     [self addChild:self.joystick];
@@ -565,7 +567,7 @@
     
     if(t.globalTankType != 0) {
         AITank *aiTank = tanks[type];
-        newBullet.speed = aiTank.bulletSpeed;
+        newBullet.bspeed = aiTank.bulletSpeed;
         newBullet.maxRicochets = aiTank.numRicochets;
         float accuracy = aiTank.bulletAccuracy;
         int randInt = [self randomInt:0 withUpperBound:2];
@@ -594,7 +596,7 @@
     if(gameHasFinished) return;
     
     if(gameIsPaused || !gameHasStarted) {
-        [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.speed];
+        [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.bspeed];
         return;
     }
     
@@ -735,9 +737,7 @@
     
     b.position = newPos;
     
-    //NSTimeInterval speed = b.speed;
-    
-    [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.speed];
+    [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.bspeed];
     
 }
 

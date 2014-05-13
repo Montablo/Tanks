@@ -37,7 +37,7 @@
     
     self.name = @"bullet";
     
-    self.speed = .008;
+    self.bspeed = .008;
     
 }
 

@@ -11,7 +11,6 @@
 @interface JCJoystick ()
     @property (nonatomic, strong) SKShapeNode *interior;
     @property float angle;
-    @property (nonatomic,strong) UITouch *onlyTouch;
     @property float baseRadius;
     @property float controlRadius;
     @property float joystickRadius;

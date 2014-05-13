@@ -39,6 +39,7 @@
     CGFloat moveAmtX;
     
     BOOL startCancelled;
+    BOOL beganWithGame;
 }
 
 -(id) initWithSize:(CGSize)size {
@@ -92,13 +93,13 @@
         arrow2.name = @"arrow2";
         [self addChild:arrow2];*/
         
-        levelNum = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        /*levelNum = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
         levelNum.text = @"Level: 1";
         levelNum.position = CGPointMake(50, 45);
         levelNum.fontColor = [SKColor blackColor];
-        [self addChild:levelNum];
+        [self addChild:levelNum];*/
         
-        SKSpriteNode *arrow3 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
+        /*SKSpriteNode *arrow3 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
         arrow3.position = CGPointMake(25, 20);
         arrow3.zRotation = M_PI;
         arrow3.size = CGSizeMake(40, 34);
@@ -109,7 +110,7 @@
         arrow4.position = CGPointMake(75, 20);
         arrow4.size = CGSizeMake(40, 34);
         arrow4.name = @"arrow4";
-        [self addChild:arrow4];
+        [self addChild:arrow4];*/
         
         /*SKSpriteNode *refresh;
         refresh = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
@@ -119,14 +120,14 @@
         [self addChild:refresh];*/
         
         SKSpriteNode *questionMark;
-        questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"questionmark"];
+        questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"QuestionMarkIcon"];
         questionMark.size = CGSizeMake(64, 64);
         questionMark.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - questionMark.size.width / 2, 5 + questionMark.size.height / 2);
         questionMark.name = @"questionMark";
         [self addChild:questionMark];
         
         SKSpriteNode *gameCenterButton;
-        gameCenterButton = [SKSpriteNode spriteNodeWithImageNamed:@"gamecenter"];
+        gameCenterButton = [SKSpriteNode spriteNodeWithImageNamed:@"GameCenterIcon"];
         gameCenterButton.size = CGSizeMake(64, 64);
         gameCenterButton.position = CGPointMake(CGRectGetMaxX(self.frame) - 15 - questionMark.size.width / 2 - gameCenterButton.size.width, 5 + gameCenterButton.size.height / 2);
         gameCenterButton.name = @"gameCenterButton";
@@ -167,7 +168,7 @@
     initialTouch = orgin;
     
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
-        [self performSelector:@selector(loadGame) withObject:nil afterDelay:.05];
+        beganWithGame = YES;
         return;
     }/* else if([n.name isEqual:@"arrow1"]) {
         currentLevelPack--;
@@ -331,6 +332,14 @@
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch *p = [touches anyObject];
+    CGPoint orgin = [p locationInNode:self];
+    SKNode *n = [self nodeAtPoint:orgin];
+    
+    if(beganWithGame && [n.name isEqual:@"playLabel"] && levels.count != 0) {
+        [self performSelector:@selector(loadGame) withObject:nil afterDelay:.05];
+    }
     
     if (levelsScroller.scrollDirection == HORIZONTAL) {
         

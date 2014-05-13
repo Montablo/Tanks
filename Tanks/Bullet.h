@@ -20,7 +20,7 @@
 
 @property BOOL isObliterated;
 
-@property float speed;
+@property float bspeed;
 
 
 @end
