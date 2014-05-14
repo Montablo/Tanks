@@ -121,7 +121,7 @@
     
     startMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
     startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
-    startMessage.text = @"Touch the screen to begin.";
+    startMessage.text = @"Tap the screen to begin.";
     startMessage.fontSize = 40;
     startMessage.fontColor = [SKColor whiteColor];
     startMessage.zPosition = 100;
@@ -209,7 +209,7 @@
     
     CGRect inGameFrame = [containers[0] CGRectValue];
     self.backgroundColor = [UIColor whiteColor];
-    backgroundIndex = [self randomInt:0 withUpperBound:wallColors.count];
+    backgroundIndex = [self randomInt:0 withUpperBound:(int) wallColors.count];
     UIColor *color = wallColors[backgroundIndex];
     [wallColors removeObjectAtIndex:backgroundIndex];
     SKSpriteNode *background = [SKSpriteNode spriteNodeWithColor:color size:inGameFrame.size];
@@ -262,25 +262,18 @@
     
     [colors removeObjectAtIndex:backgroundIndex];
     
-    int colorIndex1 = [self randomInt:0 withUpperBound:colors.count];
+    int colorIndex1 = [self randomInt:0 withUpperBound:(int) colors.count];
     UIColor *color1 = colors[colorIndex1];
     [colors removeObjectAtIndex:colorIndex1];
-    UIColor *color2 = colors[[self randomInt:0 withUpperBound:colors.count]];
+    UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
     
     self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
     //self.joystick.xScale = 1*screenMultWidth;
     //self.joystick.yScale = 1*screenMultWidth;
-    [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 5*screenMultWidth, self.joystick.frame.size.height/2 + 5*screenMultWidth)];
+    [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 15*screenMultWidth, self.joystick.frame.size.height/2 + 15*screenMultWidth)];
     self.joystick.zPosition = 25;
     self.joystick.alpha = 1;
     [self addChild:self.joystick];
-    
-    /*SKSpriteNode *mineButton = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
-    mineButton.size = CGSizeMake(40 * screenMultHeight, 40 * screenMultHeight);
-    [mineButton setPosition:CGPointMake(CGRectGetMaxX(self.frame) - (mineButton.size.width / 2 + 10), mineButton.size.height / 2 + 10)];
-    mineButton.zPosition = 25;
-    mineButton.name = @"mineButton";
-    [self addChild:mineButton];*/
 
 }
 
@@ -719,19 +712,6 @@
             }
         }
         
-        /*for(Mine *m in t.mines) {
-            if([b intersectsNode:m]) {
-                [b removeFromParent];
-                [owner.bullets removeObjectIdenticalTo:b];
-                b.isObliterated = YES;
-                [self blowUpMine:m];
-                
-                [self displayBulletShells];
-                
-                return;
-            }
-        }*/
-        
     }
 
     
@@ -977,30 +957,6 @@
     [self performSelector:@selector(processTankActionFiring) withObject:nil afterDelay: .1];
 }
 
-/*-(void) processTankActionMineDropping {
-    
-    if(gameHasFinished) return;
-    
-    if(!gameIsPaused) {
-        
-        for(int i=1; i<tanks.count; i++) {
-            AITank *t = tanks[i];
-            if(t.isObliterated == YES) continue;
-            if(t.doesDropMines) {
-                int rand = [self randomInt:0 withUpperBound:t.mineDroppingFrequency];
-                if(rand == 0) {
-                    
-                    [self dropMineWithType:i];
-                    return;
-                }
-            }
-        }
-        
-    }
-    
-    [self performSelector:@selector(processTankActionMineDropping) withObject:nil afterDelay: .1];
-}*/
-
 #pragma mark Tank AI - Moving
 
 -(void) processTankMovement : (AITank *) t {
@@ -1012,18 +968,11 @@
         CGPoint newPoint = [self getPointAtMaxDistance:t withGoal:goalTank.position];
         Bullet *b = [self isBulletNearTank : t];
         
-        //Mine *m = [self isMineNearTank : t];
-        
         if(b != nil) {
             [self avoidBullet : b : t];
-        }/* else if(m != nil) {
-            [self avoidMine : m : t];
-        }*/
+        }
         else if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:goalTank.position] || ![self tankCanSeeTank:t withTank:goalTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
-            //[self processTankPathfinding : t toPoint : userTank.position];
-            
-            //[self moveOnPath : t];
         } else { //No wall
                 
                 //t.isMoving = true;
@@ -1064,16 +1013,6 @@
     CGPoint greater = [self distanceBetweenPoints:p1 P2:b.position] >= [self distanceBetweenPoints:p2 P2:b.position] ? p1 : p2;
     t.position = greater;
 }
-
-/*-(void) avoidMine : (Mine *) m : (AITank *) t {
-    
-    float angle = M_PI - [self getAngleP1:t.position P2:m.position];
-    
-    CGPoint newPos = CGPointMake(t.position.x + cosf(angle)*screenMultWidth*t.tankSpeed, t.position.y + sinf(angle)*screenMultHeight*t.tankSpeed);
-    
-    if([self isXinBounds:newPos.x withY:newPos.y withWidth:t.frame.size.width withHeight:t.frame.size.height : false])
-        t.position = newPos;
-}*/
 
 
 -(void) moveTank : (AITank *) t toPoint : (CGPoint) goalPoint {

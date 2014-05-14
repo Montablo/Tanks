@@ -8,7 +8,6 @@
 
 #import "TanksViewController.h"
 #import "TanksHomePage.h"
-#import "TanksHomePageViewController.h"
 
 @implementation TanksViewController
 

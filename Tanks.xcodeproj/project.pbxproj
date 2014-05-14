@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1D1901A8130020F925 /* TanksHomePage.m */; };
-		0412AFF4191E5251008EF441 /* TanksHomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */; };
 		041FD51C191FB85000F8A294 /* TanksTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 041FD51B191FB85000F8A294 /* TanksTutorial.m */; };
 		044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */; };
 		044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03E18FB2AB30007F2DE /* JCJoystick.m */; };
@@ -16,12 +15,10 @@
 		0478DA2119202F5A002297DA /* TanksNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1A1901A6E80020F925 /* TanksNavigation.m */; };
 		0478DA23192030B1002297DA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0478DA22192030B1002297DA /* GameKit.framework */; };
 		0478DA26192043C7002297DA /* LevelsScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 0478DA25192043C7002297DA /* LevelsScroller.m */; };
-		048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 048217C61909C3F1004A2188 /* AStarCGPoint.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
 		04F9CE8B18FB339E009B0D7D /* AITank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8A18FB339E009B0D7D /* AITank.m */; };
-		04FEA9641904162F00A9CFB6 /* Mine.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FEA9631904162F00A9CFB6 /* Mine.m */; };
 		1A32CCD618FB07DD00C51717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD518FB07DD00C51717 /* Foundation.framework */; };
 		1A32CCD818FB07DD00C51717 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */; };
 		1A32CCDA18FB07DD00C51717 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A32CCD918FB07DD00C51717 /* UIKit.framework */; };
@@ -56,8 +53,6 @@
 		040BCF1A1901A6E80020F925 /* TanksNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksNavigation.m; sourceTree = "<group>"; };
 		040BCF1C1901A8130020F925 /* TanksHomePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksHomePage.h; sourceTree = "<group>"; };
 		040BCF1D1901A8130020F925 /* TanksHomePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksHomePage.m; sourceTree = "<group>"; };
-		0412AFF2191E5251008EF441 /* TanksHomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksHomePageViewController.h; sourceTree = SOURCE_ROOT; };
-		0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksHomePageViewController.m; sourceTree = SOURCE_ROOT; };
 		041FD51A191FB85000F8A294 /* TanksTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksTutorial.h; sourceTree = "<group>"; };
 		041FD51B191FB85000F8A294 /* TanksTutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksTutorial.m; sourceTree = "<group>"; };
 		044DF03B18FB2AB30007F2DE /* JCImageJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCImageJoystick.h; sourceTree = "<group>"; };
@@ -69,8 +64,6 @@
 		0478DA22192030B1002297DA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0478DA24192043C7002297DA /* LevelsScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelsScroller.h; sourceTree = "<group>"; };
 		0478DA25192043C7002297DA /* LevelsScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelsScroller.m; sourceTree = "<group>"; };
-		048217C51909C3F1004A2188 /* AStarCGPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AStarCGPoint.h; sourceTree = "<group>"; };
-		048217C61909C3F1004A2188 /* AStarCGPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AStarCGPoint.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
 		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
@@ -80,8 +73,6 @@
 		04F9CE8918FB339E009B0D7D /* AITank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AITank.h; sourceTree = "<group>"; };
 		04F9CE8A18FB339E009B0D7D /* AITank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AITank.m; sourceTree = "<group>"; };
 		04F9CE8C18FB3522009B0D7D /* TanksConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksConstants.h; sourceTree = "<group>"; };
-		04FEA9621904162F00A9CFB6 /* Mine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mine.h; sourceTree = "<group>"; };
-		04FEA9631904162F00A9CFB6 /* Mine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mine.m; sourceTree = "<group>"; };
 		1A32CCD218FB07DD00C51717 /* Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tanks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A32CCD518FB07DD00C51717 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -136,8 +127,6 @@
 		0412AFF5191E525F008EF441 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				0412AFF2191E5251008EF441 /* TanksHomePageViewController.h */,
-				0412AFF3191E5251008EF441 /* TanksHomePageViewController.m */,
 				1A32CCEF18FB07DD00C51717 /* TanksViewController.h */,
 				1A32CCF018FB07DD00C51717 /* TanksViewController.m */,
 			);
@@ -176,10 +165,6 @@
 				04F9CE8C18FB3522009B0D7D /* TanksConstants.h */,
 				04C0E9D118FB504E00B73711 /* Bullet.h */,
 				04C0E9D218FB504E00B73711 /* Bullet.m */,
-				04FEA9621904162F00A9CFB6 /* Mine.h */,
-				04FEA9631904162F00A9CFB6 /* Mine.m */,
-				048217C51909C3F1004A2188 /* AStarCGPoint.h */,
-				048217C61909C3F1004A2188 /* AStarCGPoint.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -380,9 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0478DA2119202F5A002297DA /* TanksNavigation.m in Sources */,
-				04FEA9641904162F00A9CFB6 /* Mine.m in Sources */,
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
-				0412AFF4191E5251008EF441 /* TanksHomePageViewController.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
 				04F9CE8B18FB339E009B0D7D /* AITank.m in Sources */,
 				04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */,
@@ -394,7 +377,6 @@
 				044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */,
 				0478DA2019202E37002297DA /* GameKitHelper.m in Sources */,
 				1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */,
-				048217C71909C3F1004A2188 /* AStarCGPoint.m in Sources */,
 				0478DA26192043C7002297DA /* LevelsScroller.m in Sources */,
 				1A32CCE418FB07DD00C51717 /* main.m in Sources */,
 			);

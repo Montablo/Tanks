@@ -104,7 +104,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
 {
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
     if (gameCenterController != nil) {
-        gameCenterController.gameCenterDelegate = self;
+        gameCenterController.gameCenterDelegate = (id<GKGameCenterControllerDelegate>) self;
         gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
         gameCenterController.leaderboardIdentifier = kLeaderBoardIdentifier;
         

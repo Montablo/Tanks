@@ -38,7 +38,7 @@
         t.color = [SKColor blueColor];
         t.name = @"userTank";
     }
-    return t;
+    return (UserTank *) t;
 }
 
 @end

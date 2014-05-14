@@ -78,63 +78,26 @@
         
         STARTING_LEVEL = 1;
         
-        //page = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"level%i", currentLevelPack+1]];
-        
-        /*SKSpriteNode *arrow1 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
-        arrow1.position = CGPointMake(CGRectGetMidX(self.frame) - 25, 20);
-        arrow1.zRotation = M_PI;
-        arrow1.size = CGSizeMake(40, 34);
-        arrow1.name = @"arrow1";
-        [self addChild:arrow1];
-        
-        SKSpriteNode *arrow2 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
-        arrow2.position = CGPointMake(CGRectGetMidX(self.frame) + 25, 20);
-        arrow2.size = CGSizeMake(40, 34);
-        arrow2.name = @"arrow2";
-        [self addChild:arrow2];*/
-        
-        /*levelNum = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
-        levelNum.text = @"Level: 1";
-        levelNum.position = CGPointMake(50, 45);
-        levelNum.fontColor = [SKColor blackColor];
-        [self addChild:levelNum];*/
-        
-        /*SKSpriteNode *arrow3 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
-        arrow3.position = CGPointMake(25, 20);
-        arrow3.zRotation = M_PI;
-        arrow3.size = CGSizeMake(40, 34);
-        arrow3.name = @"arrow3";
-        [self addChild:arrow3];
-        
-        SKSpriteNode *arrow4 = [SKSpriteNode spriteNodeWithImageNamed:@"arrow"];
-        arrow4.position = CGPointMake(75, 20);
-        arrow4.size = CGSizeMake(40, 34);
-        arrow4.name = @"arrow4";
-        [self addChild:arrow4];*/
-        
-        /*SKSpriteNode *refresh;
-        refresh = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
-        refresh.size = CGSizeMake(20, 20);
-        refresh.position = CGPointMake(CGRectGetMaxX(self.frame) - refresh.size.width, CGRectGetMaxY(self.frame) - refresh.size.height);
-        refresh.name = @"refresh";
-        [self addChild:refresh];*/
-        
         SKSpriteNode *questionMark;
         questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"QuestionMarkIcon"];
-        questionMark.size = CGSizeMake(64, 64);
+        questionMark.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
         questionMark.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - questionMark.size.width / 2, 5 + questionMark.size.height / 2);
         questionMark.name = @"questionMark";
         [self addChild:questionMark];
         
         SKSpriteNode *gameCenterButton;
         gameCenterButton = [SKSpriteNode spriteNodeWithImageNamed:@"GameCenterIcon"];
-        gameCenterButton.size = CGSizeMake(64, 64);
+        gameCenterButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
         gameCenterButton.position = CGPointMake(CGRectGetMaxX(self.frame) - 15 - questionMark.size.width / 2 - gameCenterButton.size.width, 5 + gameCenterButton.size.height / 2);
         gameCenterButton.name = @"gameCenterButton";
         [self addChild:gameCenterButton];
         
-        //[self saveLevelsToFile];
-        //[self saveTankTypesToFile];
+        /*SKSpriteNode *settingsButton;
+        settingsButton = [SKSpriteNode spriteNodeWithImageNamed:@"SettingsIcon"];
+        settingsButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
+        settingsButton.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - settingsButton.size.width / 2, 5 + settingsButton.size.height / 2);
+        settingsButton.name = @"settingsButton";
+        [self addChild:settingsButton];*/
         
         [self readTankTypes];
         [self readLevels];
@@ -170,26 +133,7 @@
     if([n.name isEqual:@"playLabel"] && levels.count != 0) {
         beganWithGame = YES;
         return;
-    }/* else if([n.name isEqual:@"arrow1"]) {
-        currentLevelPack--;
-        if(currentLevelPack == -1) currentLevelPack = (int) levelPacks.count - 1;
-        [self displaycurrentLevelPack];
-    } else if([n.name isEqual:@"arrow2"]) {
-        currentLevelPack++;
-        if(currentLevelPack == levelPacks.count) currentLevelPack = 0;
-        [self displaycurrentLevelPack];
-    }*//* else if([n.name isEqualToString:@"refresh"]) {
-        
-        
-        self.currentPage = 0;
-        [self resetLevels];
-        
-        [self saveLevelsToFile];
-        [self saveTankTypesToFile];
-        [self readLevels];
-        [self readTankTypes];
-        [self displaycurrentLevelPack];
-    }*/ else if([n.name isEqual:@"arrow3"]) {
+    } else if([n.name isEqual:@"arrow3"]) {
         STARTING_LEVEL--;
         if(STARTING_LEVEL == 0) STARTING_LEVEL = (int) levels.count;
         levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
@@ -224,12 +168,6 @@
 }
 
 -(void) displaycurrentLevelPack {
-    /*[image removeFromParent];
-    image = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"level%i", currentLevelPack+1]];
-    image.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 50);
-    image.size = CGSizeMake(CGRectGetMaxX(self.frame)*.7, CGRectGetMaxY(self.frame) - 200);
-    image.name = @"playLabel";
-    [self addChild:image];*/
     
     [statusLabel removeFromParent];
     statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
@@ -526,7 +464,7 @@
         if([line isEqual:@"START"]) {
             inLevelPack = YES;
             [levelPacks addObject:[NSMutableArray array]];
-            [[levelPacks lastObject] addObject:@[allLinedStrings[i+1], allLinedStrings[i+2], [NSNumber numberWithInt: levelPacks.count - 1]]];
+            [[levelPacks lastObject] addObject:@[allLinedStrings[i+1], allLinedStrings[i+2], [NSNumber numberWithInt: (int) levelPacks.count - 1]]];
             [[levelPacks lastObject] addObject:[NSMutableArray array]];
             levels = [levelPacks lastObject][1];
             i += 2;
