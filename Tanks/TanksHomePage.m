@@ -92,13 +92,6 @@
         gameCenterButton.name = @"gameCenterButton";
         [self addChild:gameCenterButton];
         
-        /*SKSpriteNode *settingsButton;
-        settingsButton = [SKSpriteNode spriteNodeWithImageNamed:@"SettingsIcon"];
-        settingsButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
-        settingsButton.position = CGPointMake(CGRectGetMaxX(self.frame) - 5 - settingsButton.size.width / 2, 5 + settingsButton.size.height / 2);
-        settingsButton.name = @"settingsButton";
-        [self addChild:settingsButton];*/
-        
         [self readTankTypes];
         [self readLevels];
         

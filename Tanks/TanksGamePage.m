@@ -159,12 +159,6 @@
         t.turret.zRotation = M_PI / 2;
         [t addChild:t.turret];
         
-        if(i >= 1) {
-            
-            //UserTank *userTank = tanks[0];
-            
-            //[self generatePath : t : userTank.position];
-        }
     }
     
     [self displayWalls];
@@ -197,16 +191,6 @@
     
     NSMutableArray *wallColors = [self generateColors];
     
-    /*SKSpriteNode *floor = [SKSpriteNode spriteNodeWithImageNamed:@"background"];
-    SKSpriteNode *border = [SKSpriteNode spriteNodeWithImageNamed:@"floor_walls"];
-    floor.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
-    border.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));    floor.size = self.frame.size;
-    floor.zPosition = -10;
-    border.size = self.frame.size;
-    border.zPosition = -5;
-    [self addChild:floor];
-     [self addChild:border];*/
-    
     CGRect inGameFrame = [containers[0] CGRectValue];
     self.backgroundColor = [UIColor whiteColor];
     backgroundIndex = [self randomInt:0 withUpperBound:(int) wallColors.count];
@@ -221,27 +205,6 @@
         
         CGRect wall = [walls[i] CGRectValue];
         
-        /*SKTexture *wallTexture = [SKTexture textureWithImageNamed:@"wood-1"];
-        
-        SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithTexture:wallTexture size:wall.size];
-        wallNode.position = wall.origin;
-        
-        [self addChild:wallNode];*/
-        
-        /*CGSize coverageSize = CGSizeMake(wall.size.width, wall.size.height); //the size of the entire image you want tiled
-        CGRect textureSize = CGRectMake(0, 0, 50, 50); //the size of the tile.
-        CGImageRef backgroundCGImage = [UIImage imageNamed:@"wood-1"].CGImage; //change the string to your image name
-        UIGraphicsBeginImageContext(CGSizeMake(coverageSize.width, coverageSize.height));
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextDrawTiledImage(context, textureSize, backgroundCGImage);
-        UIImage *tiledBackground = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        SKTexture *backgroundTexture = [SKTexture textureWithCGImage:tiledBackground.CGImage];
-        SKSpriteNode *backgroundTiles = [SKSpriteNode spriteNodeWithTexture:backgroundTexture];
-        backgroundTiles.yScale = -1; //upon closer inspection, I noticed my source tile was flipped vertically, so this just flipped it back.
-        backgroundTiles.position = CGPointMake(wall.origin.x, wall.origin.y);
-        [self addChild:backgroundTiles];*/
-        
         SKSpriteNode *wallNode = [SKSpriteNode spriteNodeWithColor:wallColors[[self randomInt:0 withUpperBound:(int) wallColors.count]] size:wall.size];
         wallNode.position = wall.origin;
         wallNode.zPosition = -5;
@@ -255,8 +218,6 @@
 }
 
 -(void) addJoystick {
-    //self.joystick = [[JCImageJoystick alloc]initWithJoystickImage:(@"redStick.png") baseImage:@"stickbase.png"];
-    //self.joystick.size = CGSizeMake(self.joystick.size.width * screenMultWidth, self.joystick.size.height * screenMultHeight);
     
     NSMutableArray *colors = [self generateColors];
     
@@ -268,8 +229,6 @@
     UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
     
     self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
-    //self.joystick.xScale = 1*screenMultWidth;
-    //self.joystick.yScale = 1*screenMultWidth;
     [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 15*screenMultWidth, self.joystick.frame.size.height/2 + 15*screenMultWidth)];
     self.joystick.zPosition = 25;
     self.joystick.alpha = 1;
@@ -445,14 +404,7 @@
     
     BOOL ret = NO;
     
-    /*if([n.name isEqualToString:@"endText"]) {
-        
-        
-        return;
-    }*/ /*else if([n.name isEqualToString:@"mineButton"]) {
-        [self dropUserMine];
-        return YES;
-    }*/if([n.name isEqualToString:@"exitButton"]) {
+    if([n.name isEqualToString:@"exitButton"]) {
         [TanksNavigation loadTanksHomePage:self];
         return YES;
     }
@@ -469,16 +421,6 @@
     
     return ret;
 }
-
-
-/*- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    CGPoint pt = [touch locationInView:self.view];
-    float dist = [self distanceBetweenPoints:pt P2:self.joystick.position];
-    if(dist > 50*screenMultWidth) {
-        self.joystick.position = CGPointMake(pt.x, self.size.height - pt.y);
-    }
-}*/
 
 #pragma mark Game logic - boundaries
 
@@ -721,123 +663,6 @@
     
 }
 
-#pragma mark Mine dropping
-
-/*-(void) dropUserMine {
-    
-    if(!gameHasStarted || gameIsPaused || gameHasFinished) return;
-    
-    Tank *user = tanks[0];
-    if(user.isObliterated) return;
-    
-    [self dropMineWithType:0];
-}
-
--(void) dropMineWithType : (int) type {
-    
-    if(!gameHasStarted || gameIsPaused || gameHasFinished) return;
-    
-    Tank *t = tanks[type];
-    
-    if(t.mines.count == t.maxCurrentMines) return;
-    
-    Mine *m = [[Mine alloc] initWithPosition:t.position :screenMultWidth :screenMultHeight];
-    [self addChild:m];
-    [t.mines addObject:m];
-    
-    [self performSelector:@selector(prepMine:) withObject:m afterDelay:(float) [self randomInt:25 withUpperBound:25] / 10];
-}
-
--(void) prepMine : (Mine *) m {
-    
-    if(!gameHasStarted || gameIsPaused || gameHasFinished) return;
-    
-    if(m.isObliterated) return;
-    
-    SKAction *action = [SKAction setTexture:[SKTexture textureWithImageNamed: @"mineRED"]];
-    
-    [m runAction:action];
-    
-    [self performSelector:@selector(blowUpMine:) withObject:m afterDelay:(float) [self randomInt:5 withUpperBound:10] / 10];
-}
-
--(void) blowUpMine : (Mine *) m {
-    
-    if(!gameHasStarted || gameIsPaused || gameHasFinished) return;
-    
-    if(m.isObliterated) return;
-    
-    m.isObliterated = YES;
-    
-    SKAction *action = [SKAction setTexture:[SKTexture textureWithImageNamed: @"mineExplode"]];
-    
-    [m runAction:action];
-    
-    m.zPosition = 1;
-    
-    m.size = CGSizeMake(150*screenMultHeight, 150*screenMultHeight);
-    
-    Tank *owner;
-    
-    for(int i=0; i<tanks.count; i++) {
-        
-        Tank *t = tanks[i];
-        
-        for(int i=0; i<t.mines.count; i++) {
-            
-            Mine *other = t.mines[i];
-            
-            BOOL isEqual = CGPointEqualToPoint(m.position, other.position);
-            if(isEqual) {
-                owner = t;
-                continue;
-            }
-            if(!other.isObliterated && [m intersectsNode:other]) {
-                [self blowUpMine:other];
-                i--;
-                continue;
-            }
-        }
-        
-        if([m intersectsNode:t]) {
-            
-            if(!t.isObliterated) {
-                [t removeFromParent];
-                
-                t.isObliterated = YES;
-                m.isObliterated = YES;
-                
-                int userCount = 0;
-                int enemyCount = 0;
-                for(Tank *tank in tanks) {
-                    if(tank.globalTankType == 1 && !tank.isObliterated) enemyCount++;
-                    else if((tank.globalTankType == 0 || tank.globalTankType == 2) && !tank.isObliterated) userCount++;
-                }
-                
-                if(userCount == 0) { //user lost
-                    [self endGame : YES];
-                    return;
-                }
-                
-                if(enemyCount == 0) { //user won
-                    [self endGame : NO];
-                    return;
-                }
-                
-            }
-        }
-    }
-    
-    [owner.mines removeObjectIdenticalTo:m];
-
-    
-    [self performSelector:@selector(cleanUpMine:) withObject:m afterDelay:[self randomInt:15 withUpperBound:5] / 10];
-}
-
--(void) cleanUpMine : (Mine *) m {
-    [m removeFromParent];
-}*/
-
 #pragma mark Math functions
 
 -(float) getAngleP1 : (CGPoint) P1 P2 : (CGPoint) P2 {
@@ -894,9 +719,6 @@
     if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height : false]) {
         [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
     }
-    
-    //[userTank setPosition:CGPointMake(newPositionX, newPositionY)];
-    //NSLog(@"%i", [self isWallBetweenPoints:userTank.position P2:enemyTank.position]);
 }
 
 #pragma mark Tank AI
@@ -904,7 +726,6 @@
 -(void) initAITankLogic {
     [self processTankActionMoving];
     [self processTankActionFiring];
-    //[self processTankActionMineDropping];
 }
 
 -(void) processTankActionMoving {
@@ -974,8 +795,6 @@
         else if(t.trackingCooldown != 0 || [self isWallBetweenPoints:t.position P2:goalTank.position] || ![self tankCanSeeTank:t withTank:goalTank] || [self randomInt:0 withUpperBound:[self distanceBetweenPoints:t.position P2:newPoint]] == 0) { //stuff later
             [self moveTankAimlessly : t];
         } else { //No wall
-                
-                //t.isMoving = true;
             
                 [self moveTank : t toPoint: newPoint];
         }
@@ -1233,18 +1052,6 @@
     
     return nil;
 }
-
-/*-(Mine *) isMineNearTank : (AITank *) t {
-    for(Tank *otherTank in tanks) {
-        for(Mine *m in otherTank.mines) {
-            if([self distanceBetweenPoints:t.position P2:m.position] <= t.mineAvoidingDistance) { //close to tank
-                return m;
-            }
-        }
-    }
-    
-    return nil;
-}*/
 
 -(BOOL) bulletWillHitTank : (AITank *) t withBullet : (Bullet *) b {
     float angle = [self getAngleP1:t.position P2:b.position];

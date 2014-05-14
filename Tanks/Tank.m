@@ -41,12 +41,6 @@
 
 -(void) setUp {
     
-    /*self.turret = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:[self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5*self.screenMultWidth withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))*self.screenMultHeight].size];
-    self.turret.anchorPoint = CGPointMake(0, 0);
-    //self.turret.position = CGPointMake(self.turret.position.x - 2.5, self.turret.position.y);
-    //turret.size = [self makeRectWithBottomLeftX:self.position.x withY:self.position.y withWidth:5 withHeight:sqrtf(powf(TANK_HEIGHT/2, 2) + powf(TANK_WIDTH/2, 2))].size;
-    [self addChild:self.turret];*/
-    
     self.maxCurrentBullets = 5;
     
     self.bullets = [NSMutableArray array];
