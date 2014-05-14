@@ -358,11 +358,18 @@
     
     BOOL re;
     [feedback removeFromParent];
+    
+    NSString *version = allLinedStrings[0];
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         feedback = [SKSpriteNode spriteNodeWithImageNamed:@"x"];
         statusLabel.text = @"Error connecting to the server. Play locally in the meantime.";
         re = YES;
-    } else {
+    } else if(LEVEL_RELEASE_VERSION < [version intValue]) {
+        feedback = [SKSpriteNode spriteNodeWithImageNamed:@"x"];
+        statusLabel.text = @"You are unable to get the latest levels. Please update the app.";
+        re = YES;
+    }
+    else {
         feedback = [SKSpriteNode spriteNodeWithImageNamed:@"check"];
         statusLabel.text = allLinedStrings[1];
     }
@@ -392,6 +399,12 @@
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
+    
+    
+    NSString *version = allLinedStrings[0];
+    if(LEVEL_RELEASE_VERSION < [version intValue]) {
+        return;
+    }
     
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         return;

@@ -19,12 +19,9 @@
 
 #define TANK_AI_UPDATE_SPEED 1
 
-#define VERY_LOW_INTELLIGENCE 0
-#define LOW_INTELLIGENCE 1
-#define MEDIUM_INTELLIGENCE 2
-#define HIGH_INTELLIGENCE 3
-
 #define screenWidth (568 + 0 + 0) //original screen width
 #define screenHeight (320 + 0 + 0) //original screen height
 
 #define tutorialImages 4
+
+#define LEVEL_RELEASE_VERSION 1

@@ -75,16 +75,17 @@
         [skView presentScene:scene];
     }
 }
-
 -(void) saveLevelsToFile {
-    
     NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
+    NSString *version = allLinedStrings[0];
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
+        return;
+    } else if(LEVEL_RELEASE_VERSION < [version intValue]) {
         return;
     }
     
@@ -101,6 +102,12 @@
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
+    
+    
+    NSString *version = allLinedStrings[0];
+    if(LEVEL_RELEASE_VERSION < [version intValue]) {
+        return;
+    }
     
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         return;

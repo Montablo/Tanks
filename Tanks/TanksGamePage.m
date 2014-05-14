@@ -493,8 +493,6 @@
     
     
     CGPoint startingPoint = CGPointMake(t.position.x + (t.size.width)*cosf(angle), t.position.y + (t.size.height)*sinf(angle));
-    //NSLog(@"%f, %f", newPos.x, newPos.y);
-    //CGPoint startingPoint = CGPointMake(newPos.x + (t.turret.size.height*cosf(angle)), newPos.y + (t.turret.size.height*sinf(angle)));
     
     if([self isWallBetweenPoints:startingPoint P2:t.position]) return;
     
@@ -615,7 +613,6 @@
                 int userCount = 0;
                 int enemyCount = 0;
                 for(Tank *tank in tanks) {
-                    NSLog(@"%i", tank.isObliterated);
                     if(tank.globalTankType == 1 && !tank.isObliterated) enemyCount++;
                     else if((tank.globalTankType == 0 || tank.globalTankType == 2) && !tank.isObliterated) userCount++;
                 }
