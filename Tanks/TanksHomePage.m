@@ -371,7 +371,7 @@
 -(void) saveLevelsToFile {
     [statusLabel removeFromParent];
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels2.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
@@ -418,7 +418,7 @@
 
 -(void) saveTankTypesToFile {
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes2.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     

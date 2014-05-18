@@ -131,7 +131,7 @@
     pointsLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     pointsLabel.text = [NSString stringWithFormat:@"%i Points", [storedVals[0] intValue]];
     pointsLabel.fontSize = 36*screenMultWidth;
-    pointsLabel.position = CGPointMake(CGRectGetMaxX(self.frame) - pointsLabel.frame.size.width/2 - 5*screenMultWidth, 5*screenMultHeight);
+    pointsLabel.position = CGPointMake(CGRectGetMaxX(self.frame) - pointsLabel.frame.size.width/2 - 25*screenMultWidth, 5*screenMultHeight);
     pointsLabel.name = @"pointsLabel";
     [self addChild:pointsLabel];
 }
@@ -152,7 +152,7 @@
     
     if([n.name isEqual:@"backButton"]) {
         [TanksNavigation loadTanksHomePage:self];
-    } else if([n.name isEqualToString:@"pointsLabel"]) {
+    }/* else if([n.name isEqualToString:@"pointsLabel"]) {
         storedVals[0] = [NSNumber numberWithInt:[storedVals[0] intValue] + 50];
         [TanksFileReader storeArray:storedVals];
         pointsLabel.text = [NSString stringWithFormat:@"%i Points", [storedVals[0] intValue]];
@@ -161,7 +161,7 @@
         storedVals = [TanksFileReader getArray];
         [self removeAllChildren];
         [self displayShop];
-    }
+    }*/
     else if([n.name hasPrefix:@"upgrade"]) {
         int num = [[NSString stringWithFormat:@"%c", [n.name characterAtIndex:n.name.length - 1]] intValue];
         int cost = ([storedVals[1][num] intValue] +  1)*75;
@@ -171,7 +171,7 @@
             lastCost = cost;
             
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"Are you sure that you want to upgrade %@ for %i coins?", upgrades[num], cost]
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"Are you sure that you want to upgrade %@ for %i points?", upgrades[num], cost]
                                                            delegate:self
                                                   cancelButtonTitle:@"Cancel"
                                                   otherButtonTitles:@"Yes, Purchase", nil];
