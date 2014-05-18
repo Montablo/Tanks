@@ -48,6 +48,8 @@
 
 @property (strong, nonatomic) NSMutableArray *currentPath;
 
+@property int pointValue;
+
 +(AITank *) tankWithTank:(AITank *)tank;
 
 

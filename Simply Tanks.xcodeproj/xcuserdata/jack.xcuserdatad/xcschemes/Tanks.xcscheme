@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A32CCD118FB07DD00C51717"
-               BuildableName = "Tanks.app"
-               BlueprintName = "Tanks"
-               ReferencedContainer = "container:Tanks.xcodeproj">
+               BuildableName = "Simply Tanks.app"
+               BlueprintName = "Simply Tanks"
+               ReferencedContainer = "container:Simply Tanks.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "1A32CCFC18FB07DD00C51717"
                BuildableName = "TanksTests.xctest"
                BlueprintName = "TanksTests"
-               ReferencedContainer = "container:Tanks.xcodeproj">
+               ReferencedContainer = "container:Simply Tanks.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A32CCD118FB07DD00C51717"
-            BuildableName = "Tanks.app"
-            BlueprintName = "Tanks"
-            ReferencedContainer = "container:Tanks.xcodeproj">
+            BuildableName = "Simply Tanks.app"
+            BlueprintName = "Simply Tanks"
+            ReferencedContainer = "container:Simply Tanks.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A32CCD118FB07DD00C51717"
-            BuildableName = "Tanks.app"
-            BlueprintName = "Tanks"
-            ReferencedContainer = "container:Tanks.xcodeproj">
+            BuildableName = "Simply Tanks.app"
+            BlueprintName = "Simply Tanks"
+            ReferencedContainer = "container:Simply Tanks.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -80,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A32CCD118FB07DD00C51717"
-            BuildableName = "Tanks.app"
-            BlueprintName = "Tanks"
-            ReferencedContainer = "container:Tanks.xcodeproj">
+            BuildableName = "Simply Tanks.app"
+            BlueprintName = "Simply Tanks"
+            ReferencedContainer = "container:Simply Tanks.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -79,6 +79,7 @@
         t.mineAvoidingDistance = tank.mineAvoidingDistance;
         t.doesDropMines = tank.doesDropMines;
         t.mineDroppingFrequency = tank.mineDroppingFrequency;
+        t.pointValue = tank.pointValue;
     }
     
     return t;

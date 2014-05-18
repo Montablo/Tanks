@@ -45,6 +45,27 @@
     [skView presentScene:scene transition:[SKTransition pushWithDirection:[self randomSKDirection] duration:.5]];
 }
 
++(void) loadTanksIndexPage:(SKScene *)currentPage {
+    SKView * skView = currentPage.view;
+    SKScene * scene = [TanksIndexPage sceneWithSize:skView.bounds.size];
+    
+    scene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    // Present the scene.
+    [skView presentScene:scene transition:[SKTransition pushWithDirection:[self randomSKDirection] duration:.5]];
+}
+
++(void) loadTanksUpgradePage:(SKScene *)currentPage {
+    SKView * skView = currentPage.view;
+    SKScene * scene = [TanksUpgradePage sceneWithSize:skView.bounds.size];
+    
+    scene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    // Present the scene.
+    [skView presentScene:scene transition:[SKTransition pushWithDirection:[self randomSKDirection] duration:.5]];
+}
+
+
 +(SKTransitionDirection) randomSKDirection {
     int i = [self randomInt:0 withUpperBound:3];
     switch (i) {

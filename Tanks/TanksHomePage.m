@@ -62,21 +62,41 @@
         levelsScroller.scrollDirection = HORIZONTAL;
         [self addChild:levelsScroller];
         
-        SKLabelNode *playLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        /*SKLabelNode *playLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
         playLabel.text = @"Play Game";
         playLabel.fontSize = 40;
         playLabel.name = @"playLabel";
         playLabel.position = CGPointMake(CGRectGetMidX(self.frame), 10*screenMultHeight);
-        playLabel.fontColor = [SKColor blackColor];
+        playLabel.fontColor = [SKColor blackColor];*/
+        
+        
+        SKSpriteNode *playButton;
+        playButton = [SKSpriteNode spriteNodeWithImageNamed:@"PlayIcon"];
+        playButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
+        playButton.position = CGPointMake(CGRectGetMidX(self.frame), 5 + playButton.size.height / 2);
+        playButton.name = @"playLabel";
+        [self addChild:playButton];
         
         self.backgroundColor = [SKColor whiteColor];
-        
-        [self addChild:playLabel];
         
         tanks = [NSMutableArray array];
         levelPacks = [NSMutableArray array];
         
         STARTING_LEVEL = 1;
+        
+        SKSpriteNode *upgradeButton;
+        upgradeButton = [SKSpriteNode spriteNodeWithImageNamed:@"UpgradeIcon"];
+        upgradeButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
+        upgradeButton.position = CGPointMake(5 + upgradeButton.size.width / 2, 5 + upgradeButton.size.height / 2);
+        upgradeButton.name = @"upgradeButton";
+        [self addChild:upgradeButton];
+        
+        /*SKSpriteNode *indexButton;
+        indexButton = [SKSpriteNode spriteNodeWithImageNamed:@"TankIndexIcon"];
+        indexButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
+        indexButton.position = CGPointMake(15 + upgradeButton.size.width + indexButton.size.width/2, 5 + indexButton.size.height / 2);
+        indexButton.name = @"indexButton";
+        [self addChild:indexButton];*/
         
         SKSpriteNode *questionMark;
         questionMark = [SKSpriteNode spriteNodeWithImageNamed:@"QuestionMarkIcon"];
@@ -138,6 +158,10 @@
         [TanksNavigation loadTanksTutorial:self];
     } else if([n.name isEqual:@"gameCenterButton"]) {
         [[GameKitHelper sharedGameKitHelper] showLeaderboardOnViewController:self.scene.view.window.rootViewController];
+    } else if([n.name isEqual:@"indexButton"]) {
+        [TanksNavigation loadTanksIndexPage:self];
+    } else if([n.name isEqual:@"upgradeButton"]) {
+        [TanksNavigation loadTanksUpgradePage:self];
     }
     
 }
@@ -163,7 +187,7 @@
 -(void) displaycurrentLevelPack {
     
     [statusLabel removeFromParent];
-    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    statusLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     statusLabel.text = levelPacks[self.currentPage][0][0];
     
     statusLabel.fontColor = [SKColor blackColor];
@@ -304,7 +328,7 @@
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY", @"MINE_AVOIDING_DISTANCE", @"DOES_DROP_MINES", @"MINE_DROPPING_FREQUENCY", @"AIType"];
+    NSArray *labels = @[@"TYPE", @"COLOR", @"CAN_MOVE", @"RANGE_OF_SITE", @"MAXIMUM_DISTANCE", @"BULLET_SENSING_DISTANCE", @"INITIAL_TRACKING_COOLDOWN", @"NUM_RICOCHETS", @"BULLET_SPEED", @"BULLET_FREQUENCY", @"MAX_CURRENT_BULLETS", @"BULLET_SHOOTING_DOWN_FREQUENCY", @"TANK_SPEED", @"BULLET_ACCURACY", @"MINE_AVOIDING_DISTANCE", @"DOES_DROP_MINES", @"MINE_DROPPING_FREQUENCY", @"AIType", @"POINTS"];
     
     BOOL inTank = NO;
     int ti = 0;
@@ -321,7 +345,7 @@
             
             NSMutableDictionary *tank = [tanks lastObject];
             
-            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 17) { //int
+            if(ti == 0 || ti == 7 || ti == 9 || ti == 10 || ti == 11 || ti == 17 || ti == 18) { //int
                 [tank setObject:[NSNumber numberWithInt:[line intValue]] forKey:labels[ti]];
             }
             else if(ti == 1) { //color
@@ -347,13 +371,13 @@
 -(void) saveLevelsToFile {
     [statusLabel removeFromParent];
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels2.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    statusLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
 
     
     BOOL re;
@@ -394,7 +418,7 @@
 
 -(void) saveTankTypesToFile {
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes2.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
@@ -436,7 +460,7 @@
     [feedback removeFromParent];
     [statusLabel removeFromParent];
 
-    statusLabel = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    statusLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     BOOL re = NO;
     if([allLinedStrings[0]  isEqual: @"<html><head>"]) {
         feedback = [SKSpriteNode spriteNodeWithImageNamed:@"x"];
@@ -536,7 +560,7 @@
                         AITank *tank = [[AITank alloc] initWithType:ttype withAIType : [tankModel[@"AIType"] intValue] withSize: CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight];
                         
                         
-                        
+                        tank.pointValue = [tankModel[@"POINTS"] intValue];
                         tank.color = tankModel[@"COLOR"];
                         tank.canMove = [tankModel[@"CAN_MOVE"] boolValue];
                         tank.rangeOfSight = [tankModel[@"RANGE_OF_SITE"] floatValue];

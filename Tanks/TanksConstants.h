@@ -22,6 +22,8 @@
 #define screenWidth (568 + 0 + 0) //original screen width
 #define screenHeight (320 + 0 + 0) //original screen height
 
-#define tutorialImages 4
+#define tutorialImages 5
 
-#define LEVEL_RELEASE_VERSION 1
+#define LEVEL_RELEASE_VERSION 2
+
+#define GAME_FONT @"helvetica neue"

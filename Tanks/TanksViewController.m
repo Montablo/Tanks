@@ -76,16 +76,19 @@
     }
 }
 -(void) saveLevelsToFile {
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels2.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
-    NSString *version = allLinedStrings[0];
     if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         return;
-    } else if(LEVEL_RELEASE_VERSION < [version intValue]) {
+    }
+    
+    NSString *version = allLinedStrings[0];
+    
+    if(LEVEL_RELEASE_VERSION < [version intValue]) {
         return;
     }
     
@@ -97,19 +100,21 @@
 
 -(void) saveTankTypesToFile {
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes.txt"];
+    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes2.txt"];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
     NSMutableArray* allLinedStrings = [NSMutableArray arrayWithArray: [content componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]]];
     
     
-    NSString *version = allLinedStrings[0];
-    if(LEVEL_RELEASE_VERSION < [version intValue]) {
+    
+    if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
         return;
     }
     
-    if(content == nil || [allLinedStrings[0]  isEqual: @"<html><head>"]) {
+    NSString *version = allLinedStrings[0];
+    
+    if(LEVEL_RELEASE_VERSION < [version intValue]) {
         return;
     }
     

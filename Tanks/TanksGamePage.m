@@ -7,6 +7,7 @@
 //
 
 #include "TanksGamePage.h"
+#include "TanksFileReader.h"
 
 @implementation TanksGamePage {
     
@@ -50,6 +51,12 @@
     
     BOOL userMovedJoystick;
     
+    NSMutableArray *storedVals;
+    
+    float speedUpgradeMult;
+    int numBulletsAddition;
+    float bulletSpeedMult;
+    
 }
 
 #pragma mark Initialization methods
@@ -81,6 +88,12 @@
 
 -(void) initGame {
     
+    storedVals = [TanksFileReader getArray];
+    
+    speedUpgradeMult = 1 + [storedVals[1][0] floatValue]*.25;
+    numBulletsAddition = [storedVals[1][2] intValue];
+    bulletSpeedMult = 1 - [storedVals[1][1] floatValue]*.125;
+    
     shells = [NSMutableArray array];
     
     currentLevel = [[self.userData objectForKey:@"level"] intValue];
@@ -96,7 +109,7 @@
     } else if([levelsInfo[1] isEqualToString:@"2"]) { // co-op
     }
     
-    SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     levelNode.position = CGPointMake(CGRectGetMidX(self.frame), 25);
     levelNode.text = [NSString stringWithFormat:@"Level : %i" , currentLevel + 1];
     levelNode.fontColor = [SKColor whiteColor];
@@ -104,7 +117,7 @@
     
     
     if(usesLives) {
-        SKLabelNode *livesNode = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+        SKLabelNode *livesNode = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
         livesNode.fontSize = 25;
         livesNode.text = [NSString stringWithFormat:@"Lives : %i" , lives];
         livesNode.position = CGPointMake(CGRectGetMaxX(self.frame) - livesNode.frame.size.width / 2, CGRectGetMaxY(self.frame) - 25);
@@ -119,7 +132,7 @@
     pauseButton.name = @"pauseButton";
     [self addChild:pauseButton];
     
-    startMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    startMessage = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     startMessage.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
     startMessage.text = @"Tap the screen to begin.";
     startMessage.fontSize = 40;
@@ -140,6 +153,8 @@
     for(int i=0; i<((NSArray *)levels[currentLevel][2]).count; i++) {
         if([levels[currentLevel][2][i] isKindOfClass: [UserTank class]]) { //is a usertank
             [tanks addObject:[UserTank tankWithTank:((UserTank *)levels[currentLevel][2][i])]];
+            UserTank *t = [tanks lastObject];
+            t.maxCurrentBullets += numBulletsAddition;
         } else { //AITank
             [tanks addObject:[AITank tankWithTank:((AITank *)levels[currentLevel][2][i])]];
         }
@@ -292,7 +307,7 @@
     pauseButton.name = @"pauseButton";
     [self addChild:pauseButton];
     
-    pauseMessage = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    pauseMessage = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     pauseMessage.zPosition = 150;
     pauseMessage.text = @"Tap the screen to resume.";
     pauseMessage.fontSize = 35;
@@ -332,7 +347,7 @@
     
     userWon = !userHit;
     
-    endText = [SKLabelNode labelNodeWithFontNamed:@"Baskerville"];
+    endText = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
     endText.text = userHit ? @"You lost!" : @"You won!";
     endText.fontSize = 45;
     if(usesLives && userWon && (currentLevel+1) % 5 == 0) {
@@ -507,6 +522,8 @@
         float direction =  randInt == 0 ? -1 : 1;
         float rand = [self randomInt:0 withUpperBound:15];
         newBullet.zRotation += accuracy * direction * rand;
+    } else if(t.globalTankType == 0) {
+        newBullet.bspeed *= bulletSpeedMult;
     }
     
     newBullet.zPosition = 50;
@@ -609,6 +626,10 @@
                 t.isObliterated = YES;
                 b.isObliterated = YES;
                 
+                if(t.globalTankType != 0) {
+                    storedVals[0] = [NSNumber numberWithInt:[storedVals[0] intValue] + ((AITank *)t).pointValue];
+                    [TanksFileReader storeArray:storedVals];
+                }
                 
                 int userCount = 0;
                 int enemyCount = 0;
@@ -705,8 +726,8 @@
     
     if(userTank.isObliterated) return;
     
-    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth;
-    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight;
+    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth * speedUpgradeMult;
+    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight * speedUpgradeMult;
     
     BOOL moved = YES;
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height : false]) {

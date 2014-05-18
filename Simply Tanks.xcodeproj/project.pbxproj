@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04078A421926DC740099D62A /* TanksUpgradePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 04078A411926DC740099D62A /* TanksUpgradePage.m */; };
+		04078A451926DC880099D62A /* TanksIndexPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 04078A441926DC880099D62A /* TanksIndexPage.m */; };
+		04078A481926DD830099D62A /* TanksIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 04078A471926DD830099D62A /* TanksIndex.m */; };
 		040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1D1901A8130020F925 /* TanksHomePage.m */; };
 		041FD51C191FB85000F8A294 /* TanksTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 041FD51B191FB85000F8A294 /* TanksTutorial.m */; };
 		044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DF03C18FB2AB30007F2DE /* JCImageJoystick.m */; };
@@ -15,6 +18,7 @@
 		0478DA2119202F5A002297DA /* TanksNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1A1901A6E80020F925 /* TanksNavigation.m */; };
 		0478DA23192030B1002297DA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0478DA22192030B1002297DA /* GameKit.framework */; };
 		0478DA26192043C7002297DA /* LevelsScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 0478DA25192043C7002297DA /* LevelsScroller.m */; };
+		04BB268119283B5300F41193 /* TanksFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BB268019283B5300F41193 /* TanksFileReader.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
 		04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8718FB3391009B0D7D /* UserTank.m */; };
@@ -49,6 +53,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04078A401926DC740099D62A /* TanksUpgradePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksUpgradePage.h; sourceTree = "<group>"; };
+		04078A411926DC740099D62A /* TanksUpgradePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksUpgradePage.m; sourceTree = "<group>"; };
+		04078A431926DC880099D62A /* TanksIndexPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksIndexPage.h; sourceTree = "<group>"; };
+		04078A441926DC880099D62A /* TanksIndexPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksIndexPage.m; sourceTree = "<group>"; };
+		04078A461926DD830099D62A /* TanksIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksIndex.h; sourceTree = "<group>"; };
+		04078A471926DD830099D62A /* TanksIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksIndex.m; sourceTree = "<group>"; };
 		040BCF191901A6E80020F925 /* TanksNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksNavigation.h; sourceTree = "<group>"; };
 		040BCF1A1901A6E80020F925 /* TanksNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksNavigation.m; sourceTree = "<group>"; };
 		040BCF1C1901A8130020F925 /* TanksHomePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksHomePage.h; sourceTree = "<group>"; };
@@ -64,6 +74,8 @@
 		0478DA22192030B1002297DA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0478DA24192043C7002297DA /* LevelsScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelsScroller.h; sourceTree = "<group>"; };
 		0478DA25192043C7002297DA /* LevelsScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelsScroller.m; sourceTree = "<group>"; };
+		04BB267F19283B5300F41193 /* TanksFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksFileReader.h; sourceTree = "<group>"; };
+		04BB268019283B5300F41193 /* TanksFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksFileReader.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		04C0E9D218FB504E00B73711 /* Bullet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bullet.m; sourceTree = "<group>"; };
 		04F9CE8318FB31D6009B0D7D /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
@@ -73,7 +85,7 @@
 		04F9CE8918FB339E009B0D7D /* AITank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AITank.h; sourceTree = "<group>"; };
 		04F9CE8A18FB339E009B0D7D /* AITank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AITank.m; sourceTree = "<group>"; };
 		04F9CE8C18FB3522009B0D7D /* TanksConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanksConstants.h; sourceTree = "<group>"; };
-		1A32CCD218FB07DD00C51717 /* Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tanks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A32CCD218FB07DD00C51717 /* Simply Tanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simply Tanks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A32CCD518FB07DD00C51717 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A32CCD718FB07DD00C51717 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1A32CCD918FB07DD00C51717 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -172,7 +184,7 @@
 		1A32CCC918FB07DD00C51717 = {
 			isa = PBXGroup;
 			children = (
-				1A32CCDD18FB07DD00C51717 /* Tanks */,
+				1A32CCDD18FB07DD00C51717 /* Simply Tanks */,
 				1A32CD0418FB07DD00C51717 /* TanksTests */,
 				1A32CCD418FB07DD00C51717 /* Frameworks */,
 				1A32CCD318FB07DD00C51717 /* Products */,
@@ -182,7 +194,7 @@
 		1A32CCD318FB07DD00C51717 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A32CCD218FB07DD00C51717 /* Tanks.app */,
+				1A32CCD218FB07DD00C51717 /* Simply Tanks.app */,
 				1A32CCFD18FB07DD00C51717 /* TanksTests.xctest */,
 			);
 			name = Products;
@@ -201,9 +213,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		1A32CCDD18FB07DD00C51717 /* Tanks */ = {
+		1A32CCDD18FB07DD00C51717 /* Simply Tanks */ = {
 			isa = PBXGroup;
 			children = (
+				04BB267F19283B5300F41193 /* TanksFileReader.h */,
+				04BB268019283B5300F41193 /* TanksFileReader.m */,
 				0478DA24192043C7002297DA /* LevelsScroller.h */,
 				0478DA25192043C7002297DA /* LevelsScroller.m */,
 				0412AFF5191E525F008EF441 /* ViewControllers */,
@@ -224,7 +238,14 @@
 				040BCF1D1901A8130020F925 /* TanksHomePage.m */,
 				041FD51A191FB85000F8A294 /* TanksTutorial.h */,
 				041FD51B191FB85000F8A294 /* TanksTutorial.m */,
+				04078A401926DC740099D62A /* TanksUpgradePage.h */,
+				04078A411926DC740099D62A /* TanksUpgradePage.m */,
+				04078A431926DC880099D62A /* TanksIndexPage.h */,
+				04078A441926DC880099D62A /* TanksIndexPage.m */,
+				04078A461926DD830099D62A /* TanksIndex.h */,
+				04078A471926DD830099D62A /* TanksIndex.m */,
 			);
+			name = "Simply Tanks";
 			path = Tanks;
 			sourceTree = "<group>";
 		};
@@ -260,9 +281,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A32CCD118FB07DD00C51717 /* Tanks */ = {
+		1A32CCD118FB07DD00C51717 /* Simply Tanks */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Tanks" */;
+			buildConfigurationList = 1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Simply Tanks" */;
 			buildPhases = (
 				1A32CCCE18FB07DD00C51717 /* Sources */,
 				1A32CCCF18FB07DD00C51717 /* Frameworks */,
@@ -272,9 +293,9 @@
 			);
 			dependencies = (
 			);
-			name = Tanks;
+			name = "Simply Tanks";
 			productName = Tanks;
-			productReference = 1A32CCD218FB07DD00C51717 /* Tanks.app */;
+			productReference = 1A32CCD218FB07DD00C51717 /* Simply Tanks.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1A32CCFC18FB07DD00C51717 /* TanksTests */ = {
@@ -318,7 +339,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Tanks" */;
+			buildConfigurationList = 1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Simply Tanks" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -331,7 +352,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1A32CCD118FB07DD00C51717 /* Tanks */,
+				1A32CCD118FB07DD00C51717 /* Simply Tanks */,
 				1A32CCFC18FB07DD00C51717 /* TanksTests */,
 			);
 		};
@@ -367,13 +388,17 @@
 				0478DA2119202F5A002297DA /* TanksNavigation.m in Sources */,
 				1A32CCF118FB07DD00C51717 /* TanksViewController.m in Sources */,
 				1A32CCE818FB07DD00C51717 /* TanksAppDelegate.m in Sources */,
+				04078A421926DC740099D62A /* TanksUpgradePage.m in Sources */,
 				04F9CE8B18FB339E009B0D7D /* AITank.m in Sources */,
 				04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */,
 				040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */,
 				044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */,
 				041FD51C191FB85000F8A294 /* TanksTutorial.m in Sources */,
+				04078A451926DC880099D62A /* TanksIndexPage.m in Sources */,
 				04C0E9D318FB504E00B73711 /* Bullet.m in Sources */,
 				04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */,
+				04078A481926DD830099D62A /* TanksIndex.m in Sources */,
+				04BB268119283B5300F41193 /* TanksFileReader.m in Sources */,
 				044DF03F18FB2AB30007F2DE /* JCImageJoystick.m in Sources */,
 				0478DA2019202E37002297DA /* GameKitHelper.m in Sources */,
 				1A32CD1618FB092E00C51717 /* TanksGamePage.m in Sources */,
@@ -395,7 +420,7 @@
 /* Begin PBXTargetDependency section */
 		1A32CD0318FB07DD00C51717 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A32CCD118FB07DD00C51717 /* Tanks */;
+			target = 1A32CCD118FB07DD00C51717 /* Simply Tanks */;
 			targetProxy = 1A32CD0218FB07DD00C51717 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -589,7 +614,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Tanks" */ = {
+		1A32CCCD18FB07DD00C51717 /* Build configuration list for PBXProject "Simply Tanks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A32CD0C18FB07DD00C51717 /* Debug */,
@@ -598,7 +623,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Tanks" */ = {
+		1A32CD0E18FB07DD00C51717 /* Build configuration list for PBXNativeTarget "Simply Tanks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A32CD0F18FB07DD00C51717 /* Debug */,
