@@ -76,7 +76,7 @@
     }
 }
 -(void) saveLevelsToFile {
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
+    NSURL *url = [NSURL URLWithString:LEVELS_URL];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
@@ -100,7 +100,7 @@
 
 -(void) saveTankTypesToFile {
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes.txt"];
+    NSURL *url = [NSURL URLWithString:TANKTYPE_URL];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     

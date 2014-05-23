@@ -31,11 +31,15 @@
     }
 }
 
+-(void) setNametag : (NSString *) name {
+    
+}
+
 +(UserTank *) tankWithTank : (Tank*) tank {
     Tank *t = [super tankWithTank:tank];
     
     if(t) {
-        t.color = [SKColor blueColor];
+        t.color = tank.color;
         t.name = @"userTank";
     }
     return (UserTank *) t;

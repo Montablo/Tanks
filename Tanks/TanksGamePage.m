@@ -8,6 +8,7 @@
 
 #include "TanksGamePage.h"
 #include "TanksFileReader.h"
+#import "GameKitHelper.h"
 
 @implementation TanksGamePage {
     
@@ -19,6 +20,7 @@
     BOOL gameHasStarted;
     BOOL gameHasFinished;
     BOOL gameIsPaused;
+    BOOL gameIsReadyToStart;
     
     NSArray *levelPack;
     NSMutableArray *levels;
@@ -57,6 +59,17 @@
     int numBulletsAddition;
     float bulletSpeedMult;
     
+    int userTankIndex;
+    NSUInteger _currentPlayerIndex;
+    
+    BOOL gameUsesMultiplayer;
+    BOOL userIsServer;
+    
+    CGPoint touchStartingPoint;
+    BOOL touchHasMoved;
+    BOOL touchIsMoving;
+    int JOYSTICK_RADIUS;
+    
 }
 
 #pragma mark Initialization methods
@@ -75,7 +88,6 @@
     ((TanksAppDelegate*)[[UIApplication sharedApplication] delegate]).tanksGamePage = self;
     
     lives = [[self.userData objectForKey:@"lives"] intValue];
-
     
     [self initGame];
     
@@ -87,6 +99,10 @@
 }
 
 -(void) initGame {
+    
+    userTankIndex = 0;
+    
+    gameIsReadyToStart = YES;
     
     storedVals = [TanksFileReader getArray];
     
@@ -107,6 +123,9 @@
     if([levelsInfo[1]  isEqual: @"0"]) { //solo
         usesLives = YES;
     } else if([levelsInfo[1] isEqualToString:@"2"]) { // co-op
+        gameIsReadyToStart = NO;
+        gameUsesMultiplayer = YES;
+        //[self initGameCenter];
     }
     
     SKLabelNode *levelNode = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
@@ -176,6 +195,8 @@
         
     }
     
+    JOYSTICK_RADIUS = 35*screenMultWidth;
+    
     [self displayWalls];
     
     [self addJoystick];
@@ -188,15 +209,15 @@
     for(SKSpriteNode *shell in shells) [shell removeFromParent];
     shells = [NSMutableArray array];
     
-    for(int i = 0; i<((Tank *) tanks[0]).maxCurrentBullets; i++) {
+    for(int i = 0; i<((Tank *) tanks[userTankIndex]).maxCurrentBullets; i++) {
         
-        NSString *imgName = ((Tank *) tanks[0]).maxCurrentBullets - i <= ((Tank *) tanks[0]).bullets.count ? @"RoundWhiteCircleBorder" : @"RoundWhiteCircle";
+        NSString *imgName = ((Tank *) tanks[userTankIndex]).maxCurrentBullets - i <= ((Tank *) tanks[userTankIndex]).bullets.count ? @"RoundWhiteCircleBorder" : @"RoundWhiteCircle";
         
         SKSpriteNode *shell = [SKSpriteNode spriteNodeWithImageNamed:imgName];
         shell.zRotation = M_PI/2;
         shell.zPosition = 25;
         shell.size = CGSizeMake(10*screenMultWidth, 10*screenMultWidth);
-        shell.position = CGPointMake((CGRectGetMidX(self.frame) - shell.size.height / 2) + (i) * (shell.size.height + 5) - (shell.size.height*(((Tank *) tanks[0]).maxCurrentBullets / 2)), CGRectGetMaxY(self.frame) - shell.size.width / 2 - 5*screenMultHeight);
+        shell.position = CGPointMake((CGRectGetMidX(self.frame) - shell.size.height / 2) + (i) * (shell.size.height + 5) - (shell.size.height*(((Tank *) tanks[userTankIndex]).maxCurrentBullets / 2)), CGRectGetMaxY(self.frame) - shell.size.width / 2 - 5*screenMultHeight);
         [self addChild:shell];
         [shells addObject:shell];
     }
@@ -240,15 +261,25 @@
     
     int colorIndex1 = [self randomInt:0 withUpperBound:(int) colors.count];
     UIColor *color1 = colors[colorIndex1];
-    [colors removeObjectAtIndex:colorIndex1];
-    UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
+    //[colors removeObjectAtIndex:colorIndex1];
+    //UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
     
-    self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
-    [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 15*screenMultWidth, self.joystick.frame.size.height/2 + 15*screenMultWidth)];
-    self.joystick.zPosition = 25;
-    self.joystick.alpha = 1;
-    [self addChild:self.joystick];
-
+    self.joystickCircle = [SKShapeNode node];
+    CGMutablePathRef circlePath = CGPathCreateMutable();
+    CGPathAddEllipseInRect(circlePath , NULL , CGRectMake(self.joystickCircle.position.x - JOYSTICK_RADIUS, self.joystickCircle.position.y - JOYSTICK_RADIUS, JOYSTICK_RADIUS*2, JOYSTICK_RADIUS*2) );
+    self.joystickCircle.path = circlePath;
+    self.joystickCircle.fillColor =  color1;
+    self.joystickCircle.lineWidth = 0;
+    CGPathRelease( circlePath );
+    
+    /*self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];*/
+    [self.joystickCircle setPosition:CGPointMake(self.joystickCircle.frame.size.width/2 + 15*screenMultWidth, self.joystickCircle.frame.size.height/2 + 15*screenMultWidth)];
+    self.joystickCircle.zPosition = 25;
+    self.joystickCircle.alpha = 1;
+    [self addChild:self.joystickCircle];
+    
+    touchStartingPoint = self.joystickCircle.position;
+    
 }
 
 -(void) startGame {
@@ -259,6 +290,105 @@
     
     [self initAITankLogic];
     
+}
+
+#pragma GameCenter
+
+
+-(void) initGameCenter {
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
+    //                                           name:LocalPlayerIsAuthenticated object:nil];
+    
+    
+    [self playerAuthenticated];
+}
+
+- (void)playerAuthenticated {
+    
+    self.networkingEngine = [[MultiplayerNetworking alloc] init];
+    self.networkingEngine.delegate = self;
+    
+    [[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self.view.window.rootViewController delegate:self.networkingEngine];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)matchStarted {
+    NSLog(@"Match started");
+}
+
+- (void)matchEnded {
+    NSLog(@"Match ended");
+}
+
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+    NSLog(@"Received data");
+}
+
+- (void)setCurrentPlayerIndex:(NSUInteger)index {
+    _currentPlayerIndex = index;
+    userTankIndex = (int)index;
+    userIsServer = !index;
+    for(int i=0; i<2; i++) {
+        Tank *current = tanks[i];
+        //current.gameCenterName = [self.networkingEngine nameOfPlayerWithIndex:i][1];
+        current.gameCenterName = [NSString stringWithFormat:@"Tank %i", i];
+        [current refreshLabel];
+    }
+}
+
+-(void) moveTankAtIndex:(NSUInteger)index toPoint:(CGPoint)point {
+    if(index > tanks.count - 1) {
+        NSLog(@"Invalid tank index : %i", (int) index);
+        return;
+    }
+    Tank *tankToMove = tanks[index];
+    tankToMove.position = [self pointToCurrentDisplay:point];
+}
+
+-(void) fireBulletOfTank:(NSUInteger)tankIndex :(float)zRotation :(CGPoint)newPos {
+    if(tankIndex > tanks.count - 1) {
+        NSLog(@"Invalid tank index : %i", (int) tankIndex);
+        return;
+    }
+
+    Tank *tankToUse = tanks[tankIndex];
+    Bullet *newBullet = [[Bullet alloc] initWithBulletType:0 withPosition:[self pointToCurrentDisplay:newPos] withDirection:zRotation :screenMultWidth :screenMultHeight];
+    newBullet.zPosition = 50;
+    newBullet.zRotation = zRotation;
+    [self addChild:newBullet];
+    [tankToUse.bullets addObject:newBullet];
+}
+
+-(void) moveBulletOfTank:(NSUInteger)tankIndex toBullet:(NSUInteger)bulletIndex toPoint:(CGPoint)point :(float)zRotation {
+    if(tankIndex > tanks.count - 1) {
+        NSLog(@"Invalid tank index : %i", (int) tankIndex);
+        return;
+    }
+    Tank *tankToUse = tanks[tankIndex];
+    if(bulletIndex > tankToUse.bullets.count - 1) {
+        NSLog(@"Invalid bullet index : %lu", (unsigned long)bulletIndex);
+        return;
+    }
+    Bullet *bulletToUse = tankToUse.bullets[bulletIndex];
+    bulletToUse.position = [self pointToCurrentDisplay:point];
+    bulletToUse.zRotation = zRotation;
+}
+
+-(CGPoint) pointToStandard : (CGPoint) point {
+    return CGPointMake(point.x/screenMultWidth, point.y/screenMultHeight);
+}
+
+-(CGPoint) pointToCurrentDisplay : (CGPoint) point {
+    return CGPointMake(point.x*screenMultWidth, point.y*screenMultHeight);
+}
+
+-(void) beginGame {
+    gameIsReadyToStart = YES;
+    [self startGame];
 }
 
 #pragma mark CGRect helping methods
@@ -370,9 +500,9 @@
     SKTransition *transition;
     
     if(userWon) {
+        BOOL homePage = NO;
         if(currentLevel == levels.count - 1) {
-            [TanksNavigation loadTanksHomePage:self];
-            return;
+            homePage = YES;
         } else {
             
             levelNum = currentLevel + 1;
@@ -382,6 +512,10 @@
         GameKitHelper *sharedHelper = [GameKitHelper sharedGameKitHelper];
         NSString *lID = [NSString stringWithFormat:@"LP_0%i", [levelsInfo[2] intValue] + 1];
         [sharedHelper reportScore:currentLevel+1 forLeaderboardID: lID];
+        if(homePage) {
+            [TanksNavigation loadTanksHomePage:self];
+            return;
+        }
     } else {
         
         if(usesLives) {
@@ -479,6 +613,8 @@
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
+    if(!gameIsReadyToStart) return;
+    
     if(!gameHasStarted) {
         [self startGame];
         return;
@@ -488,15 +624,55 @@
     
     if(gameIsPaused || gameHasFinished) return;
     
-    Tank *user = tanks[0];
+    Tank *user = tanks[userTankIndex];
     if(user.isObliterated) return;
     
     CGPoint point = [[touches anyObject] locationInNode:self];
     
-    [self fireBulletWithType : 0 withPoint:point];
+    [self checkUserFireBullet:[touches anyObject]];
+    //else touchStartingPoint = point;
+    
+    
+    //[self performSelector:@selector(checkUserFireBullet:) withObject:[touches anyObject] afterDelay:.1];
+}
+
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    CGPoint location = [[touches anyObject] locationInNode:self];
+    float dist = [self distanceBetweenPoints:location P2:touchStartingPoint];
+    if(dist < 10) {
+        touchHasMoved = NO;
+        return;
+    }
+    touchHasMoved = YES;
+    touchIsMoving = YES;
+    
+    self.joystickCircle.position = location;
+    
+}
+
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    touchIsMoving = NO;
+    touchHasMoved = NO;
+    //touchStartingPoint = self.joystickCircle.position;
+}
+
+-(void) checkUserFireBullet : (UITouch*) touch {
+    
+    /*if(touchHasMoved) {
+        
+        return;
+    }*/
+    [self fireUserBulletWithPoint:[touch locationInNode:self]];
+}
+
+-(void) fireUserBulletWithPoint : (CGPoint) point {
+    [self fireBulletWithType : userTankIndex withPoint:point];
 }
 
 -(void) fireBulletWithType : (int) type withPoint : (CGPoint) point {
+    
+    if(gameUsesMultiplayer && !userIsServer && type != userTankIndex) return;
     
     Tank *t = tanks[type];
     
@@ -528,6 +704,8 @@
     
     newBullet.zPosition = 50;
     
+    if(gameUsesMultiplayer) [self.networkingEngine sendFireBullet:type :newBullet.zRotation :[self pointToStandard:newBullet.position]];
+    
     [self addChild:newBullet];
     
     [t.bullets addObject:newBullet];
@@ -542,6 +720,8 @@
     
     Bullet *b = args[0];
     Tank *owner = args[1];
+    
+    if(gameUsesMultiplayer && !userIsServer && [tanks indexOfObject:owner] != userTankIndex) return;
     
     if(gameHasFinished) return;
     
@@ -677,6 +857,8 @@
     
     b.position = newPos;
     
+    if(gameUsesMultiplayer) [self.networkingEngine sendMoveBullet:[tanks indexOfObject:owner] :b.zRotation :[self pointToStandard:b.position] : [owner.bullets indexOfObject:b]];
+    
     [self performSelector:@selector(advanceBullet :) withObject:args afterDelay: b.bspeed];
     
 }
@@ -713,29 +895,45 @@
 
 -(void) update:(NSTimeInterval)currentTime {
     
-    if(self.joystick.x == 0 && self.joystick.y == 0) return;
+    if(!gameIsReadyToStart) return;
+    
+    //float xDiff = touchStartingPoint.x - self.joystickCircle.position.x > 0 ? -1 : 1;
+    //float yDiff = touchStartingPoint.y - self.joystickCircle.position.y > 0 ? -1 : 1;
+    
+    if(CGPointEqualToPoint(touchStartingPoint, self.joystickCircle.position)) return;
+    
+    float angle = [self getAngleP1:touchStartingPoint P2:self.joystickCircle.position];
+    
+    float x = cosf(angle);
+    float y = sinf(angle);
     
     if(!gameHasStarted) {
         [self startGame];
     }
     
+    if(gameIsPaused) {
+        [self unpauseGame];
+    }
+    
     if(gameIsPaused || gameHasFinished) return;
     
-    Tank *userTank = tanks[0];
+    Tank *userTank = tanks[userTankIndex];
     //Tank *enemyTank = tanks[1];
     
     if(userTank.isObliterated) return;
     
-    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth * speedUpgradeMult;
-    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight * speedUpgradeMult;
+    float newPositionX = userTank.position.x + TANK_SPEED * x * screenMultWidth * speedUpgradeMult;
+    float newPositionY = userTank.position.y + TANK_SPEED * y * screenMultHeight * speedUpgradeMult;
     
-    BOOL moved = YES;
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height : false]) {
-        [userTank setPosition:CGPointMake(userTank.position.x, newPositionY)];
+        CGPoint newPos = CGPointMake(userTank.position.x, newPositionY);
+        [userTank setPosition:newPos];
+        if(gameUsesMultiplayer) [self.networkingEngine sendMove:[self pointToStandard:newPos] : userTankIndex];
     }
-    moved = YES;
     if([self isXinBounds:newPositionX withY:userTank.position.y withWidth:userTank.size.width withHeight:userTank.size.height : false]) {
-        [userTank setPosition:CGPointMake(newPositionX, userTank.position.y)];
+        CGPoint newPos = CGPointMake(newPositionX, userTank.position.y);
+        [userTank setPosition:newPos];
+        if(gameUsesMultiplayer) [self.networkingEngine sendMove:[self pointToStandard:newPos] : userTankIndex];
     }
 }
 
@@ -753,6 +951,8 @@
     if(!gameIsPaused) {
     
         for(int i=1; i<tanks.count; i++) {
+            
+            if(((Tank *)tanks[i]).globalTankType == 0) continue;
             
             AITank *t = tanks[i];
             
@@ -773,6 +973,10 @@
     if(!gameIsPaused) {
     
         for(int i=1; i<tanks.count; i++) {
+            
+            
+            if(((Tank *)tanks[i]).globalTankType == 0) continue;
+            
             AITank *t = tanks[i];
             if(t.isObliterated == YES) continue;
             

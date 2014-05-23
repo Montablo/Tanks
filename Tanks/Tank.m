@@ -55,4 +55,14 @@
     return CGRectMake(x + width/2, y + height/2, width, height);
 }
 
+-(void) refreshLabel {
+    [self.nameLabel removeFromParent];
+    self.nameLabel = [SKLabelNode labelNodeWithFontNamed:GAME_FONT];
+    self.nameLabel.text = self.gameCenterName;
+    self.nameLabel.position = CGPointZero;
+    self.nameLabel.fontSize = 12;
+    self.nameLabel.zPosition = self.zPosition;
+    [self addChild:self.nameLabel];
+}
+
 @end

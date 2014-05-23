@@ -18,6 +18,7 @@
 		0478DA2119202F5A002297DA /* TanksNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BCF1A1901A6E80020F925 /* TanksNavigation.m */; };
 		0478DA23192030B1002297DA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0478DA22192030B1002297DA /* GameKit.framework */; };
 		0478DA26192043C7002297DA /* LevelsScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 0478DA25192043C7002297DA /* LevelsScroller.m */; };
+		04924658192AC441005C91D2 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 04924657192AC441005C91D2 /* MultiplayerNetworking.m */; };
 		04BB268119283B5300F41193 /* TanksFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BB268019283B5300F41193 /* TanksFileReader.m */; };
 		04C0E9D318FB504E00B73711 /* Bullet.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E9D218FB504E00B73711 /* Bullet.m */; };
 		04F9CE8518FB31D6009B0D7D /* Tank.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9CE8418FB31D6009B0D7D /* Tank.m */; };
@@ -74,6 +75,8 @@
 		0478DA22192030B1002297DA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0478DA24192043C7002297DA /* LevelsScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelsScroller.h; sourceTree = "<group>"; };
 		0478DA25192043C7002297DA /* LevelsScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelsScroller.m; sourceTree = "<group>"; };
+		04924656192AC441005C91D2 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerNetworking.h; sourceTree = "<group>"; };
+		04924657192AC441005C91D2 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerNetworking.m; sourceTree = "<group>"; };
 		04BB267F19283B5300F41193 /* TanksFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TanksFileReader.h; sourceTree = "<group>"; };
 		04BB268019283B5300F41193 /* TanksFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TanksFileReader.m; sourceTree = "<group>"; };
 		04C0E9D118FB504E00B73711 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
@@ -148,6 +151,8 @@
 		0497881A1919C273007FFCAC /* GameKit */ = {
 			isa = PBXGroup;
 			children = (
+				04924656192AC441005C91D2 /* MultiplayerNetworking.h */,
+				04924657192AC441005C91D2 /* MultiplayerNetworking.m */,
 				0478DA1E19202E37002297DA /* GameKitHelper.h */,
 				0478DA1F19202E37002297DA /* GameKitHelper.m */,
 			);
@@ -391,6 +396,7 @@
 				04078A421926DC740099D62A /* TanksUpgradePage.m in Sources */,
 				04F9CE8B18FB339E009B0D7D /* AITank.m in Sources */,
 				04F9CE8818FB3391009B0D7D /* UserTank.m in Sources */,
+				04924658192AC441005C91D2 /* MultiplayerNetworking.m in Sources */,
 				040BCF1E1901A8130020F925 /* TanksHomePage.m in Sources */,
 				044DF04018FB2AB30007F2DE /* JCJoystick.m in Sources */,
 				041FD51C191FB85000F8A294 /* TanksTutorial.m in Sources */,

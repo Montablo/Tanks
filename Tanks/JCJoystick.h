@@ -23,4 +23,6 @@
 
 @property (nonatomic,strong) UITouch *onlyTouch;
 
+-(void) moveJoystickToPoint : (CGPoint)point;
+
 @end

@@ -195,7 +195,7 @@
     statusLabel.fontSize = 15;
     [self addChild:statusLabel];
     levels = levelPacks[self.currentPage][1];
-    STARTING_LEVEL = 1;
+    STARTING_LEVEL = 16;
     levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
 }
 
@@ -371,7 +371,7 @@
 -(void) saveLevelsToFile {
     [statusLabel removeFromParent];
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/levels.txt"];
+    NSURL *url = [NSURL URLWithString:LEVELS_URL];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
@@ -418,7 +418,7 @@
 
 -(void) saveTankTypesToFile {
     
-    NSURL *url = [NSURL URLWithString:@"http://Montablo.eu5.org/Tanks/tanktypes.txt"];
+    NSURL *url = [NSURL URLWithString:TANKTYPE_URL];
     
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:nil];
     
@@ -547,6 +547,10 @@
                     if(ttype <= -1) {
                         
                         UserTank *t = [[UserTank alloc] initWithSize:CGSizeMake(TANK_WIDTH*screenMultWidth, TANK_HEIGHT*screenMultWidth) withPosition:CGPointMake(x, y) : screenMultWidth : screenMultHeight];
+                        
+                        if(ttype == -2) {
+                            t.color = [UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+                        }
                         
                         t.globalTankType = 0;
                         

@@ -24,6 +24,8 @@
 @property BOOL isObliterated;
 
 @property (strong, nonatomic) SKSpriteNode *turret;
+@property (strong, nonatomic) SKLabelNode *nameLabel;
+@property (strong, nonatomic) NSString *gameCenterName;
 
 @property float screenMultWidth;
 @property float screenMultHeight;
@@ -31,5 +33,7 @@
 @property int globalTankType; //0 : user 1 : enemy ai 2 : friend ai
 
 +(Tank *) tankWithTank : (Tank*) tank;
+
+-(void) refreshLabel;
 
 @end

@@ -16,10 +16,13 @@
 #import "Bullet.h"
 #import "TanksAppDelegate.h"
 #import "TanksNavigation.h"
+#import "MultiplayerNetworking.h"
 
-@interface TanksGamePage : SKScene
+@interface TanksGamePage : SKScene <MultiplayerNetworkingProtocol>
 
-@property (strong, nonatomic) JCJoystick *joystick;
+//@property (strong, nonatomic) JCJoystick *joystick;
+@property (strong, nonatomic) SKShapeNode *joystickCircle;
+@property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 
 -(void) pauseGame;
 -(void) unpauseGame;
