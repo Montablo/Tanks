@@ -20,8 +20,7 @@
 
 @interface TanksGamePage : SKScene <MultiplayerNetworkingProtocol>
 
-//@property (strong, nonatomic) JCJoystick *joystick;
-@property (strong, nonatomic) SKShapeNode *joystickCircle;
+@property (strong, nonatomic) JCJoystick *joystick;
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 
 -(void) pauseGame;

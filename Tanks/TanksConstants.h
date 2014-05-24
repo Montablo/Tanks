@@ -24,9 +24,9 @@
 
 #define tutorialImages 5
 
-#define LEVEL_RELEASE_VERSION 2
+#define LEVEL_RELEASE_VERSION 3
 
 #define GAME_FONT @"helvetica neue"
 
-#define TANKTYPE_URL @"http://Montablo.eu5.org/Tanks/tanktypes2.txt"
-#define LEVELS_URL @"http://Montablo.eu5.org/Tanks/levels2.txt"
+#define TANKTYPE_URL @"http://Montablo.eu5.org/Tanks/tanktypes.txt"
+#define LEVELS_URL @"http://Montablo.eu5.org/Tanks/levels.txt"

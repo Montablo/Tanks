@@ -79,12 +79,25 @@
         return;
     }
     CGPoint location = [self.onlyTouch locationInNode:[self parent]];
-    [self moveJoystickToPoint:location];
+    CGFloat newx = location.x;
+    CGFloat newy = location.y;
+    if((pow(newx-self.position.x,2)+pow(newy-self.position.y,2))>self.radiusSR2){
+        self.angle = atan2f (newy -self.position.y,newx  -self.position.x);
+        newx = (float)(self.position.x + self.controlRadius*cos(self.angle));
+        newy = (float)(self.position.y + self.controlRadius*sin(self.angle));
+        /*if((pow(location.x-self.position.x,2)+pow(location.y-self.position.y,2))>self.radiusSR2 + 5000){
+            self.position = CGPointMake(self.position.x + location.x - newx,self.position.y + location.y - newy);
+        }*/
+    }
+    self.interior.position=[self convertPoint:CGPointMake(newx, newy) fromNode:[self parent]];
+    self.x = (newx-self.position.x)/self.controlRadius;
+    self.y = (newy-self.position.y)/self.controlRadius;
 }
 
--(void) moveJoystickToPoint:(CGPoint)point {
-    CGFloat newx = point.x;
-    CGFloat newy = point.y;
+-(void) moveTouches : (CGPoint) location{
+    
+    CGFloat newx = location.x;
+    CGFloat newy = location.y;
     if((pow(newx-self.position.x,2)+pow(newy-self.position.y,2))>self.radiusSR2){
         self.angle = atan2f (newy -self.position.y,newx  -self.position.x);
         newx = (float)(self.position.x + self.controlRadius*cos(self.angle));

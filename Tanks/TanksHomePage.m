@@ -16,6 +16,7 @@
     NSMutableArray *levels;
     NSMutableArray *tanks;
     int STARTING_LEVEL;
+    int NUM_LIVES;
     
     float screenMultWidth;
     float screenMultHeight;
@@ -69,7 +70,6 @@
         playLabel.position = CGPointMake(CGRectGetMidX(self.frame), 10*screenMultHeight);
         playLabel.fontColor = [SKColor blackColor];*/
         
-        
         SKSpriteNode *playButton;
         playButton = [SKSpriteNode spriteNodeWithImageNamed:@"PlayIcon"];
         playButton.size = CGSizeMake(64*screenMultWidth, 64*screenMultWidth);
@@ -81,8 +81,6 @@
         
         tanks = [NSMutableArray array];
         levelPacks = [NSMutableArray array];
-        
-        STARTING_LEVEL = 1;
         
         SKSpriteNode *upgradeButton;
         upgradeButton = [SKSpriteNode spriteNodeWithImageNamed:@"UpgradeIcon"];
@@ -127,7 +125,7 @@
     
     if(startCancelled) return;
     
-    [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[self.currentPage] : 3 : [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5]];
+    [TanksNavigation loadTanksGamePage:self :STARTING_LEVEL - 1 :levelPacks[self.currentPage] : NUM_LIVES : [SKTransition pushWithDirection:[TanksNavigation randomSKDirection] duration:.5]];
 }
 
 
@@ -195,7 +193,18 @@
     statusLabel.fontSize = 15;
     [self addChild:statusLabel];
     levels = levelPacks[self.currentPage][1];
-    STARTING_LEVEL = 16;
+    
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"levelProgress%i", self.currentPage]] == nil) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:[NSString stringWithFormat:@"levelProgress%i", self.currentPage]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"levelLives%i", self.currentPage]] == nil) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"3" forKey:[NSString stringWithFormat:@"levelLives%i", self.currentPage]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    STARTING_LEVEL = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"levelProgress%i", self.currentPage]] intValue] + 1;
+    NUM_LIVES = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"levelLives%i", self.currentPage]] intValue];
     levelNum.text = [NSString stringWithFormat:@"Level: %i", STARTING_LEVEL];
 }
 

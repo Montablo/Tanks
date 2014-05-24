@@ -65,10 +65,9 @@
     BOOL gameUsesMultiplayer;
     BOOL userIsServer;
     
-    CGPoint touchStartingPoint;
-    BOOL touchHasMoved;
-    BOOL touchIsMoving;
-    int JOYSTICK_RADIUS;
+    BOOL joystickHasMoved;
+    BOOL joystickIsMoving;
+    CGPoint lastTouch;
     
 }
 
@@ -195,8 +194,6 @@
         
     }
     
-    JOYSTICK_RADIUS = 35*screenMultWidth;
-    
     [self displayWalls];
     
     [self addJoystick];
@@ -261,24 +258,14 @@
     
     int colorIndex1 = [self randomInt:0 withUpperBound:(int) colors.count];
     UIColor *color1 = colors[colorIndex1];
-    //[colors removeObjectAtIndex:colorIndex1];
-    //UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
+    [colors removeObjectAtIndex:colorIndex1];
+    UIColor *color2 = colors[[self randomInt:0 withUpperBound:(int) colors.count]];
     
-    self.joystickCircle = [SKShapeNode node];
-    CGMutablePathRef circlePath = CGPathCreateMutable();
-    CGPathAddEllipseInRect(circlePath , NULL , CGRectMake(self.joystickCircle.position.x - JOYSTICK_RADIUS, self.joystickCircle.position.y - JOYSTICK_RADIUS, JOYSTICK_RADIUS*2, JOYSTICK_RADIUS*2) );
-    self.joystickCircle.path = circlePath;
-    self.joystickCircle.fillColor =  color1;
-    self.joystickCircle.lineWidth = 0;
-    CGPathRelease( circlePath );
-    
-    /*self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];*/
-    [self.joystickCircle setPosition:CGPointMake(self.joystickCircle.frame.size.width/2 + 15*screenMultWidth, self.joystickCircle.frame.size.height/2 + 15*screenMultWidth)];
-    self.joystickCircle.zPosition = 25;
-    self.joystickCircle.alpha = 1;
-    [self addChild:self.joystickCircle];
-    
-    touchStartingPoint = self.joystickCircle.position;
+    self.joystick = [[JCJoystick alloc] initWithControlRadius:35*screenMultHeight baseRadius:35*screenMultHeight baseColor:color1 joystickRadius:20*screenMultHeight joystickColor:color2];
+    [self.joystick setPosition:CGPointMake(self.joystick.frame.size.width/2 + 15*screenMultWidth, self.joystick.frame.size.height/2 + 15*screenMultWidth)];
+    self.joystick.zPosition = 25;
+    self.joystick.alpha = 1;
+    [self addChild:self.joystick];
     
 }
 
@@ -513,6 +500,9 @@
         NSString *lID = [NSString stringWithFormat:@"LP_0%i", [levelsInfo[2] intValue] + 1];
         [sharedHelper reportScore:currentLevel+1 forLeaderboardID: lID];
         if(homePage) {
+            [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", 0] forKey:[NSString stringWithFormat:@"levelProgress%@", levelsInfo[2]]];
+            [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", 3] forKey:[NSString stringWithFormat:@"levelLives%@", levelsInfo[2]]];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [TanksNavigation loadTanksHomePage:self];
             return;
         }
@@ -536,10 +526,17 @@
         }
         
         if(!usesLives || lives == 0) {
+            [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", 0] forKey:[NSString stringWithFormat:@"levelProgress%@", levelsInfo[2]]];
+            [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", 3] forKey:[NSString stringWithFormat:@"levelLives%@", levelsInfo[2]]];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [TanksNavigation loadTanksHomePage:self];
             return;
         }
     }
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", levelNum] forKey:[NSString stringWithFormat:@"levelProgress%@", levelsInfo[2]]];
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", lives] forKey:[NSString stringWithFormat:@"levelLives%@", levelsInfo[2]]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     [TanksNavigation loadTanksGamePage:self :levelNum :levelPack : lives : transition];
 }
@@ -554,6 +551,9 @@
     BOOL ret = NO;
     
     if([n.name isEqualToString:@"exitButton"]) {
+        [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", currentLevel] forKey:[NSString stringWithFormat:@"levelProgress%@", levelsInfo[2]]];
+        [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i", lives] forKey:[NSString stringWithFormat:@"levelLives%@", levelsInfo[2]]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [TanksNavigation loadTanksHomePage:self];
         return YES;
     }
@@ -615,6 +615,10 @@
     
     if(!gameIsReadyToStart) return;
     
+    CGPoint point = [[touches anyObject] locationInNode:self];
+    
+    lastTouch = point;
+    
     if(!gameHasStarted) {
         [self startGame];
         return;
@@ -627,47 +631,32 @@
     Tank *user = tanks[userTankIndex];
     if(user.isObliterated) return;
     
-    CGPoint point = [[touches anyObject] locationInNode:self];
-    
-    [self checkUserFireBullet:[touches anyObject]];
-    //else touchStartingPoint = point;
-    
-    
-    //[self performSelector:@selector(checkUserFireBullet:) withObject:[touches anyObject] afterDelay:.1];
+    if(joystickIsMoving) [self fireBulletWithType : userTankIndex withPoint:point];
+    else [self performSelector:@selector(fireUserBullet:) withObject:[NSValue valueWithCGPoint:point] afterDelay:.1];
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    CGPoint location = [[touches anyObject] locationInNode:self];
-    float dist = [self distanceBetweenPoints:location P2:touchStartingPoint];
-    if(dist < 10) {
-        touchHasMoved = NO;
+    joystickIsMoving = YES;
+    [self.joystick touchesMoved:touches withEvent:event];
+    if([self distanceBetweenPoints:[[touches anyObject] locationInNode:self] P2:lastTouch] < 1 || self.joystick.onlyTouch) {
         return;
     }
-    touchHasMoved = YES;
-    touchIsMoving = YES;
-    
-    self.joystickCircle.position = location;
-    
+    joystickHasMoved = YES;
+    self.joystick.position = lastTouch;
+    self.joystick.onlyTouch = [touches anyObject];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    touchIsMoving = NO;
-    touchHasMoved = NO;
-    //touchStartingPoint = self.joystickCircle.position;
+    joystickIsMoving = NO;
+    joystickHasMoved = NO;
+    [self.joystick touchesEnded:touches withEvent:event];
 }
 
--(void) checkUserFireBullet : (UITouch*) touch {
+-(void) fireUserBullet : (NSValue*) point {
     
-    /*if(touchHasMoved) {
-        
-        return;
-    }*/
-    [self fireUserBulletWithPoint:[touch locationInNode:self]];
-}
-
--(void) fireUserBulletWithPoint : (CGPoint) point {
-    [self fireBulletWithType : userTankIndex withPoint:point];
+    if(joystickHasMoved) return;
+    
+    [self fireBulletWithType : userTankIndex withPoint:[point CGPointValue]];
 }
 
 -(void) fireBulletWithType : (int) type withPoint : (CGPoint) point {
@@ -897,15 +886,7 @@
     
     if(!gameIsReadyToStart) return;
     
-    //float xDiff = touchStartingPoint.x - self.joystickCircle.position.x > 0 ? -1 : 1;
-    //float yDiff = touchStartingPoint.y - self.joystickCircle.position.y > 0 ? -1 : 1;
-    
-    if(CGPointEqualToPoint(touchStartingPoint, self.joystickCircle.position)) return;
-    
-    float angle = [self getAngleP1:touchStartingPoint P2:self.joystickCircle.position];
-    
-    float x = cosf(angle);
-    float y = sinf(angle);
+    if(self.joystick.x == 0 && self.joystick.y == 0) return;
     
     if(!gameHasStarted) {
         [self startGame];
@@ -922,8 +903,8 @@
     
     if(userTank.isObliterated) return;
     
-    float newPositionX = userTank.position.x + TANK_SPEED * x * screenMultWidth * speedUpgradeMult;
-    float newPositionY = userTank.position.y + TANK_SPEED * y * screenMultHeight * speedUpgradeMult;
+    float newPositionX = userTank.position.x + TANK_SPEED * self.joystick.x * screenMultWidth * speedUpgradeMult;
+    float newPositionY = userTank.position.y + TANK_SPEED * self.joystick.y * screenMultHeight * speedUpgradeMult;
     
     if([self isXinBounds:userTank.position.x withY:newPositionY withWidth:userTank.size.width withHeight:userTank.size.height : false]) {
         CGPoint newPos = CGPointMake(userTank.position.x, newPositionY);
